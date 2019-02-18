@@ -4,7 +4,7 @@
     <data>
         <variable
                 name="viewModel"
-                type="com.example.bpawlowski.falldetector.activity.main.MainViewModel" />
+                type="com.example.bpawlowski.falldetector.presentation.activity.main.MainViewModel" />
     </data>
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -13,20 +13,10 @@
         <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:visible= "@{viewModel.isLoading.get()}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-        <android.support.v7.widget.RecyclerView
-                android:id="@+id/post_list"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                tools:listitem="@layout/posts_container"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </layout>
