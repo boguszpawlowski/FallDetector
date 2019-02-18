@@ -4,11 +4,11 @@
         xmlns:tools="http://schemas.android.com/tools" >
 
     <data>
-        <import type="com.example.bpawlowski.mvvm.activity.base.recycler.DataListHolder"/>
+        <import type="com.example.bpawlowski.falldetector.activity.base.recycler.DataListHolder"/>
 
         <variable
                 name="postContainer"
-                type="com.example.bpawlowski.mvvm.activity.main.recycler.PostsListHolder"/>
+                type="com.example.bpawlowski.falldetector.activity.main.recycler.PostsListHolder"/>
     </data>
 
     <android.support.constraint.ConstraintLayout

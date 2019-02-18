@@ -6,7 +6,7 @@
 
         <variable
                 name="infoContainer"
-                type="com.example.bpawlowski.mvvm.activity.base.recycler.DataListHolder"/>
+                type="com.example.bpawlowski.falldetector.activity.base.recycler.DataListHolder"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
