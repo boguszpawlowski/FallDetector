@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="Post"
-                type="com.example.bpawlowski.mvvm.model.Post"/>
+                type="com.example.bpawlowski.falldetector.model.Post"/>
     </data>
 
 
