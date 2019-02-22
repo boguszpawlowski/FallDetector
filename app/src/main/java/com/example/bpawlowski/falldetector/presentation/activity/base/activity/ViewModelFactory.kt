@@ -1,7 +1,7 @@
 package com.example.bpawlowski.falldetector.presentation.activity.base.activity
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.bpawlowski.falldetector.presentation.di.annotation.AppScope
 import java.lang.Exception
 import java.lang.IllegalArgumentException

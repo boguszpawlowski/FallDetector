@@ -1,6 +1,7 @@
 package com.example.bpawlowski.falldetector
 
 import com.example.bpawlowski.falldetector.presentation.di.component.DaggerIAppComponent
+import com.example.bpawlowski.falldetector.presentation.util.initializeStetho
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 
@@ -18,6 +19,9 @@ class FallDetectorApp : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        //for database debugging
+        initializeStetho(this)
     }
 
 

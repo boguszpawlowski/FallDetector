@@ -1,6 +1,6 @@
 package com.example.bpawlowski.falldetector.presentation.activity.base.recycler
 
-import android.databinding.BaseObservable
+import androidx.databinding.BaseObservable
 
 open class DataListHolder<out T : Any, out D : Any>(
     val group: T,

@@ -1,7 +1,7 @@
 package com.example.bpawlowski.falldetector.presentation.di.module
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.bpawlowski.falldetector.presentation.activity.base.activity.ViewModelFactory
 import com.example.bpawlowski.falldetector.presentation.activity.main.MainViewModel
 import com.example.bpawlowski.falldetector.presentation.di.annotation.ViewModelKey
