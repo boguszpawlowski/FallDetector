@@ -7,12 +7,13 @@ import com.example.bpawlowski.falldetector.presentation.di.module.AppModule
 import com.example.bpawlowski.falldetector.presentation.di.module.ContextModule
 import dagger.BindsInstance
 import dagger.Component
+import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import dagger.android.support.AndroidSupportInjectionModule
 
 @AppScope
-@Component(modules = arrayOf(AppModule::class, AndroidSupportInjectionModule::class))
+@Component(modules = arrayOf(AppModule::class, AndroidInjectionModule::class, AndroidSupportInjectionModule::class))
 interface IAppComponent : AndroidInjector<DaggerApplication> {
 
     fun inject(app: FallDetectorApp)

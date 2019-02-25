@@ -7,5 +7,4 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
 
     private val TAG = MainViewModel::class.java.simpleName
 
-
 }
