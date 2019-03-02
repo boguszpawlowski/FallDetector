@@ -14,7 +14,7 @@ import dagger.android.support.AndroidSupportInjectionModule
 
 @AppScope
 @Component(modules = arrayOf(AppModule::class, AndroidInjectionModule::class, AndroidSupportInjectionModule::class))
-interface IAppComponent : AndroidInjector<DaggerApplication> {
+interface IAppComponent {
 
     fun inject(app: FallDetectorApp)
 

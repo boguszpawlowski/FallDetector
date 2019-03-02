@@ -1,31 +1,29 @@
 package com.example.bpawlowski.falldetector
 
+import android.app.Activity
+import android.app.Application
 import com.example.bpawlowski.falldetector.presentation.di.component.DaggerIAppComponent
 import com.example.bpawlowski.falldetector.presentation.util.initializeStetho
 import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
+import javax.inject.Inject
 
-class FallDetectorApp : DaggerApplication() {
+class FallDetectorApp : Application(), HasActivityInjector {
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        val component = DaggerIAppComponent.builder()
-            .application(this)
-            .build()
-        component.inject(this)
+    @Inject
+    lateinit var activityInjector: DispatchingAndroidInjector<Activity>
 
-        return component
-    }
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
-
+        DaggerIAppComponent.builder()
+            .application(this)
+            .build()
+            .inject(this)
         //for database debugging
         initializeStetho(this)
     }
 
-
-    companion object {
-        lateinit var instance: FallDetectorApp private set
-    }
+    override fun activityInjector(): AndroidInjector<Activity> = activityInjector
 }
