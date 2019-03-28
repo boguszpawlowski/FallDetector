@@ -9,6 +9,8 @@ buildscript {
         androidx_version = '1.0.0'
         constraint_version = '1.1.2'
         stetho_version = '1.5.0'
+        room_version = "2.1.0-alpha06"
+        rx_kotlin_version = "2.3.0"
     }
 
     repositories {

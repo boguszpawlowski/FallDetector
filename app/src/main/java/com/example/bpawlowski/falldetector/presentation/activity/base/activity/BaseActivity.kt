@@ -32,7 +32,7 @@ abstract class BaseActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActi
         AndroidInjection.inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(getViewModelClass())
         binding = DataBindingUtil.setContentView(this, getLayoutID())
-
+        bindViewModel()
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentInjector
@@ -47,11 +47,13 @@ abstract class BaseActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActi
             finish()
         }
     }
-
+    //TODO navigate to new view - fragment manager
 
     open fun keepInBackStack(): Boolean = false
 
     abstract fun getViewModelClass(): Class<VM>
+
+    abstract fun bindViewModel()
 
     abstract fun getLayoutID(): Int
 

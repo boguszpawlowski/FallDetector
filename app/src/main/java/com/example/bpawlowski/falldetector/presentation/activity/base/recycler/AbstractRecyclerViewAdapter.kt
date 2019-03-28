@@ -5,10 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.bpawlowski.falldetector.presentation.util.layoutInflater
 
-abstract class AbstractRecyclerViewAdapter<D, VH : AbstractViewHolder<*, D>>(data: List<D> = emptyList()) :
+abstract class AbstractRecyclerViewAdapter<D, VH : AbstractViewHolder<*, D>>(data: MutableList<D> = mutableListOf()) :
     RecyclerView.Adapter<VH>() {
 
-    open var data: List<D> = emptyList()
+    open var data: MutableList<D> = mutableListOf()
         set(value) {
             field = value
             notifyDataSetChanged()

@@ -1,6 +1,8 @@
 package com.example.bpawlowski.falldetector.presentation.activity.main.di
 
+import com.example.bpawlowski.falldetector.presentation.activity.main.call.CallFragment
 import com.example.bpawlowski.falldetector.presentation.activity.main.contacts.ContactsFragment
+import com.example.bpawlowski.falldetector.presentation.activity.main.contacts.FormDialogFragment
 import com.example.bpawlowski.falldetector.presentation.activity.main.home.HomeFragment
 import com.example.bpawlowski.falldetector.presentation.activity.main.settings.SettingsFragment
 import dagger.Module
@@ -20,4 +22,12 @@ abstract class MainActivityModule{
     @MainActivityScope
     @ContributesAndroidInjector
     abstract fun bindSettingsFragment(): SettingsFragment
+
+    @MainActivityScope
+    @ContributesAndroidInjector
+    abstract fun bindFormDialogFragment(): FormDialogFragment
+
+    @MainActivityScope
+    @ContributesAndroidInjector
+    abstract fun bindCallFragment(): CallFragment
 }

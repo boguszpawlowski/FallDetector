@@ -21,7 +21,7 @@ class FallDetectorApp : Application(), HasActivityInjector {
             .application(this)
             .build()
             .inject(this)
-        //for database debugging
+
         initializeStetho(this)
     }
 

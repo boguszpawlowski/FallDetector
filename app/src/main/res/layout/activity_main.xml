@@ -18,6 +18,7 @@
 
         <include
                 layout="@layout/app_bar_navigation"
+                app:viewModel="@{viewModel}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

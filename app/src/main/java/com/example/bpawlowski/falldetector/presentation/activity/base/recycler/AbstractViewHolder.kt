@@ -13,12 +13,12 @@ abstract class AbstractViewHolder<out B: ViewDataBinding, in D>(view: View): Rec
     abstract fun bindingId(): Int
 
     fun bind(data: D){
-        update(data)
+        onBind(data)
         binding.setVariable(bindingId(), data)
         binding.executePendingBindings()
     }
 
-    open fun update(data: D){
+    open fun onBind(data: D){
 
     }
 }

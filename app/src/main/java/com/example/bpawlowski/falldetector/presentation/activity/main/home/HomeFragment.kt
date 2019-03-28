@@ -16,16 +16,18 @@ class HomeFragment : BaseFragment<HomeViewModel, MainViewModel, FragmentHomeBind
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
-
 
     override fun getViewModelClass(): Class<HomeViewModel> = HomeViewModel::class.java
 
     override fun getLayoutID(): Int = R.layout.fragment_home
 
     override fun getParentViewModeClass(): Class<MainViewModel> = MainViewModel::class.java
+
+    override fun bindViewModel() {
+        binding.viewModel = viewModel
+    }
 
     companion object {
         @JvmStatic
