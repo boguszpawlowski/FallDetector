@@ -9,7 +9,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
-abstract class MainActivityModule{
+abstract class MainActivityModule {
 
     @MainActivityScope
     @ContributesAndroidInjector

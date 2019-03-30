@@ -18,11 +18,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(MainViewModel::class)
-    abstract fun bindMainViewModel(mainViewModel: MainViewModel): ViewModel
-
-    @Binds
-    @IntoMap
     @ViewModelKey(HomeViewModel::class)
     abstract fun bindHomeViewModel(homeViewModel: HomeViewModel): ViewModel
 
@@ -42,6 +37,10 @@ abstract class ViewModelModule {
     abstract fun bindCallViewModel(callViewModel: CallViewModel): ViewModel
 
     @Binds
-    abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
+    @IntoMap
+    @ViewModelKey(MainViewModel::class)
+    abstract fun bindMainViewModel(mainViewModel: MainViewModel): ViewModel
 
+    @Binds
+    abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
 }

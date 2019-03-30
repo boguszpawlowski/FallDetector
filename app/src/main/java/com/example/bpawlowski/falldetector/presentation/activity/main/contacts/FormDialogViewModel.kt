@@ -22,8 +22,7 @@ class FormDialogViewModel @Inject constructor() : BaseViewModel() {
     val mobileSubject = BehaviorSubject.createDefault("")
     val emailSubject = BehaviorSubject.createDefault("")
 
-    override fun onResume() {
-        super.onResume()
+    init {
         initValidator()
     }
 

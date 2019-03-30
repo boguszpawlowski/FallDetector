@@ -3,9 +3,6 @@ package com.example.bpawlowski.falldetector.presentation.activity.base.activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.bpawlowski.falldetector.presentation.di.annotation.AppScope
-import java.lang.Exception
-import java.lang.IllegalArgumentException
-import java.lang.RuntimeException
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -15,13 +12,13 @@ class ViewModelFactory @Inject constructor(
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        val creator = creators[modelClass] ?:
-        creators.asIterable().firstOrNull{modelClass.isAssignableFrom(it.key)}?.value
+        val creator =
+            creators[modelClass] ?: creators.asIterable().firstOrNull { modelClass.isAssignableFrom(it.key) }?.value
             ?: throw IllegalArgumentException("Could`t find ViewModel")
 
-        return try{
+        return try {
             creator.get() as T
-        }catch (e: Exception){
+        } catch (e: Exception) {
             throw RuntimeException(e)
         }
     }

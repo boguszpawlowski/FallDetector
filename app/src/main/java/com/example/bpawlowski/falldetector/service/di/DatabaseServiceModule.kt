@@ -12,5 +12,4 @@ abstract class DatabaseServiceModule{
     @Binds
     @AppScope
     abstract fun bindDatabaseService(databaseService: DatabaseService): IDatabaseService
-
 }
