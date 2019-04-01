@@ -7,6 +7,7 @@ import com.example.bpawlowski.falldetector.presentation.activity.base.recycler.A
 import com.example.bpawlowski.falldetector.presentation.activity.base.recycler.AbstractViewHolder
 import com.example.bpawlowski.falldetector.presentation.activity.base.recycler.ItemTouchHelperAdapter
 import com.example.bpawlowski.falldetector.presentation.activity.main.call.CallContactViewHolder
+import com.example.bpawlowski.falldetector.presentation.activity.main.sms.MessageContactViewHolder
 import com.example.bpawlowski.falldetector.service.model.Contact
 import java.util.*
 
@@ -22,6 +23,7 @@ class ContactViewAdapter(
         return when(viewType){
             R.layout.contact_item -> ContactViewHolder(inflatedView, context)
             R.layout.contact_item_call -> CallContactViewHolder(inflatedView, context)
+            R.layout.contact_item_sms -> MessageContactViewHolder(inflatedView, context)
             else -> CallContactViewHolder(inflatedView, context)
         }
     }

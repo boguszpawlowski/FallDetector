@@ -14,6 +14,7 @@ import com.example.bpawlowski.falldetector.presentation.activity.base.activity.B
 import com.example.bpawlowski.falldetector.presentation.activity.main.call.CallFragment
 import com.example.bpawlowski.falldetector.presentation.activity.main.contacts.ContactsFragment
 import com.example.bpawlowski.falldetector.presentation.activity.main.home.HomeFragment
+import com.example.bpawlowski.falldetector.presentation.activity.main.sms.MessageFragment
 import com.example.bpawlowski.falldetector.presentation.util.doNothing
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -32,7 +33,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 
         fragmentManager = supportFragmentManager
         if (savedInstanceState == null) {
-            changeView(HomeFragment::class.java)
+            changeView(HomeFragment::class.java, false)
         }
         viewModel.stateSubject.subscribe {
             when (it) {
@@ -80,26 +81,25 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         when (item.itemId) {
             R.id.nav_home -> changeView(HomeFragment::class.java)
             R.id.nav_contacts -> changeView(ContactsFragment::class.java)
-            R.id.nav_alarm -> doNothing
-            R.id.nav_settings -> doNothing
+            R.id.nav_alarm -> doNothing //TODO not implemented
+            R.id.nav_settings -> doNothing //TODO not implemented
 
             R.id.nav_call -> changeView(CallFragment::class.java)
-            R.id.nav_sms -> doNothing
+            R.id.nav_sms -> changeView(MessageFragment::class.java)
         }
-
+        item.isChecked = true
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
 
-    private fun changeView(fragmentClass: Class<*>) {
-
+    private fun changeView(fragmentClass: Class<*>, keepInBackStack: Boolean = true) {
         val newFragment =
             fragmentManager.findFragmentByTag(fragmentClass.canonicalName) ?: instantiateFragment(fragmentClass)
-
         val transaction = fragmentManager.beginTransaction()
-
+        if (keepInBackStack) {
+            transaction.addToBackStack(fragmentClass.canonicalName)
+        }
         transaction.replace(R.id.fragment_container, newFragment)
-
         transaction.commit()
     }
 

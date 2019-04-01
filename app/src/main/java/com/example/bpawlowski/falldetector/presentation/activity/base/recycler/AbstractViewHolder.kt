@@ -18,7 +18,5 @@ abstract class AbstractViewHolder<out B: ViewDataBinding, in D>(view: View): Rec
         binding.executePendingBindings()
     }
 
-    open fun onBind(data: D){
-
-    }
+    abstract fun onBind(data: D)
 }

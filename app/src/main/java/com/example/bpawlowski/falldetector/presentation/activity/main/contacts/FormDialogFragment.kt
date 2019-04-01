@@ -46,10 +46,6 @@ class FormDialogFragment : DialogFragment() {
         with(dialog.window) {
             this?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             this?.attributes?.windowAnimations = R.style.FormDialogAnimation
-            /* val view = binding.root
-             val bitmap = getBitmapFromView(view)
-             val blurred = RSBlurProcessor(RenderScript.create(requireContext())).blur(bitmap, 10f, 1)
-             this?.setBackgroundDrawable(BitmapDrawable(resources, blurred))*/
         }
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(FormDialogViewModel::class.java)
         parentViewModel = ViewModelProviders.of(this, viewModelFactory).get(ContactsViewModel::class.java)
@@ -64,9 +60,9 @@ class FormDialogFragment : DialogFragment() {
 
     private fun initListeners() {
         binding.root.btn_apply.setOnClickListener {
-            val name = binding.root.txt_contact_name.value
-            val email = binding.root.txt_contact_email.value
-            val mobile = binding.root.txt_contact_mobile.value.toInt()
+            val name = binding.txtContactName.value
+            val email = binding.txtContactEmail.value
+            val mobile = binding.txtContactMobile.value.toInt()
             val priority = if (cbx_ice.isChecked) UserPriority.PRIORITY_ICE else UserPriority.PRIORITY_NORMAL
 
             val contact = Contact(

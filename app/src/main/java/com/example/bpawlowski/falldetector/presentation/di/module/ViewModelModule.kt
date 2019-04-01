@@ -8,6 +8,7 @@ import com.example.bpawlowski.falldetector.presentation.activity.main.call.CallV
 import com.example.bpawlowski.falldetector.presentation.activity.main.contacts.ContactsViewModel
 import com.example.bpawlowski.falldetector.presentation.activity.main.contacts.FormDialogViewModel
 import com.example.bpawlowski.falldetector.presentation.activity.main.home.HomeViewModel
+import com.example.bpawlowski.falldetector.presentation.activity.main.sms.MessageViewModel
 import com.example.bpawlowski.falldetector.presentation.di.annotation.ViewModelKey
 import dagger.Binds
 import dagger.Module
@@ -15,6 +16,11 @@ import dagger.multibindings.IntoMap
 
 @Module
 abstract class ViewModelModule {
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MessageViewModel::class)
+    abstract fun bindMessageViewModel(messageViewModel: MessageViewModel): ViewModel
 
     @Binds
     @IntoMap

@@ -5,11 +5,16 @@ import com.example.bpawlowski.falldetector.presentation.activity.main.contacts.C
 import com.example.bpawlowski.falldetector.presentation.activity.main.contacts.FormDialogFragment
 import com.example.bpawlowski.falldetector.presentation.activity.main.home.HomeFragment
 import com.example.bpawlowski.falldetector.presentation.activity.main.settings.SettingsFragment
+import com.example.bpawlowski.falldetector.presentation.activity.main.sms.MessageFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class MainActivityModule {
+
+    @MainActivityScope
+    @ContributesAndroidInjector
+    abstract fun bindMessageFragment(): MessageFragment
 
     @MainActivityScope
     @ContributesAndroidInjector
