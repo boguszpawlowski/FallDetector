@@ -69,6 +69,8 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
     implementation "androidx.room:room-rxjava2:$room_version"
 
+    //RuntimePermissions
+    implementation 'com.karumi:dexter:5.0.0'
 
     //Stetho
     implementation "com.facebook.stetho:stetho:$stetho_version"

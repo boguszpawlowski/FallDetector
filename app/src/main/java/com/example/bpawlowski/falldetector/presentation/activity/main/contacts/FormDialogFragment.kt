@@ -42,11 +42,9 @@ class FormDialogFragment : DialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         AndroidSupportInjection.inject(this)
-        with(dialog.window) {
-            this?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            this?.attributes?.windowAnimations = R.style.FormDialogAnimation
-        }
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(FormDialogViewModel::class.java)
         parentViewModel = ViewModelProviders.of(this, viewModelFactory).get(ContactsViewModel::class.java)
         binding.viewModel = viewModel
@@ -54,6 +52,7 @@ class FormDialogFragment : DialogFragment() {
 
     override fun onResume() {
         super.onResume()
+
         initListeners()
         viewModel.onResume()
     }

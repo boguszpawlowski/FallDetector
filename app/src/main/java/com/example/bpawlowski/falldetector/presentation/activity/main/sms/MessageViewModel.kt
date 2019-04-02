@@ -17,10 +17,10 @@ class MessageViewModel @Inject constructor(
 
     override fun onResume() {
         super.onResume()
-        fetchContacts()
+        getAllContacts()
     }
 
-    private fun fetchContacts() {
+    private fun getAllContacts() {
         disposable.add(
             contactRepository.getAllContacts()
                 .observeOn(schedulerProvider.MAIN)

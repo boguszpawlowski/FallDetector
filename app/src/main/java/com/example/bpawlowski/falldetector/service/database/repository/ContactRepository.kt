@@ -16,20 +16,20 @@ import javax.inject.Inject
 class ContactRepository @Inject constructor(
     databaseService: IDatabaseService,
     private val schedulerProvider: ISchedulerProvider
-) : BaseRepository() {
+) : BaseRepository(), IContactRepository {
 
     private val contactDao = databaseService.getContactDao()
 
-    fun addContact(contact: Contact): Single<Long> =
+    override fun addContact(contact: Contact): Single<Long> =
         contactDao.insert(contact).subscribeOn(schedulerProvider.IO)
 
-    fun getAllContacts(): Flowable<List<Contact>> =
+    override fun getAllContacts(): Flowable<List<Contact>> =
         contactDao.getAll().subscribeOn(schedulerProvider.IO)
 
-    fun getContactByMobile(mobile: Int): Single<Contact> =
+    override fun getContactByMobile(mobile: Int): Single<Contact> =
         contactDao.getContactByMobile(mobile).subscribeOn(schedulerProvider.IO)
 
-    fun updateContactEmail(contact: Contact): Completable {
+    override fun updateContactEmail(contact: Contact): Completable {
         val id = contact.id ?: return Completable.error(Throwable("No contact id"))
         val email = contact.email ?: return Completable.error(Throwable("No contact email"))
 
@@ -37,10 +37,10 @@ class ContactRepository @Inject constructor(
             .subscribeOn(schedulerProvider.IO)
     }
 
-    fun removeContact(contact: Contact): Completable =
+    override fun removeContact(contact: Contact): Completable =
         contactDao.delete(contact).subscribeOn(schedulerProvider.IO)
 
-    fun isIceContactExisting(contact: Contact): Single<Boolean> =
+    override fun isIceContactExisting(contact: Contact): Single<Boolean> =
         contactDao.findIceContact()
             .map { contact.priority == UserPriority.PRIORITY_ICE }
             .onErrorResumeNext { Single.just(false) }

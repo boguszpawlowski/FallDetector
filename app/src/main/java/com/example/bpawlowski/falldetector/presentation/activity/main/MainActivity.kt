@@ -69,15 +69,13 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem) =
+        when (item.itemId) {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
-    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> changeView(HomeFragment::class.java)
             R.id.nav_contacts -> changeView(ContactsFragment::class.java)
@@ -101,11 +99,11 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         }
         transaction.replace(R.id.fragment_container, newFragment)
         transaction.commit()
+        fragmentManager.executePendingTransactions()
     }
 
-    private fun instantiateFragment(fragmentClass: Class<*>): Fragment {
-        return Fragment.instantiate(this, fragmentClass.canonicalName)
-    }
+    private fun instantiateFragment(fragmentClass: Class<*>) =
+        Fragment.instantiate(this, fragmentClass.canonicalName)
 
     override fun getViewModelClass(): Class<MainViewModel> = MainViewModel::class.java
 

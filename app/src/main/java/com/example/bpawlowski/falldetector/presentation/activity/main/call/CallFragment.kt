@@ -1,5 +1,6 @@
 package com.example.bpawlowski.falldetector.presentation.activity.main.call
 
+import android.Manifest
 import android.os.Bundle
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentCallBinding
@@ -7,6 +8,7 @@ import com.example.bpawlowski.falldetector.presentation.activity.base.fragment.B
 import com.example.bpawlowski.falldetector.presentation.activity.main.MainScreenState
 import com.example.bpawlowski.falldetector.presentation.activity.main.MainViewModel
 import com.example.bpawlowski.falldetector.presentation.activity.main.contacts.recycler.ContactViewAdapter
+import com.example.bpawlowski.falldetector.presentation.util.checkPermission
 
 class CallFragment : BaseFragment<CallViewModel, MainViewModel, FragmentCallBinding>() {
 
@@ -16,7 +18,12 @@ class CallFragment : BaseFragment<CallViewModel, MainViewModel, FragmentCallBind
         binding.recyclerContact.apply {
             adapter = ContactViewAdapter(
                 context = requireContext(),
-                viewType = R.layout.contact_item_call
+                viewType = R.layout.contact_item_call,
+                onClickListener = { contact ->
+                    checkPermission(requireActivity(), Manifest.permission.CALL_PHONE) {
+                        viewModel.callContact(requireContext(), contact)
+                    }
+                }
             )
         }
     }
@@ -43,4 +50,5 @@ class CallFragment : BaseFragment<CallViewModel, MainViewModel, FragmentCallBind
     override fun bindViewModel() {
         binding.viewModel = viewModel
     }
+
 }

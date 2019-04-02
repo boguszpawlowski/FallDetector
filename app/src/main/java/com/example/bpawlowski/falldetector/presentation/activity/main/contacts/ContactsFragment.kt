@@ -44,6 +44,7 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
 
     @SuppressLint("CheckResult")
     override fun onResume() {
+
         super.onResume()
         disposable.add(
             viewModel.contactSubject

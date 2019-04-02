@@ -1,6 +1,8 @@
 package com.example.bpawlowski.falldetector.presentation.activity.main.call
 
+import android.content.Context
 import com.example.bpawlowski.falldetector.presentation.activity.base.activity.BaseViewModel
+import com.example.bpawlowski.falldetector.presentation.util.callNumber
 import com.example.bpawlowski.falldetector.service.database.repository.ContactRepository
 import com.example.bpawlowski.falldetector.service.model.Contact
 import com.example.bpawlowski.falldetector.service.rx.ISchedulerProvider
@@ -16,10 +18,10 @@ class CallViewModel @Inject constructor(
 
     override fun onResume() {
         super.onResume()
-        fetchContacts()
+        getAllContacts()
     }
 
-    private fun fetchContacts() {
+    private fun getAllContacts() {
         disposable.add(
             contactRepository.getAllContacts()
                 .observeOn(schedulerProvider.MAIN)
@@ -30,4 +32,6 @@ class CallViewModel @Inject constructor(
                 )
         )
     }
+
+    fun callContact(context: Context, contact: Contact) = callNumber(context, contact.mobile)
 }
