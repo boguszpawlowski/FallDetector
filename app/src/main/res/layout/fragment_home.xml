@@ -1,14 +1,14 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="viewModel"
-                  type="com.example.bpawlowski.falldetector.presentation.activity.main.home.HomeViewModel"/>
+                  type="com.example.bpawlowski.falldetector.activity.main.home.HomeViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                        xmlns:tools="http://schemas.android.com/tools"
                                                        android:layout_width="match_parent"
                                                        android:layout_height="match_parent"
-                                                       tools:context="com.example.bpawlowski.falldetector.presentation.activity.main.home.HomeFragment">
+                                                       tools:context=".activity.main.home.HomeFragment">
 
         <ImageView
                 android:layout_width="0dp"

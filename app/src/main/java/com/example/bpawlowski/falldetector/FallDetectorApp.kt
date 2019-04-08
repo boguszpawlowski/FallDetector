@@ -2,8 +2,8 @@ package com.example.bpawlowski.falldetector
 
 import android.app.Activity
 import android.app.Application
-import com.example.bpawlowski.falldetector.presentation.di.component.DaggerIAppComponent
-import com.example.bpawlowski.falldetector.presentation.util.initializeStetho
+import com.example.bpawlowski.falldetector.di.component.DaggerIAppComponent
+import com.example.bpawlowski.falldetector.util.initializeStetho
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector

@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <variable name="contact" type="com.example.bpawlowski.falldetector.service.model.Contact"/>
+        <variable name="contact" type="bogusz.com.service.model.Contact"/>
     </data>
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/container"

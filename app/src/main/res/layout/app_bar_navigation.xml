@@ -2,7 +2,7 @@
 <layout>
     <data>
         <variable name="viewModel"
-                  type="com.example.bpawlowski.falldetector.presentation.activity.main.MainViewModel"/>
+                  type="com.example.bpawlowski.falldetector.activity.main.MainViewModel"/>
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -11,7 +11,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="com.example.bpawlowski.falldetector.presentation.activity.main.MainActivity">
+            tools:context=".activity.main.MainActivity">
 
         <com.google.android.material.appbar.AppBarLayout
                 android:layout_height="wrap_content"
