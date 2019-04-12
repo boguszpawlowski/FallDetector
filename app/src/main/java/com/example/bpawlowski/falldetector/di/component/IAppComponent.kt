@@ -4,6 +4,7 @@ import com.example.bpawlowski.falldetector.FallDetectorApp
 import com.example.bpawlowski.falldetector.di.module.AppModule
 import bogusz.com.service.di.ConnectivityServiceModule
 import bogusz.com.service.di.DatabaseServiceModule
+import bogusz.com.service.di.LocationProviderModule
 import bogusz.com.service.di.RxModule
 import dagger.BindsInstance
 import dagger.Component
@@ -15,6 +16,7 @@ import dagger.android.support.AndroidSupportInjectionModule
     AppModule::class,
     ConnectivityServiceModule::class,
     DatabaseServiceModule::class,
+    LocationProviderModule::class,
     RxModule::class,
     AndroidInjectionModule::class,
     AndroidSupportInjectionModule::class))

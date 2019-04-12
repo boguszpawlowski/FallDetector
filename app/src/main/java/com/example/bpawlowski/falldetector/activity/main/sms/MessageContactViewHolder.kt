@@ -2,16 +2,17 @@ package com.example.bpawlowski.falldetector.activity.main.sms
 
 import android.content.Context
 import android.view.View
-import android.widget.Toast
-import com.example.bpawlowski.falldetector.BR
-import com.example.bpawlowski.falldetector.databinding.ContactItemSmsBinding
-import com.example.bpawlowski.falldetector.activity.base.recycler.AbstractViewHolder
 import bogusz.com.service.model.Contact
 import bogusz.com.service.model.UserPriority
+import com.example.bpawlowski.falldetector.BR
+import com.example.bpawlowski.falldetector.activity.base.recycler.AbstractViewHolder
+import com.example.bpawlowski.falldetector.activity.main.contacts.recycler.OnContactClickedListener
+import com.example.bpawlowski.falldetector.databinding.ContactItemSmsBinding
 
 class MessageContactViewHolder(
     view: View,
-    private val context: Context?
+    private val context: Context?,
+    private var onClickListener: OnContactClickedListener?
 ) : AbstractViewHolder<ContactItemSmsBinding, Contact>(view) {
     override fun bindingId(): Int = BR.contact
 
@@ -24,6 +25,6 @@ class MessageContactViewHolder(
             UserPriority.PRIORITY_ICE -> "ICE"
         }
 
-        binding.container.setOnClickListener { Toast.makeText(context, "On click", Toast.LENGTH_LONG).show() }
+        binding.container.setOnClickListener { onClickListener?.invoke(data) }
     }
 }

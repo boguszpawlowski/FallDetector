@@ -3,9 +3,6 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.example.bpawlowski.falldetector">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-
     <application
             android:name=".FallDetectorApp"
             android:allowBackup="true"

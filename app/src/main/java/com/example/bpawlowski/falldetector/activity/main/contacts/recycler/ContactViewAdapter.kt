@@ -14,24 +14,18 @@ import java.util.*
 class ContactViewAdapter(
     private val context: Context?,
     private val onDismissListener: ((Contact) -> Unit)? = null,
-    private val onClickListener: ((Contact) ->Unit)? = null,
+    private val onClickListener: OnContactClickedListener? = null,
     private val viewType: Int = R.layout.contact_item
 ) : AbstractRecyclerViewAdapter<Contact, AbstractViewHolder<*,Contact>>(), ItemTouchHelperAdapter {
-
-    private val onContactClickedListener = object: OnContactClickedListener{
-        override fun onClick(contact: Contact) {
-            onClickListener?.invoke(contact)
-        }
-    }
 
     override fun getViewType(position: Int): Int = viewType
 
     override fun createHolder(inflatedView: View, viewType: Int): AbstractViewHolder<*,Contact> {
         return when(viewType){
             R.layout.contact_item -> ContactViewHolder(inflatedView, context)
-            R.layout.contact_item_call -> CallContactViewHolder(inflatedView, context, onContactClickedListener)
-            R.layout.contact_item_sms -> MessageContactViewHolder(inflatedView, context)
-            else -> CallContactViewHolder(inflatedView, context, onContactClickedListener)
+            R.layout.contact_item_call -> CallContactViewHolder(inflatedView, context, onClickListener)
+            R.layout.contact_item_sms -> MessageContactViewHolder(inflatedView, context, onClickListener)
+            else -> CallContactViewHolder(inflatedView, context, onClickListener)
         }
     }
 
@@ -48,6 +42,5 @@ class ContactViewAdapter(
     }
 }
 
-interface OnContactClickedListener{
-    fun onClick(contact: Contact)
-} //TODO move to different dir, add abstract VH for contact
+typealias OnContactClickedListener = (Contact) ->Unit
+//TODO move to different dir, add abstract VH for contact

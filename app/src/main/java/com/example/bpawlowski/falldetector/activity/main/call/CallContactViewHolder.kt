@@ -12,7 +12,7 @@ import bogusz.com.service.model.UserPriority
 class CallContactViewHolder(
     view: View,
     private val context: Context?,
-    private val onContactClickedListener: OnContactClickedListener
+    private val onContactClickedListener: OnContactClickedListener?
 ) : AbstractViewHolder<ContactItemCallBinding, Contact>(view) {
     override fun bindingId(): Int = BR.contact
 
@@ -25,6 +25,6 @@ class CallContactViewHolder(
             UserPriority.PRIORITY_ICE -> "ICE"
         }
 
-        binding.container.setOnClickListener { onContactClickedListener.onClick(data) }
+        binding.container.setOnClickListener { onContactClickedListener?.invoke(data) }
     }
 }

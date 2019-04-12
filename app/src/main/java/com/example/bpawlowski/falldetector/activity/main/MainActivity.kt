@@ -1,5 +1,6 @@
 package com.example.bpawlowski.falldetector.activity.main
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
@@ -9,13 +10,14 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.bpawlowski.falldetector.R
-import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
 import com.example.bpawlowski.falldetector.activity.base.activity.BaseActivity
 import com.example.bpawlowski.falldetector.activity.main.call.CallFragment
 import com.example.bpawlowski.falldetector.activity.main.contacts.ContactsFragment
 import com.example.bpawlowski.falldetector.activity.main.home.HomeFragment
 import com.example.bpawlowski.falldetector.activity.main.sms.MessageFragment
+import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
 import com.example.bpawlowski.falldetector.util.doNothing
+import com.example.bpawlowski.falldetector.util.getPermissions
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
@@ -54,6 +56,8 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        checkPermissions()
     }
 
     override fun onBackPressed() {
@@ -89,6 +93,17 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
+
+    private fun checkPermissions() =
+        getPermissions(
+            this,
+            listOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.CALL_PHONE,
+                Manifest.permission.SEND_SMS,
+                Manifest.permission.READ_PHONE_STATE
+            )
+        )
 
     private fun changeView(fragmentClass: Class<*>, keepInBackStack: Boolean = true) {
         val newFragment =

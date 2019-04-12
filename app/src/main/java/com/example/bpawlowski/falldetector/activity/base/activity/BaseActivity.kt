@@ -48,7 +48,6 @@ abstract class BaseActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActi
             finish()
         }
     }
-    //TODO navigate to new view - fragment manager
 
     open fun keepInBackStack(): Boolean = false
 

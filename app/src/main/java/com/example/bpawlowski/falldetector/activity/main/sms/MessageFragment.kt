@@ -16,7 +16,8 @@ class MessageFragment : BaseFragment<MessageViewModel, MainViewModel, FragmentMe
         binding.recyclerContact.apply {
             adapter = ContactViewAdapter(
                 context = requireContext(),
-                viewType = R.layout.contact_item_sms
+                viewType = R.layout.contact_item_sms,
+                onClickListener = { viewModel.sendMessage(it) }
             )
         }
     }
