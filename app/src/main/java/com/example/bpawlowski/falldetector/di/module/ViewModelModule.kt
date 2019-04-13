@@ -2,6 +2,7 @@ package com.example.bpawlowski.falldetector.di.module
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.bpawlowski.falldetector.activity.alarm.AlarmViewModel
 import com.example.bpawlowski.falldetector.activity.base.activity.ViewModelFactory
 import com.example.bpawlowski.falldetector.activity.main.MainViewModel
 import com.example.bpawlowski.falldetector.activity.main.call.CallViewModel
@@ -46,6 +47,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MainViewModel::class)
     abstract fun bindMainViewModel(mainViewModel: MainViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AlarmViewModel::class)
+    abstract fun bindAlarmViewModel(alarmViewModel: AlarmViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

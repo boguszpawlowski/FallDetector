@@ -2,6 +2,7 @@ package com.example.bpawlowski.falldetector.activity.main
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -10,6 +11,7 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.bpawlowski.falldetector.R
+import com.example.bpawlowski.falldetector.activity.alarm.AlarmActivity
 import com.example.bpawlowski.falldetector.activity.base.activity.BaseActivity
 import com.example.bpawlowski.falldetector.activity.main.call.CallFragment
 import com.example.bpawlowski.falldetector.activity.main.contacts.ContactsFragment
@@ -83,7 +85,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         when (item.itemId) {
             R.id.nav_home -> changeView(HomeFragment::class.java)
             R.id.nav_contacts -> changeView(ContactsFragment::class.java)
-            R.id.nav_alarm -> doNothing //TODO not implemented
+            R.id.nav_alarm -> goToActivity(AlarmActivity::class.java)
             R.id.nav_settings -> doNothing //TODO not implemented
 
             R.id.nav_call -> changeView(CallFragment::class.java)
@@ -104,6 +106,12 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
                 Manifest.permission.READ_PHONE_STATE
             )
         )
+
+    private fun goToActivity(activityClass: Class<*>){
+        with(Intent(this, activityClass)){
+            startActivity(this)
+        }
+    }
 
     private fun changeView(fragmentClass: Class<*>, keepInBackStack: Boolean = true) {
         val newFragment =
