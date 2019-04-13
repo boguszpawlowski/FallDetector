@@ -1,5 +1,7 @@
 package bogusz.com.service.di
 
+import bogusz.com.service.alarm.AlarmService
+import bogusz.com.service.alarm.IAlarmService
 import bogusz.com.service.connectivity.CallService
 import bogusz.com.service.connectivity.ICallService
 import bogusz.com.service.connectivity.ISmsService
@@ -12,10 +14,14 @@ import javax.inject.Singleton
 abstract class ConnectivityServiceModule{
 
     @Binds
-    @Singleton
+    @AppScope
+    abstract fun bindAlarmService(alarmService: AlarmService): IAlarmService
+
+    @Binds
+    @AppScope
     abstract fun bindSmsService(smsService: SmsService): ISmsService
 
     @Binds
-    @Singleton
+    @AppScope
     abstract fun bindCallService(callService: CallService): ICallService
 }

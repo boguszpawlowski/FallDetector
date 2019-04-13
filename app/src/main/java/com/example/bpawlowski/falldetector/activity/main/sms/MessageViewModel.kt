@@ -1,7 +1,7 @@
 package com.example.bpawlowski.falldetector.activity.main.sms
 
 import android.content.Context
-import bogusz.com.service.connectivity.SmsService
+import bogusz.com.service.connectivity.ISmsService
 import bogusz.com.service.database.repository.ContactRepository
 import bogusz.com.service.location.ILocationProvider
 import bogusz.com.service.model.Contact
@@ -15,7 +15,7 @@ class MessageViewModel @Inject constructor(
     private val contactRepository: ContactRepository,
     private val schedulerProvider: ISchedulerProvider,
     private val locationProvider: ILocationProvider,
-    private val smsService: SmsService,
+    private val smsService: ISmsService,
     private val context: Context
 ) : BaseViewModel() {
 

@@ -10,6 +10,10 @@ class AlarmActivity : BaseActivity<AlarmViewModel, ActivityAlarmBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        binding.btnAlarm.setOnClickListener {
+            viewModel.raiseAlarm()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

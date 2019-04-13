@@ -1,16 +1,17 @@
 package com.example.bpawlowski.falldetector.activity.main.call
 
 import android.content.Context
-import com.example.bpawlowski.falldetector.activity.base.activity.BaseViewModel
-import com.example.bpawlowski.falldetector.util.callNumber
+import bogusz.com.service.connectivity.ICallService
 import bogusz.com.service.database.repository.ContactRepository
 import bogusz.com.service.model.Contact
 import bogusz.com.service.rx.ISchedulerProvider
+import com.example.bpawlowski.falldetector.activity.base.activity.BaseViewModel
 import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
 class CallViewModel @Inject constructor(
     private val contactRepository: ContactRepository,
+    private val callService: ICallService,
     private val schedulerProvider: ISchedulerProvider
 ) : BaseViewModel() {
 
@@ -33,5 +34,5 @@ class CallViewModel @Inject constructor(
         )
     }
 
-    fun callContact(context: Context, contact: Contact) = callNumber(context, contact.mobile)
+    fun callContact(context: Context, contact: Contact) = callService.call(context, contact)
 }
