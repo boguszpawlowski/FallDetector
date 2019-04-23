@@ -21,10 +21,10 @@ class AlarmViewModel @Inject constructor(
             locationsProvider.getLastKnownLocation()
                 .observeOn(schedulerProvider.IO)
                 .toFlowable()
-                .zipWith(contactRepository.getAllContacts()){location, list -> location to list }
+                .zipWith(contactRepository.getAllContacts()) { location, list -> location to list }
                 .subscribe(
-                    {pair -> alarmService.raiseAlarm(pair.second, pair.first)},
-                    { Log.e(TAG, it.message, it)}
+                    { pair -> alarmService.raiseAlarm(pair.second, pair.first) },
+                    { Log.e(TAG, it.message, it) }
                 )
         )
     }

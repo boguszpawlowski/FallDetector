@@ -17,7 +17,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:background="#00000000"
+                android:background="?attr/selectableItemBackground"
                 android:src="@drawable/icon_alarm_100"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
