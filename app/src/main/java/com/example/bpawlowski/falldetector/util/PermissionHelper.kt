@@ -15,35 +15,32 @@ fun getPermissions(activity: Activity, permissions: List<String>) {
         .withPermissions(permissions)
         .withListener(getListener())
         .check()
+}
 
-}//TODO permissions
-
-fun checkPermission(activity: Activity, permission: String, onGranted: () -> Unit) {
+fun checkPermission(activity: Activity, permission: String, onGranted: () -> Unit, onDenied: () -> Unit = {}) {
     Dexter.withActivity(activity)
         .withPermission(permission)
-        .withListener(object : PermissionListener{
+        .withListener(object : PermissionListener {
             override fun onPermissionGranted(response: PermissionGrantedResponse?) {
                 onGranted.invoke()
             }
-            override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken?){
+
+            override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken?) {
                 doNothing
             }
+
             override fun onPermissionDenied(response: PermissionDeniedResponse?) {
-                doNothing
+                onDenied.invoke()
             }
-        })
-        .check()
+        }).check()
 }
 
-private fun getListener(): MultiplePermissionsListener = object: MultiplePermissionsListener{
-        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+private fun getListener(): MultiplePermissionsListener = object : MultiplePermissionsListener {
+    override fun onPermissionsChecked(report: MultiplePermissionsReport?) {}
 
-        }
-
-        override fun onPermissionRationaleShouldBeShown(
-            permissions: MutableList<PermissionRequest>?,
-            token: PermissionToken?
-        ) {
-
-        }
+    override fun onPermissionRationaleShouldBeShown(
+        permissions: MutableList<PermissionRequest>?,
+        token: PermissionToken?
+    ) {
     }
+}

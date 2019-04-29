@@ -15,6 +15,4 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
         isLoading.set(state is MainScreenState.LoadingState)
         stateSubject.onNext(state)
     }
-
-    private val TAG = MainViewModel::class.java.simpleName
 }

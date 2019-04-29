@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import java.lang.NullPointerException
 
-abstract class AbstractViewHolder<out B: ViewDataBinding, in D>(view: View): RecyclerView.ViewHolder(view){
+abstract class BaseViewHolder<out B: ViewDataBinding, in D>(view: View): RecyclerView.ViewHolder(view){
 
     val binding: B = DataBindingUtil.bind(view) ?: throw NullPointerException("no binding")
 
@@ -18,5 +18,8 @@ abstract class AbstractViewHolder<out B: ViewDataBinding, in D>(view: View): Rec
         binding.executePendingBindings()
     }
 
+    /**
+     * for additional action when binding
+     */
     abstract fun onBind(data: D)
 }

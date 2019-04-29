@@ -3,15 +3,20 @@ package com.example.bpawlowski.falldetector.activity.main.contacts
 import android.annotation.SuppressLint
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
+import bogusz.com.service.database.repository.ContactRepository
+import bogusz.com.service.rx.SchedulerProvider
 import com.example.bpawlowski.falldetector.activity.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.util.validate
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
 @SuppressLint("CheckResult")
-class FormDialogViewModel @Inject constructor() : BaseViewModel() {
+class FormDialogViewModel @Inject constructor(
+    private val contactsRepository: ContactRepository,
+    private val schedulerProvider: SchedulerProvider
+) : BaseViewModel() {
 
     val dataValid = ObservableBoolean(false)
     val nameError = ObservableField<String>()
@@ -25,12 +30,16 @@ class FormDialogViewModel @Inject constructor() : BaseViewModel() {
         initValidator()
     }
 
+    fun checkIfIceExists(): Single<Boolean> =
+        contactsRepository.isIceContactExisting()
+            .observeOn(schedulerProvider.MAIN)
+
     private fun initValidator() {
         disposable.add(
             Observables.combineLatest(nameValidator(), mobileValidator(), emailValidator()) { name, mobile, email ->
                 name && mobile && email
             }.distinctUntilChanged()
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(schedulerProvider.MAIN)
                 .subscribe { dataValid.set(it) }
         )
     }
@@ -41,7 +50,7 @@ class FormDialogViewModel @Inject constructor() : BaseViewModel() {
         }
 
     private fun emailValidator() =
-        emailSubject.validate( emailError, "Email not valid!") {
+        emailSubject.validate(emailError, "Email not valid!") {
             it.matches(emailRegex) || it.isEmpty()
         }
 
@@ -51,6 +60,5 @@ class FormDialogViewModel @Inject constructor() : BaseViewModel() {
     companion object {
         private val emailRegex =
             Regex("(?:[a-z0-9!#\$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#\$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)])")
-        private val TAG = FormDialogViewModel::class.java.name
     }
 }

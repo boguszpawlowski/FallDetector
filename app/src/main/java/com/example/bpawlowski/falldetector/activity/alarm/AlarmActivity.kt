@@ -23,9 +23,5 @@ class AlarmActivity : BaseActivity<AlarmViewModel, ActivityAlarmBinding>() {
 
     override fun getViewModelClass() = AlarmViewModel::class.java
 
-    override fun bindViewModel() {
-        binding.viewModel = viewModel
-    }
-
     override fun getLayoutID() = R.layout.activity_alarm
 }

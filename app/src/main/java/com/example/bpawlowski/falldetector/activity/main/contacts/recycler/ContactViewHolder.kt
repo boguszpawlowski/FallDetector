@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.Toast
 import com.example.bpawlowski.falldetector.BR
 import com.example.bpawlowski.falldetector.databinding.ContactItemBinding
-import com.example.bpawlowski.falldetector.activity.base.recycler.AbstractViewHolder
+import com.example.bpawlowski.falldetector.activity.base.recycler.BaseViewHolder
 import com.example.bpawlowski.falldetector.activity.base.recycler.ItemTouchHelperViewHolder
 import bogusz.com.service.model.Contact
 import bogusz.com.service.model.UserPriority
@@ -14,7 +14,7 @@ import bogusz.com.service.model.UserPriority
 class ContactViewHolder(
     view: View,
     private val context: Context?
-) : AbstractViewHolder<ContactItemBinding, Contact>(view), ItemTouchHelperViewHolder {
+) : BaseViewHolder<ContactItemBinding, Contact>(view), ItemTouchHelperViewHolder {
     override fun bindingId(): Int = BR.contact
 
     override fun onBind(data: Contact) {
@@ -32,6 +32,4 @@ class ContactViewHolder(
     override fun onItemSelected() = itemView.setBackgroundColor(Color.LTGRAY)
 
     override fun onItemClear() = itemView.setBackgroundColor(0)
-}
-
-//TODO generic binding
+} //TODO generic binding ?

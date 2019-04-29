@@ -1,7 +1,7 @@
 package bogusz.com.service.di
 
-import bogusz.com.service.rx.ISchedulerProvider
 import bogusz.com.service.rx.SchedulerProvider
+import bogusz.com.service.rx.SchedulerProviderImpl
 import dagger.Binds
 import dagger.Module
 
@@ -9,5 +9,5 @@ import dagger.Module
 abstract class RxModule {
     @Binds
     @AppScope
-    abstract fun bindSchedulerProvider(schedulerProvider: SchedulerProvider): ISchedulerProvider
+    internal abstract fun bindSchedulerProvider(schedulerProvider: SchedulerProviderImpl): SchedulerProvider
 }

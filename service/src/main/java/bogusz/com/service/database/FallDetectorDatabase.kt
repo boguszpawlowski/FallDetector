@@ -14,7 +14,7 @@ import bogusz.com.service.model.UserPriorityConverter
     version = 1
 )
 @TypeConverters(UserPriorityConverter::class)
-abstract class FallDetectorDatabase : RoomDatabase() {
+internal abstract class FallDetectorDatabase : RoomDatabase() {
 
     abstract fun contactDao(): ContactDao
 }

@@ -1,16 +1,16 @@
 package com.example.bpawlowski.falldetector.activity.main.contacts
 
+import bogusz.com.service.database.repository.ContactRepository
+import bogusz.com.service.model.Contact
+import bogusz.com.service.rx.SchedulerProvider
 import com.example.bpawlowski.falldetector.activity.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.util.doNothing
-import bogusz.com.service.database.repository.IContactRepository
-import bogusz.com.service.model.Contact
-import bogusz.com.service.rx.ISchedulerProvider
 import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
 class ContactsViewModel @Inject constructor(
-    private val contactsRepository: IContactRepository,
-    private val schedulerProvider: ISchedulerProvider
+    private val contactsRepository: ContactRepository,
+    private val schedulerProvider: SchedulerProvider
 ) : BaseViewModel() {
 
     val contactSubject = BehaviorSubject.create<List<Contact>>()
@@ -44,17 +44,12 @@ class ContactsViewModel @Inject constructor(
 
     fun addContact(contact: Contact) {
         disposable.add(
-            contactsRepository.isIceContactExisting(contact)
-                .flatMap { contactsRepository.addContact(contact) }
+            contactsRepository.addContact(contact)
                 .observeOn(schedulerProvider.MAIN)
                 .subscribe(
                     { doNothing },
                     { contactSubject::onError }
                 )
         )
-    }
-
-    companion object {
-        val TAG = ContactsViewModel::class.java.simpleName
     }
 }

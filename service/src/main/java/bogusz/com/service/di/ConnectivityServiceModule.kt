@@ -1,27 +1,26 @@
 package bogusz.com.service.di
 
+import bogusz.com.service.alarm.AlarmServiceImpl
 import bogusz.com.service.alarm.AlarmService
-import bogusz.com.service.alarm.IAlarmService
+import bogusz.com.service.connectivity.CallServiceImpl
 import bogusz.com.service.connectivity.CallService
-import bogusz.com.service.connectivity.ICallService
-import bogusz.com.service.connectivity.ISmsService
 import bogusz.com.service.connectivity.SmsService
+import bogusz.com.service.connectivity.SmsServiceImpl
 import dagger.Binds
 import dagger.Module
-import javax.inject.Singleton
 
 @Module
 abstract class ConnectivityServiceModule{
 
     @Binds
     @AppScope
-    abstract fun bindAlarmService(alarmService: AlarmService): IAlarmService
+    internal abstract fun bindAlarmService(alarmService: AlarmServiceImpl): AlarmService
 
     @Binds
     @AppScope
-    abstract fun bindSmsService(smsService: SmsService): ISmsService
+    internal abstract fun bindSmsService(smsService: SmsServiceImpl): SmsService
 
     @Binds
     @AppScope
-    abstract fun bindCallService(callService: CallService): ICallService
+    internal abstract fun bindCallService(callService: CallServiceImpl): CallService
 }

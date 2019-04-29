@@ -19,6 +19,7 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         binding.recyclerContact.apply {
             adapter = ContactViewAdapter(
                 context = requireContext(),
@@ -27,7 +28,7 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
         }
 
         binding.fab.setOnClickListener {
-            val fragmentTransaction = fragmentManager?.beginTransaction()
+            val fragmentTransaction = childFragmentManager.beginTransaction()
             with(FormDialogFragment()) {
                 show(fragmentTransaction, "FormDialogFragment")
             }
@@ -44,13 +45,13 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
 
     @SuppressLint("CheckResult")
     override fun onResume() {
-
         super.onResume()
+
         disposable.add(
             viewModel.contactSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { (binding.recyclerContact.adapter as? ContactViewAdapter)?.data = it.toMutableList() },
+                    { (binding.recyclerContact.adapter as? ContactViewAdapter)?.updateData(it.toMutableList()) },
                     { parentViewModel.changeState(MainScreenState.ErrorState(it)) }
                 )
         )
@@ -61,15 +62,4 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
     override fun getLayoutID() = R.layout.fragment_contacts
 
     override fun getParentViewModeClass() = MainViewModel::class.java
-
-    override fun bindViewModel() {
-        binding.viewModel = viewModel
-    }
-
-    companion object {
-        val TAG = ContactsFragment::class.java.simpleName
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) = ContactsFragment()
-    }
 }

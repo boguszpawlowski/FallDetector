@@ -2,13 +2,12 @@ package bogusz.com.service.database.dao
 
 import androidx.room.*
 import bogusz.com.service.model.Contact
-import bogusz.com.service.model.UserPriority
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 
 @Dao
-interface ContactDao {
+internal interface ContactDao {
 
     @Query("SELECT * FROM contact")
     fun getAll(): Flowable<List<Contact>>
@@ -28,6 +27,6 @@ interface ContactDao {
     @Query(value = "UPDATE contact SET email=:email WHERE id like :id")
     fun updateEmail(id: Long, email: String): Completable
 
-    @Query(value = "SELECT id FROM contact WHERE user_priority = :priority")
-    fun findIceContact(priority: UserPriority? = UserPriority.PRIORITY_ICE): Single<Long>
+    @Query(value = "SELECT id FROM contact WHERE user_priority = 1")
+    fun findIceContact(): Single<Long>
 }

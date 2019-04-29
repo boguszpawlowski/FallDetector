@@ -28,7 +28,7 @@ class MessageFragment : BaseFragment<MessageViewModel, MainViewModel, FragmentMe
         disposable.add(
             viewModel.contactsSubject
                 .subscribe(
-                    { (binding.recyclerContact.adapter as? ContactViewAdapter)?.data = it.toMutableList() },
+                    { (binding.recyclerContact.adapter as? ContactViewAdapter)?.updateData(it.toMutableList()) },
                     { parentViewModel.changeState(MainScreenState.ErrorState(it)) }
                 )
 
@@ -40,8 +40,4 @@ class MessageFragment : BaseFragment<MessageViewModel, MainViewModel, FragmentMe
     override fun getLayoutID() = R.layout.fragment_message
 
     override fun getParentViewModeClass() = MainViewModel::class.java
-
-    override fun bindViewModel() {
-        binding.viewModel = viewModel
-    }
 }

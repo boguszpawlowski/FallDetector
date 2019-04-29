@@ -2,8 +2,11 @@ package com.example.bpawlowski.falldetector.activity.main
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -24,11 +27,18 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_navigation.*
+import timber.log.Timber
 
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var fragmentManager: FragmentManager
+
+    override fun getViewModelClass(): Class<MainViewModel> = MainViewModel::class.java
+
+    override fun getLayoutID(): Int = R.layout.activity_main
+
+    override fun keepInBackStack(): Boolean = true
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,17 +49,20 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         if (savedInstanceState == null) {
             changeView(HomeFragment::class.java, false)
         }
-        viewModel.stateSubject.subscribe {
-            when (it) {
-                is MainScreenState.ErrorState -> Snackbar.make(
-                    this.nav_view,
-                    it.error.message.orEmpty(),
-                    Snackbar.LENGTH_SHORT
-                ).show()
-                else -> {
+        disposable.add(
+            viewModel.stateSubject.subscribe {
+                when (it) {
+                    is MainScreenState.ErrorState -> {
+                        Snackbar.make(
+                            this.nav_view,
+                            it.error.message.orEmpty(),
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                        Timber.e(it.error)
+                    }
+                    else -> doNothing
                 }
-            }
-        }
+            })
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -63,6 +76,8 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     }
 
     override fun onBackPressed() {
+        binding.navView.checkedItem?.isChecked = false
+
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
@@ -91,8 +106,10 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
             R.id.nav_call -> changeView(CallFragment::class.java)
             R.id.nav_sms -> changeView(MessageFragment::class.java)
         }
-        item.isChecked = true
-        drawer_layout.closeDrawer(GravityCompat.START)
+        Handler(Looper.getMainLooper()).postDelayed({
+            item.isChecked = true
+            drawer_layout.closeDrawer(GravityCompat.START)
+        }, CLOSE_DRAWER_DELAY)
         return true
     }
 
@@ -107,8 +124,8 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
             )
         )
 
-    private fun goToActivity(activityClass: Class<*>){
-        with(Intent(this, activityClass)){
+    private fun goToActivity(activityClass: Class<*>) {
+        with(Intent(this, activityClass)) {
             startActivity(this)
         }
     }
@@ -116,25 +133,31 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     private fun changeView(fragmentClass: Class<*>, keepInBackStack: Boolean = true) {
         val newFragment =
             fragmentManager.findFragmentByTag(fragmentClass.canonicalName) ?: instantiateFragment(fragmentClass)
-        val transaction = fragmentManager.beginTransaction()
-        if (keepInBackStack) {
-            transaction.addToBackStack(fragmentClass.canonicalName)
+
+        fragmentManager.popBackStack(FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+        fragmentManager.beginTransaction().run {
+            replace(R.id.fragment_container, newFragment, fragmentClass.canonicalName)
+            if (keepInBackStack) addToBackStack(FRAGMENT_TAG)
+            commit()
         }
-        transaction.replace(R.id.fragment_container, newFragment)
-        transaction.commit()
         fragmentManager.executePendingTransactions()
     }
 
     private fun instantiateFragment(fragmentClass: Class<*>) =
         Fragment.instantiate(this, fragmentClass.canonicalName)
 
-    override fun getViewModelClass(): Class<MainViewModel> = MainViewModel::class.java
+    override fun onNavigateUp(): Boolean {
+        binding.navView.menu.getItem(0).isChecked = true
 
-    override fun getLayoutID(): Int = R.layout.activity_main
+        return super.onNavigateUp()
+    }
 
-    override fun keepInBackStack(): Boolean = true
+    companion object {
+        private const val CLOSE_DRAWER_DELAY = 200L
+        private const val FRAGMENT_TAG = "fragment_tag"
 
-    override fun bindViewModel() {
-        binding.viewModel = viewModel
+        @JvmStatic
+        fun getIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
 }

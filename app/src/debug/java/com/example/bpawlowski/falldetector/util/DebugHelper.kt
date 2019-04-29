@@ -3,8 +3,9 @@ package com.example.bpawlowski.falldetector.util
 import android.app.Application
 import android.util.Log
 import com.facebook.stetho.Stetho
+import timber.log.Timber
 
-fun initializeStetho(app: Application){
+fun initializeDebugTools(app: Application){
     Stetho.initializeWithDefaults(app)
-    Log.d("StethoHelper","Initializing Stetho")
+    Timber.plant(Timber.DebugTree())
 }

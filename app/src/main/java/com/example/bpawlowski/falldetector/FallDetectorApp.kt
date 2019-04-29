@@ -2,8 +2,8 @@ package com.example.bpawlowski.falldetector
 
 import android.app.Activity
 import android.app.Application
-import com.example.bpawlowski.falldetector.di.component.DaggerIAppComponent
-import com.example.bpawlowski.falldetector.util.initializeStetho
+import com.example.bpawlowski.falldetector.di.component.DaggerAppComponent
+import com.example.bpawlowski.falldetector.util.initializeDebugTools
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -17,12 +17,12 @@ class FallDetectorApp : Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
-        DaggerIAppComponent.builder()
+        DaggerAppComponent.builder()
             .application(this)
             .build()
             .inject(this)
 
-        initializeStetho(this)
+        initializeDebugTools(this)
     }
 
     override fun activityInjector(): AndroidInjector<Activity> = activityInjector

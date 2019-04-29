@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.example.bpawlowski.falldetector.BR
 import com.example.bpawlowski.falldetector.activity.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.activity.base.activity.ViewModelFactory
 import dagger.android.support.AndroidSupportInjection
@@ -37,17 +38,19 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, getLayoutID(), container, false)
-        bindViewModel()
+        binding.setVariable(BR.viewModel, viewModel)
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
+
         viewModel.onResume()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
         disposable.dispose()
     }
 
@@ -56,6 +59,4 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
     abstract fun getLayoutID(): Int
 
     abstract fun getParentViewModeClass(): Class<SVM>
-
-    abstract fun bindViewModel()
 }

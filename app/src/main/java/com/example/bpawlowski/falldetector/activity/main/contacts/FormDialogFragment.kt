@@ -1,5 +1,6 @@
 package com.example.bpawlowski.falldetector.activity.main.contacts
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -9,17 +10,21 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
-import com.example.bpawlowski.falldetector.R
-import com.example.bpawlowski.falldetector.databinding.DialogFormBinding
-import com.example.bpawlowski.falldetector.activity.base.activity.ViewModelFactory
 import bogusz.com.service.model.Contact
 import bogusz.com.service.model.UserPriority
+import com.example.bpawlowski.falldetector.R
+import com.example.bpawlowski.falldetector.activity.base.activity.ViewModelFactory
+import com.example.bpawlowski.falldetector.databinding.DialogFormBinding
+import com.example.bpawlowski.falldetector.util.toast
 import com.example.bpawlowski.falldetector.util.value
 import dagger.android.support.AndroidSupportInjection
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.dialog_form.*
 import javax.inject.Inject
 
 class FormDialogFragment : DialogFragment() {
+
+    private lateinit var parentViewModel: ContactsViewModel
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -28,7 +33,7 @@ class FormDialogFragment : DialogFragment() {
 
     lateinit var viewModel: FormDialogViewModel
 
-    lateinit var parentViewModel: ContactsViewModel
+    private val disposable = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +60,12 @@ class FormDialogFragment : DialogFragment() {
         initListeners()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        disposable.dispose()
+    }
+
     private fun initListeners() {
         binding.btnApply.setOnClickListener {
             val name = binding.txtContactName.value
@@ -68,12 +79,22 @@ class FormDialogFragment : DialogFragment() {
                 email = email,
                 priority = priority
             )
-            parentViewModel.addContact(contact)
-            dismiss()
+            tryToAddContact(contact)
         }
         binding.btnCancel.setOnClickListener {
             dismiss()
         }
     }
-    //TODO check ICE, maybe add base dialog fragment
+
+    @SuppressLint("CheckResult")
+    private fun tryToAddContact(contact: Contact) {
+        disposable.add(viewModel.checkIfIceExists().subscribe { exists -> //TODO remove if from here and replace toast with snackbar
+            if (exists && contact.priority == UserPriority.PRIORITY_ICE) {
+                requireContext().toast("Ice contact already exists")
+            } else {
+                parentViewModel.addContact(contact)
+                dismiss()
+            }
+        })
+    }
 }

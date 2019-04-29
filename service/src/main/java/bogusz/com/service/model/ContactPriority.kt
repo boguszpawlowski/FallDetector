@@ -5,10 +5,9 @@ import androidx.room.TypeConverter
 enum class UserPriority(val priority: Int) {
     PRIORITY_ICE(1),
     PRIORITY_NORMAL(0);
-
 }
 
-object UserPriorityConverter {
+internal object UserPriorityConverter {
     @TypeConverter
     @JvmStatic
     fun toPriority(priority: Int): UserPriority {

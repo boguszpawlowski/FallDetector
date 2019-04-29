@@ -8,7 +8,7 @@ import android.renderscript.*
 import android.view.View
 
 
-fun getBitmapFromView(view: View?): Bitmap?{
+fun getBitmapFromView(view: View?): Bitmap? {
     view?.let {
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val c = Canvas(bitmap)
@@ -74,10 +74,8 @@ class RSBlurProcessor(private val rs: RenderScript) {
         return bitmap
     }
 
-    companion object {
 
-        @SuppressLint("ObsoleteSdkInt")
-        private val IS_BLUR_SUPPORTED = Build.VERSION.SDK_INT >= 17
-        private val MAX_RADIUS = 25
-    }
+    @SuppressLint("ObsoleteSdkInt")
+    private val IS_BLUR_SUPPORTED = Build.VERSION.SDK_INT >= 17
+    private val MAX_RADIUS = 25
 }

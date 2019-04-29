@@ -1,19 +1,19 @@
 package com.example.bpawlowski.falldetector.activity.alarm
 
-import android.util.Log
-import bogusz.com.service.alarm.IAlarmService
-import bogusz.com.service.database.repository.IContactRepository
-import bogusz.com.service.location.ILocationProvider
-import bogusz.com.service.rx.ISchedulerProvider
+import bogusz.com.service.alarm.AlarmService
+import bogusz.com.service.database.repository.ContactRepository
+import bogusz.com.service.location.LocationProvider
+import bogusz.com.service.rx.SchedulerProvider
 import com.example.bpawlowski.falldetector.activity.base.activity.BaseViewModel
 import io.reactivex.rxkotlin.zipWith
+import timber.log.Timber
 import javax.inject.Inject
 
 class AlarmViewModel @Inject constructor(
-    private val locationsProvider: ILocationProvider,
-    private val schedulerProvider: ISchedulerProvider,
-    private val contactRepository: IContactRepository,
-    private val alarmService: IAlarmService
+    private val locationsProvider: LocationProvider,
+    private val schedulerProvider: SchedulerProvider,
+    private val contactRepository: ContactRepository,
+    private val alarmService: AlarmService
 ) : BaseViewModel() {
 
     fun raiseAlarm() {
@@ -24,12 +24,8 @@ class AlarmViewModel @Inject constructor(
                 .zipWith(contactRepository.getAllContacts()) { location, list -> location to list }
                 .subscribe(
                     { pair -> alarmService.raiseAlarm(pair.second, pair.first) },
-                    { Log.e(TAG, it.message, it) }
+                    { Timber.e(it) }
                 )
         )
-    }
-
-    companion object {
-        private val TAG = AlarmViewModel::class.java.simpleName
     }
 }
