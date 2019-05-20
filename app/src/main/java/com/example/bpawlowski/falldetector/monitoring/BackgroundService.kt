@@ -1,14 +1,14 @@
 package com.example.bpawlowski.falldetector.monitoring
 
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.Observer
-import bogusz.com.service.accelometer.AccelerometerLiveData
-import bogusz.com.service.model.AccelerometerEvent
+import bogusz.com.service.accelometer.AccelerometerFlowable
+import bogusz.com.service.rx.SchedulerProvider
 import com.example.bpawlowski.falldetector.FallDetectorApp
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.activity.main.MainActivity
@@ -19,17 +19,15 @@ import com.example.bpawlowski.falldetector.util.notificationManager
 import com.example.bpawlowski.falldetector.util.toast
 import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
+import javax.inject.Inject
 
 class BackgroundService : Service() {
 
-    private val accelerometerLiveData: AccelerometerLiveData by lazy {
-        AccelerometerLiveData(applicationContext)
-    }
+    @Inject
+    lateinit var schedulerProvider: SchedulerProvider
 
-    private val accelerometerEventObserver: Observer<AccelerometerEvent> by lazy {
-        Observer<AccelerometerEvent> {
-            Timber.e("working: ${it.timestamp} ${it.x} ")
-        }
+    private val accelerometerFlowable: AccelerometerFlowable by lazy {
+        AccelerometerFlowable(applicationContext)
     }
 
     override fun onBind(intent: Intent?) = null
@@ -60,7 +58,7 @@ class BackgroundService : Service() {
     override fun onDestroy() {
         super.onDestroy()
 
-        accelerometerLiveData.removeObserver(accelerometerEventObserver)
+        accelerometerFlowable.dispose()
     }
 
     private fun stopService() {
@@ -69,10 +67,13 @@ class BackgroundService : Service() {
         stopSelf()
     }
 
+    @SuppressLint("CheckResult")
     private fun startService() {
         toast("Started background service")
 
-        accelerometerLiveData.observeForever(accelerometerEventObserver)
+        accelerometerFlowable
+            .subscribeOn(schedulerProvider.COMPUTATION)
+            .subscribe { Timber.e("working: ${it.timestamp} ${it.x} ") }
     }
 
     @Suppress("DEPRECATION")
