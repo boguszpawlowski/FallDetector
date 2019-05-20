@@ -1,9 +1,9 @@
 package com.example.bpawlowski.falldetector.di.module
 
-import com.example.bpawlowski.falldetector.activity.alarm.AlarmActivity
-import com.example.bpawlowski.falldetector.activity.login.LoginActivity
-import com.example.bpawlowski.falldetector.activity.main.MainActivity
-import com.example.bpawlowski.falldetector.activity.main.di.MainActivityModule
+import com.example.bpawlowski.falldetector.ui.alarm.AlarmActivity
+import com.example.bpawlowski.falldetector.ui.login.LoginActivity
+import com.example.bpawlowski.falldetector.ui.main.MainActivity
+import com.example.bpawlowski.falldetector.ui.main.di.MainActivityModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

@@ -2,14 +2,14 @@ package com.example.bpawlowski.falldetector.di.module
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.bpawlowski.falldetector.activity.alarm.AlarmViewModel
-import com.example.bpawlowski.falldetector.activity.base.activity.ViewModelFactory
-import com.example.bpawlowski.falldetector.activity.main.MainViewModel
-import com.example.bpawlowski.falldetector.activity.main.call.CallViewModel
-import com.example.bpawlowski.falldetector.activity.main.contacts.ContactsViewModel
-import com.example.bpawlowski.falldetector.activity.main.contacts.FormDialogViewModel
-import com.example.bpawlowski.falldetector.activity.main.home.HomeViewModel
-import com.example.bpawlowski.falldetector.activity.main.sms.MessageViewModel
+import com.example.bpawlowski.falldetector.ui.alarm.AlarmViewModel
+import com.example.bpawlowski.falldetector.ui.base.activity.ViewModelFactory
+import com.example.bpawlowski.falldetector.ui.main.MainViewModel
+import com.example.bpawlowski.falldetector.ui.main.call.CallViewModel
+import com.example.bpawlowski.falldetector.ui.main.contacts.ContactsViewModel
+import com.example.bpawlowski.falldetector.ui.main.contacts.FormDialogViewModel
+import com.example.bpawlowski.falldetector.ui.main.home.HomeViewModel
+import com.example.bpawlowski.falldetector.ui.main.sms.MessageViewModel
 import com.example.bpawlowski.falldetector.di.annotation.ViewModelKey
 import dagger.Binds
 import dagger.Module

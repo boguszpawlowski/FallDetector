@@ -2,7 +2,7 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="viewModel"
-                  type="com.example.bpawlowski.falldetector.activity.main.contacts.FormDialogViewModel"/>
+                  type="com.example.bpawlowski.falldetector.ui.main.contacts.FormDialogViewModel"/>
     </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="vertical"

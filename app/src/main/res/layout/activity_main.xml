@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="viewModel"
-                type="com.example.bpawlowski.falldetector.activity.main.MainViewModel"/>
+                type="com.example.bpawlowski.falldetector.ui.main.MainViewModel"/>
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout

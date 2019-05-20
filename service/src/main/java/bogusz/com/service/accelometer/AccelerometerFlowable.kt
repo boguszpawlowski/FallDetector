@@ -7,16 +7,26 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import bogusz.com.service.model.AccelerometerEvent
 import bogusz.com.service.util.accelerometer
+import bogusz.com.service.util.doNothing
 import bogusz.com.service.util.sensorManager
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import io.reactivex.disposables.Disposable
+import io.reactivex.FlowableSubscriber
+import io.reactivex.exceptions.MissingBackpressureException
+import io.reactivex.internal.subscriptions.SubscriptionHelper
+import io.reactivex.internal.util.BackpressureHelper
 import org.reactivestreams.Subscriber
+import org.reactivestreams.Subscription
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.atomic.AtomicReference
 
 class AccelerometerFlowable(
-    context: Context
-) : Flowable<AccelerometerEvent>(), SensorEventListener, Disposable {
+    context: Context,
+    private val backpressureStrategy: BackpressureStrategy = BackpressureStrategy.DROP
+) : Flowable<AccelerometerEvent>(), SensorEventListener {
 
-    private var accelerometerSubscriber: Subscriber<in AccelerometerEvent>? = null
+    private val subscribers = ConcurrentHashMap<Int, Subscriber<in AccelerometerEvent>>()
 
     private val sensorManager: SensorManager by lazy {
         context.sensorManager
@@ -26,35 +36,89 @@ class AccelerometerFlowable(
         sensorManager.accelerometer
     }
 
-    override fun subscribeActual(subscriber: Subscriber<in AccelerometerEvent>?) {
-        subscriber?.let {
-            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
-            accelerometerSubscriber = it
+    override fun subscribeActual(s: Subscriber<in AccelerometerEvent>?) {
+        s?.let {
+            val subscriber = AccelerometerFlowableSubscriber(it, backpressureStrategy ,this)
+            if (subscribers.isEmpty()) {
+                sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
+            }
+            subscribers[subscriber.hashCode()] = subscriber
+            subscriber.onSubscribe(subscriber)
         }
     }
 
-    override fun dispose() {
-        if (isDisposed.not()) {
-            accelerometerSubscriber = null
+    private fun removeSubscriber(subscriber: AccelerometerFlowableSubscriber) {
+        subscribers.remove(subscriber.hashCode())
+        if (subscribers.isEmpty()) {
             sensorManager.unregisterListener(this, accelerometer)
         }
     }
 
-    override fun isDisposed() = accelerometerSubscriber == null
+    private fun clear() {
+        subscribers.clear()
+        sensorManager.unregisterListener(this, accelerometer)
+    }
 
     override fun onSensorChanged(event: SensorEvent?) {
         try {
             if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
-
                 val data = AccelerometerEvent(event.timestamp, event.values[0], event.values[1], event.values[2])
-                accelerometerSubscriber?.onNext(data)
+                subscribers.forEach { _, subscriber -> subscriber.onNext(data) }
             }
         } catch (e: Exception) {
-            accelerometerSubscriber?.onError(e)
-            dispose()
+            subscribers.forEach { _, subscriber -> subscriber.onError(e) }
+            clear()
         }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+    }
+
+    private inner class AccelerometerFlowableSubscriber(
+        private val downstream: Subscriber<in AccelerometerEvent>,
+        private val backpressureStrategy: BackpressureStrategy,
+        private var other: AccelerometerFlowable
+    ) : AtomicReference<Subscription>(), FlowableSubscriber<AccelerometerEvent>, Subscription {
+
+        private val requested: AtomicLong = AtomicLong()
+
+        override fun onNext(t: AccelerometerEvent) {
+            if (requested.get() != 0L) {
+                BackpressureHelper.produced(requested, 1)
+                downstream.onNext(t)
+            } else {
+                onOverflow()
+            }
+        }
+
+        override fun onError(t: Throwable) {
+            downstream.onError(t)
+        }
+
+        override fun onComplete() {
+            downstream.onComplete()
+        }
+
+        override fun onSubscribe(s: Subscription) {
+            downstream.onSubscribe(s)
+        }
+
+        override fun request(n: Long) {
+            SubscriptionHelper.deferredRequest(this, requested, n)
+        }
+
+        override fun cancel() {
+            other.removeSubscriber(this)
+            SubscriptionHelper.cancel(this)
+        }
+
+        private fun onOverflow() {
+            when (backpressureStrategy) {
+                BackpressureStrategy.MISSING -> doNothing
+                BackpressureStrategy.ERROR -> throw MissingBackpressureException("create: could not emit value due to lack of requests")
+                BackpressureStrategy.DROP -> doNothing
+                else -> throw RuntimeException("Backpressure strategy not supported")
+            }
+        }
     }
 }

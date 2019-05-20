@@ -10,6 +10,8 @@ interface ContactRepository {
 
     fun getAllContacts(): Flowable<List<Contact>>
 
+    fun fetchAllContacts(): Single<List<Contact>>
+
     fun getContactByMobile(mobile: Int): Single<Contact>
 
     fun updateContactEmail(contact: Contact): Completable

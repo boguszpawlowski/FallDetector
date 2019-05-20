@@ -12,6 +12,9 @@ internal interface ContactDao {
     @Query("SELECT * FROM contact")
     fun getAll(): Flowable<List<Contact>>
 
+    @Query("SELECT * FROM contact")
+    fun fetchAll(): Single<List<Contact>>
+
     @Query("SELECT * FROM contact WHERE mobile LIKE :mobile")
     fun getContactByMobile(mobile: Int): Single<Contact>
 

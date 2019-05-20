@@ -37,6 +37,10 @@ internal class ContactRepositoryImpl @Inject constructor(
             .subscribeOn(schedulerProvider.IO)
     }
 
+    override fun fetchAllContacts(): Single<List<Contact>> =
+        contactDao.fetchAll()
+            .subscribeOn(schedulerProvider.IO)
+
     override fun removeContact(contact: Contact): Completable =
         contactDao.delete(contact)
             .subscribeOn(schedulerProvider.IO)

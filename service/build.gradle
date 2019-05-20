@@ -47,6 +47,9 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
 
+    //Timber
+    implementation "com.jakewharton.timber:timber:$timber_version"
+
     implementation "com.google.android.gms:play-services-location:16.0.0"
 
     testImplementation 'junit:junit:4.12'
