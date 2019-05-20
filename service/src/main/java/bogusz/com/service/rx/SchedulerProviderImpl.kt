@@ -5,7 +5,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-
 internal class SchedulerProviderImpl @Inject constructor() : SchedulerProvider {
     override val MAIN: Scheduler
         get() = AndroidSchedulers.mainThread()

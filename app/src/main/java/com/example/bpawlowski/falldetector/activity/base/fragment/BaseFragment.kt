@@ -38,6 +38,7 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, getLayoutID(), container, false)
+        binding.lifecycleOwner = this
         binding.setVariable(BR.viewModel, viewModel)
         return binding.root
     }

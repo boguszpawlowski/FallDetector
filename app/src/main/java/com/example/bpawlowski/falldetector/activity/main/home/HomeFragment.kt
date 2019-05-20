@@ -18,9 +18,11 @@ class HomeFragment : BaseFragment<HomeViewModel, MainViewModel, FragmentHomeBind
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        BackgroundService.isServiceRunningSubject
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { isServiceRunning.set(it) }
+        disposable.add(
+            BackgroundService.isServiceRunningSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { isServiceRunning.set(it) }
+        )
 
         binding.btnMonitor.setOnClickListener {
             if (isServiceRunning.get().not()) {

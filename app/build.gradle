@@ -42,7 +42,7 @@ dependencies {
     // Support
     implementation "androidx.recyclerview:recyclerview:$androidx_version"
     implementation "com.google.android.material:material:$androidx_version"
-    implementation "androidx.appcompat:appcompat:$androidx_version"
+    implementation "androidx.appcompat:appcompat:$androidx_appcompat_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
     implementation "androidx.cardview:cardview:$androidx_version"
 
@@ -71,7 +71,7 @@ dependencies {
 
     //Room
     implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
+    kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
 
     //RuntimePermissions
@@ -81,6 +81,9 @@ dependencies {
     implementation "com.facebook.stetho:stetho:$stetho_version"
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.2-alpha02'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha02'
+    androidTestImplementation 'androidx.test:runner:1.2.0-beta01'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-beta01'
+
+    //Leak Canary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-1'
 }

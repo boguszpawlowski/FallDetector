@@ -33,4 +33,5 @@
     <string name="notification_title">Monitoring Service</string>
     <string name="notification_message">App is monitoring your safety</string>
     <string name="ticker_text">Service toggled!</string>
+    <string name="service_button">Service button</string>
 </resources>
