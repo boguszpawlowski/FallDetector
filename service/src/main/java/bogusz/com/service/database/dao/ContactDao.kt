@@ -12,17 +12,17 @@ internal interface ContactDao {
     @Query("SELECT * FROM contact")
     fun getAll(): Flowable<List<Contact>>
 
+    @Query("SELECT * FROM contact WHERE id like :id")
+    fun getContactById(id: Long): Single<Contact>
+
     @Query("SELECT * FROM contact")
     fun fetchAll(): Single<List<Contact>>
 
     @Query("SELECT * FROM contact WHERE mobile LIKE :mobile")
     fun getContactByMobile(mobile: Int): Single<Contact>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insert(contact: Contact): Single<Long>
-
-    @Update
-    fun update(contact: Contact): Completable
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(contact: Contact): Completable
 
     @Delete
     fun delete(contact: Contact): Completable

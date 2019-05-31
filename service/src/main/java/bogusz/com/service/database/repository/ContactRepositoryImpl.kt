@@ -16,8 +16,12 @@ internal class ContactRepositoryImpl @Inject constructor(
 
     private val contactDao by lazy { databaseService.getContactDao() }
 
-    override fun addContact(contact: Contact): Single<Long> =
+    override fun addContact(contact: Contact): Completable =
         contactDao.insert(contact)
+            .subscribeOn(schedulerProvider.IO)
+
+    override fun getContact(id: Long): Single<Contact> =
+        contactDao.getContactById(id)
             .subscribeOn(schedulerProvider.IO)
 
     override fun getAllContacts(): Flowable<List<Contact>> =

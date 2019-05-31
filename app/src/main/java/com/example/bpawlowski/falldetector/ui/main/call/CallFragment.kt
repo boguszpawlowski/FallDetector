@@ -17,7 +17,6 @@ class CallFragment : BaseFragment<CallViewModel, MainViewModel, FragmentCallBind
 
         binding.recyclerContact.apply {
             adapter = ContactViewAdapter(
-                context = requireContext(),
                 viewType = R.layout.contact_item_call,
                 onClickListener = { contact ->
                     checkPermission(

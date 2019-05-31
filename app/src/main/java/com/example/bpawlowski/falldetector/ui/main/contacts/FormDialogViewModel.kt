@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import bogusz.com.service.database.repository.ContactRepository
+import bogusz.com.service.model.Contact
 import bogusz.com.service.rx.SchedulerProvider
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.util.validate
@@ -32,6 +33,10 @@ class FormDialogViewModel @Inject constructor(
 
     fun checkIfIceExists(): Single<Boolean> =
         contactsRepository.isIceContactExisting()
+            .observeOn(schedulerProvider.MAIN)
+
+    fun initEditingData(id: Long): Single<Contact> =
+        contactsRepository.getContact(id)
             .observeOn(schedulerProvider.MAIN)
 
     private fun initValidator() {

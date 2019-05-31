@@ -6,7 +6,9 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 
 interface ContactRepository {
-    fun addContact(contact: Contact): Single<Long>
+    fun addContact(contact: Contact): Completable
+
+    fun getContact(id: Long): Single<Contact>
 
     fun getAllContacts(): Flowable<List<Contact>>
 

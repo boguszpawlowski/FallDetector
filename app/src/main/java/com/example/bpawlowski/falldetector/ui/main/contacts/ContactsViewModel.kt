@@ -6,6 +6,7 @@ import bogusz.com.service.rx.SchedulerProvider
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.util.doNothing
 import io.reactivex.subjects.BehaviorSubject
+import timber.log.Timber
 import javax.inject.Inject
 
 class ContactsViewModel @Inject constructor(
@@ -36,18 +37,18 @@ class ContactsViewModel @Inject constructor(
             contactsRepository.removeContact(contact)
                 .observeOn(schedulerProvider.MAIN)
                 .subscribe(
-                    { doNothing },
+                    { Timber.i("Removed contact: $contact")  },
                     { contactSubject::onError }
                 )
         )
     }
 
-    fun addContact(contact: Contact) {
+    fun addContact(contact: Contact){
         disposable.add(
             contactsRepository.addContact(contact)
                 .observeOn(schedulerProvider.MAIN)
                 .subscribe(
-                    { doNothing },
+                    { Timber.i("Added contact: $contact") },
                     { contactSubject::onError }
                 )
         )
