@@ -13,16 +13,20 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Observer
+import bogusz.com.service.model.AppSettings
 import com.example.bpawlowski.falldetector.R
+import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
 import com.example.bpawlowski.falldetector.ui.alarm.AlarmActivity
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseActivity
 import com.example.bpawlowski.falldetector.ui.main.call.CallFragment
 import com.example.bpawlowski.falldetector.ui.main.contacts.ContactsFragment
 import com.example.bpawlowski.falldetector.ui.main.home.HomeFragment
+import com.example.bpawlowski.falldetector.ui.main.settings.SettingsFragment
 import com.example.bpawlowski.falldetector.ui.main.sms.MessageFragment
-import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
 import com.example.bpawlowski.falldetector.util.doNothing
 import com.example.bpawlowski.falldetector.util.getPermissions
+import com.example.bpawlowski.falldetector.util.screenTitles
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
@@ -32,7 +36,11 @@ import timber.log.Timber
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var fragmentManager: FragmentManager
+    private val appSettingsObserver: Observer<AppSettings> by lazy {
+        Observer<AppSettings> {appSettings ->
+            appSettings.let { updateApp(it) }
+        }
+    }
 
     override fun getViewModelClass(): Class<MainViewModel> = MainViewModel::class.java
 
@@ -45,7 +53,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
 
-        fragmentManager = supportFragmentManager
         if (savedInstanceState == null) {
             changeView(HomeFragment::class.java, false)
         }
@@ -92,7 +99,10 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 
     override fun onOptionsItemSelected(item: MenuItem) =
         when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_settings -> {
+                changeView(SettingsFragment::class.java)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
 
@@ -101,7 +111,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
             R.id.nav_home -> changeView(HomeFragment::class.java)
             R.id.nav_contacts -> changeView(ContactsFragment::class.java)
             R.id.nav_alarm -> goToActivity(AlarmActivity::class.java)
-            R.id.nav_settings -> doNothing //TODO not implemented
+            R.id.nav_settings -> changeView(SettingsFragment::class.java)
 
             R.id.nav_call -> changeView(CallFragment::class.java)
             R.id.nav_sms -> changeView(MessageFragment::class.java)
@@ -110,7 +120,12 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
             item.isChecked = true
             drawer_layout.closeDrawer(GravityCompat.START)
         }, CLOSE_DRAWER_DELAY)
+
         return true
+    }
+
+    private fun updateApp(appSettings: AppSettings){
+        //TODO change DARK mode, sensitivity etc.
     }
 
     private fun checkPermissions() =
@@ -132,16 +147,18 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 
     private fun changeView(fragmentClass: Class<*>, keepInBackStack: Boolean = true) {
         val newFragment =
-            fragmentManager.findFragmentByTag(fragmentClass.canonicalName) ?: instantiateFragment(fragmentClass)
+            supportFragmentManager.findFragmentByTag(fragmentClass.canonicalName) ?: instantiateFragment(fragmentClass)
 
-        fragmentManager.popBackStack(FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        supportFragmentManager.popBackStack(FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
-        fragmentManager.beginTransaction().run {
+        supportFragmentManager.beginTransaction().run {
             replace(R.id.fragment_container, newFragment, fragmentClass.canonicalName)
             if (keepInBackStack) addToBackStack(FRAGMENT_TAG)
             commit()
         }
-        fragmentManager.executePendingTransactions()
+        supportFragmentManager.executePendingTransactions()
+
+        toolbar.title = screenTitles[fragmentClass]
     }
 
     private fun instantiateFragment(fragmentClass: Class<*>) =

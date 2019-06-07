@@ -33,7 +33,7 @@ abstract class BaseActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActi
     internal val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Timber.v("ON_CREATE")
+        Timber.tag(javaClass.simpleName).v("ON_CREATE")
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
 
@@ -43,27 +43,27 @@ abstract class BaseActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActi
     }
 
     override fun onStart() {
-        Timber.v("ON_START")
+        Timber.tag(javaClass.simpleName).v("ON_START")
         super.onStart()
     }
 
     override fun onResume() {
-        Timber.v("ON_RESUME")
+        Timber.tag(javaClass.simpleName).v("ON_RESUME")
         super.onResume()
     }
 
     override fun onPause() {
-        Timber.v("ON_PAUSE")
+        Timber.tag(javaClass.simpleName).v("ON_PAUSE")
         super.onPause()
     }
 
     override fun onStop() {
-        Timber.v("ON_STOP")
+        Timber.tag(javaClass.simpleName).v("ON_STOP")
         super.onStop()
     }
 
     override fun onDestroy() {
-        Timber.v("ON_DESTROY")
+        Timber.tag(javaClass.simpleName).v("ON_DESTROY")
         super.onDestroy()
 
         disposable.dispose()

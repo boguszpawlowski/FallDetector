@@ -7,6 +7,7 @@ import dagger.Module
 
 @Module(includes = [DatabaseServiceModule::class]) //TODO change visibility of database service to service module only
 abstract class RepositoryModule {
+
     @Binds
     @AppScope
     internal abstract fun bindContactRepository(contactRepository: ContactRepositoryImpl): ContactRepository

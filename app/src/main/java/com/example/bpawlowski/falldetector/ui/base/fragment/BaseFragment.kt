@@ -30,7 +30,7 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
     val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Timber.v("ON_CREATE")
+        Timber.tag(javaClass.simpleName).v("ON_CREATE")
 
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -40,7 +40,7 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Timber.v("ON_CREATE_VIEW")
+        Timber.tag(javaClass.simpleName).v("ON_CREATE_VIEW")
 
         binding = DataBindingUtil.inflate(inflater, getLayoutID(), container, false)
         binding.lifecycleOwner = this
@@ -49,29 +49,29 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
     }
 
     override fun onStart() {
-        Timber.v("ON_START")
+        Timber.tag(javaClass.simpleName).v("ON_START")
         super.onStart()
     }
 
     override fun onResume() {
-        Timber.v("ON_RESUME")
+        Timber.tag(javaClass.simpleName).v("ON_RESUME")
         super.onResume()
 
         viewModel.onResume()
     }
 
     override fun onPause() {
-        Timber.v("ON_PAUSE")
+        Timber.tag(javaClass.simpleName).v("ON_PAUSE")
         super.onPause()
     }
 
     override fun onStop() {
-        Timber.v("ON_STOP")
+        Timber.tag(javaClass.simpleName).v("ON_STOP")
         super.onStop()
     }
 
     override fun onDestroy() {
-        Timber.v("ON_DESTROY")
+        Timber.tag(javaClass.simpleName).v("ON_DESTROY")
         super.onDestroy()
 
         disposable.dispose()

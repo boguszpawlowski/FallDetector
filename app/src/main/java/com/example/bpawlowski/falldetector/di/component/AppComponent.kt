@@ -1,9 +1,6 @@
 package com.example.bpawlowski.falldetector.di.component
 
-import bogusz.com.service.di.ConnectivityServiceModule
-import bogusz.com.service.di.LocationProviderModule
-import bogusz.com.service.di.RepositoryModule
-import bogusz.com.service.di.RxModule
+import bogusz.com.service.di.*
 import com.example.bpawlowski.falldetector.FallDetectorApp
 import com.example.bpawlowski.falldetector.di.module.AppModule
 import com.example.bpawlowski.falldetector.monitoring.BackgroundService
@@ -19,6 +16,7 @@ import dagger.android.support.AndroidSupportInjectionModule
         ConnectivityServiceModule::class,
         LocationProviderModule::class,
         RepositoryModule::class,
+        SharedPreferencesModule::class,
         RxModule::class,
         AndroidInjectionModule::class,
         AndroidSupportInjectionModule::class

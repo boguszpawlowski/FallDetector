@@ -7,6 +7,7 @@ import dagger.Module
 
 @Module
 internal abstract class DatabaseServiceModule {
+
     @Binds
     @AppScope
     abstract fun bindDatabaseService(databaseService: DatabaseServiceImpl): DatabaseService

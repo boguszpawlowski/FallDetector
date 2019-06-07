@@ -2,6 +2,7 @@ package com.example.bpawlowski.falldetector.di.module
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.bpawlowski.falldetector.di.annotation.ViewModelKey
 import com.example.bpawlowski.falldetector.ui.alarm.AlarmViewModel
 import com.example.bpawlowski.falldetector.ui.base.activity.ViewModelFactory
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
@@ -9,8 +10,8 @@ import com.example.bpawlowski.falldetector.ui.main.call.CallViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.ContactsViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.FormDialogViewModel
 import com.example.bpawlowski.falldetector.ui.main.home.HomeViewModel
+import com.example.bpawlowski.falldetector.ui.main.settings.SettingsViewModel
 import com.example.bpawlowski.falldetector.ui.main.sms.MessageViewModel
-import com.example.bpawlowski.falldetector.di.annotation.ViewModelKey
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -52,6 +53,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AlarmViewModel::class)
     abstract fun bindAlarmViewModel(alarmViewModel: AlarmViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SettingsViewModel::class)
+    abstract fun bindSettingsViewModel(settingsViewModel: SettingsViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

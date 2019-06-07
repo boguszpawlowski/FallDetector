@@ -7,6 +7,7 @@ import dagger.Module
 
 @Module
 abstract class RxModule {
+
     @Binds
     @AppScope
     internal abstract fun bindSchedulerProvider(schedulerProvider: SchedulerProviderImpl): SchedulerProvider

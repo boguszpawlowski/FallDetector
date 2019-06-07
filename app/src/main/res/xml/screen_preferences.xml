@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+            app:iconSpaceReserved="false"
+            android:title="Visuals"/>
+
+    <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            android:key="dark_theme"
+            android:summary="Use more"
+            android:title="Dark Theme"
+            android:defaultValue="false"/>
+    <PreferenceCategory
+            app:iconSpaceReserved="false"
+            android:title="Functionality"/>
+
+    <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+
+            android:key="send_sms"
+            android:title="Send SMS"
+            android:defaultValue="true"
+            android:summary="After alarm send text messages to all contacts"/>
+
+    <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
+            android:key="send_location"
+            android:title="Send Location"
+            android:defaultValue="true"
+            android:summary="When sending text messages, share my location"/>
+
+    <com.example.bpawlowski.falldetector.ui.custom.ListDialogPreference
+            app:iconSpaceReserved="false"
+            android:key="sensitivity"
+            android:title="Sensitivity"
+            android:summary="Choose sensitivity of fall detection"
+            android:defaultValue="0"
+            android:entries="@array/prefs_sensitivity"
+            android:entryValues="@array/prefs_sensitivity_values"/>
+
+</PreferenceScreen>
