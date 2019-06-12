@@ -23,9 +23,9 @@
         <item name="android:windowBackground">@drawable/background_transparent</item>
         <item name="android:background">@drawable/background_rounded</item>
     </style>
+
     <style name="FormDialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
-
 </resources>
