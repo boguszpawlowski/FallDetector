@@ -1,12 +1,12 @@
 package com.example.bpawlowski.falldetector.ui.main.contacts
 
-import android.annotation.SuppressLint
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
 import bogusz.com.service.model.Contact
 import bogusz.com.service.model.UserPriority
@@ -17,14 +17,13 @@ import com.example.bpawlowski.falldetector.di.Injectable
 import com.example.bpawlowski.falldetector.ui.base.activity.ViewModelFactory
 import com.example.bpawlowski.falldetector.util.toast
 import com.example.bpawlowski.falldetector.util.value
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.dialog_form.*
 import javax.inject.Inject
 
-class FormDialogFragment : BottomSheetDialogFragment(), Injectable { //TODO refactor
+class FormDialogFragment : DialogFragment(), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -33,14 +32,13 @@ class FormDialogFragment : BottomSheetDialogFragment(), Injectable { //TODO refa
 
     lateinit var viewModel: FormDialogViewModel
 
-    private lateinit var parentViewModel: ContactsViewModel
-
     private val disposable = CompositeDisposable()
 
     private var contactId: Long? = null
 
-    override fun onCreateDialog(savedInstanceState: Bundle?) =
-        BottomSheetDialog(requireContext(), theme)//TODO remove bottom sheet - add transition
+    override fun onCreateDialog(savedInstanceState: Bundle?) = Dialog(requireContext(), theme)
+
+    override fun getTheme() = R.style.FormDialogStyle
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,10 +46,7 @@ class FormDialogFragment : BottomSheetDialogFragment(), Injectable { //TODO refa
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_form, container, false)
-
         binding.lifecycleOwner = this
-
-        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         return binding.root
     }
 
@@ -59,7 +54,6 @@ class FormDialogFragment : BottomSheetDialogFragment(), Injectable { //TODO refa
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(FormDialogViewModel::class.java)
-        parentViewModel = ViewModelProviders.of(this, viewModelFactory).get(ContactsViewModel::class.java)
         binding.viewModel = viewModel
     }
 
@@ -76,7 +70,8 @@ class FormDialogFragment : BottomSheetDialogFragment(), Injectable { //TODO refa
                         txtContactName.setText(name)
                         txtContactMobile.setText(mobile.toString())
                         txtContactEmail.setText(email)
-                        cbxIce.isChecked = priority == UserPriority.PRIORITY_ICE  //fixme
+                        cbxIce.isChecked = priority == UserPriority.PRIORITY_ICE
+                        imgProfile.transitionName = arguments?.getString(TRANSITION_NAME)
                     }
                 },
                 onError = { doNothing }
@@ -90,8 +85,6 @@ class FormDialogFragment : BottomSheetDialogFragment(), Injectable { //TODO refa
 
         disposable.dispose()
     }
-
-    override fun getTheme() = R.style.BottomSheetDialogTheme
 
     private fun initListeners() {
         binding.btnApply.setOnClickListener {
@@ -114,16 +107,16 @@ class FormDialogFragment : BottomSheetDialogFragment(), Injectable { //TODO refa
         }
     }
 
-    @SuppressLint("CheckResult")
     private fun tryToAddContact(contact: Contact) {
-        disposable.add(viewModel.checkIfIceExists().subscribe { exists ->
-            //TODO remove if from here and replace toast with snackbar
+        disposable.add(viewModel.checkIfIceExists().flatMapCompletable { exists ->
             if (exists && contact.priority == UserPriority.PRIORITY_ICE) {
-                requireContext().toast("Ice contact already exists")
+                Completable.error(Throwable("Ice already exists"))
             } else {
-                parentViewModel.addContact(contact)
-                dismiss()
+                viewModel.addContact(contact)
             }
-        })
+        }.subscribeBy(
+            onComplete = { dismiss() },
+            onError = { context?.toast("Ice Contact already exists") }
+        ))
     }
 }

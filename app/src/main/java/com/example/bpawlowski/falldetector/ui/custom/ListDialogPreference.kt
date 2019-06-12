@@ -16,6 +16,6 @@ class ListDialogPreference @JvmOverloads constructor(
     override fun onBindDialogView(view: View?) {
         super.onBindDialogView(view)
 
-        dialog.window?.setBackgroundDrawable(context.getDrawable(R.drawable.backgroud_rounded))
+        dialog.window?.setBackgroundDrawable(context.getDrawable(R.drawable.background_rounded))
     }
 }

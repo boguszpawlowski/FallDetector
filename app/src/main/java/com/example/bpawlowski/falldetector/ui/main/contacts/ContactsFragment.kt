@@ -1,7 +1,8 @@
 package com.example.bpawlowski.falldetector.ui.main.contacts
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.view.View
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentContactsBinding
@@ -14,6 +15,7 @@ import com.example.bpawlowski.falldetector.ui.main.contacts.recycler.ContactView
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 const val CONTACT_ID = "contact_id"
+const val TRANSITION_NAME = "transition_name"
 
 class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, FragmentContactsBinding>() {
 
@@ -25,7 +27,7 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
         binding.recyclerContact.apply {
             adapter = ContactViewAdapter(
                 onDismissListener = { viewModel.removeContact(it) },
-                onSelectListener = { showDialog(it.id) }
+                onSelectListener = { contact, position -> showDialog(contact.id, "tr_$position") }
             )
         }
 
@@ -53,16 +55,24 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
         )
     }
 
-    private fun showDialog(ticketId: Long? = null) {
-        val fragmentTransaction = childFragmentManager.beginTransaction()
+    private fun showDialog(ticketId: Long? = null, transitionName: String = "", imageView: View? = null) {
         val args = Bundle()
-        ticketId?.let { args.putLong(CONTACT_ID, it) }
+        ticketId?.let {
+            args.putLong(CONTACT_ID, it)
+            args.putString(TRANSITION_NAME, transitionName)
+        }
 
-        val fragment = Fragment.instantiate(
-            requireContext(),
-            FormDialogFragment::class.java.canonicalName,
-            args
-        ) as FormDialogFragment
+        val fragmentTransaction = childFragmentManager.beginTransaction()
+
+        imageView?.let {
+            fragmentTransaction.addSharedElement(imageView, transitionName)
+        }
+
+        val fragment = childFragmentManager.fragmentFactory.instantiate(
+            ClassLoader.getSystemClassLoader(),
+            FormDialogFragment::class.java.name
+        ).apply { arguments = args } as DialogFragment
+
         fragment.show(fragmentTransaction, "FormDialogFragment")
     }
 

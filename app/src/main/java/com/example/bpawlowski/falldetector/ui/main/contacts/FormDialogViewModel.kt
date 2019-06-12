@@ -8,6 +8,7 @@ import bogusz.com.service.model.Contact
 import bogusz.com.service.rx.SchedulerProvider
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.util.validate
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
@@ -37,6 +38,10 @@ class FormDialogViewModel @Inject constructor(
 
     fun initEditingData(id: Long): Single<Contact> =
         contactsRepository.getContact(id)
+            .observeOn(schedulerProvider.MAIN)
+
+    fun addContact(contact: Contact): Completable =
+        contactsRepository.addContact(contact)
             .observeOn(schedulerProvider.MAIN)
 
     private fun initValidator() {

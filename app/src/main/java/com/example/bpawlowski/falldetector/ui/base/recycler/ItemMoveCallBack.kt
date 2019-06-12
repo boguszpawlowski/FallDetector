@@ -83,7 +83,7 @@ class ItemMoveCallBack(
 
     companion object {
         const val ALPHA_FULL = 1.0f
-        const val ELEVATION = 10f
+        const val ELEVATION = 8f
     }
 }
 

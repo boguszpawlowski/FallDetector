@@ -8,12 +8,11 @@ import com.example.bpawlowski.falldetector.ui.base.recycler.BaseViewHolder
 import com.example.bpawlowski.falldetector.ui.base.recycler.ItemTouchHelperAdapter
 import com.example.bpawlowski.falldetector.ui.main.call.CallContactViewHolder
 import com.example.bpawlowski.falldetector.ui.main.sms.MessageContactViewHolder
-import java.util.*
 
 class ContactViewAdapter(
     private val onDismissListener: OnContactTouchedListener? = null,
     private val onClickListener: OnContactTouchedListener? = null,
-    private val onSelectListener: OnContactTouchedListener? = null,
+    private val onSelectListener: OnClickedListener? = null,
     private val viewType: Int = R.layout.contact_item
 ) : BaseRecyclerViewAdapter<Contact, BaseViewHolder<*, Contact>>(), ItemTouchHelperAdapter {
 
@@ -45,3 +44,4 @@ class ContactViewAdapter(
 }
 
 typealias OnContactTouchedListener = (Contact) -> Unit
+typealias OnClickedListener = (Contact, Int) -> Unit

@@ -42,15 +42,4 @@ class ContactsViewModel @Inject constructor(
                 )
         )
     }
-
-    fun addContact(contact: Contact){
-        disposable.add(
-            contactsRepository.addContact(contact)
-                .observeOn(schedulerProvider.MAIN)
-                .subscribe(
-                    { Timber.i("Added contact: $contact") },
-                    { contactSubject::onError }
-                )
-        )
-    }
 }
