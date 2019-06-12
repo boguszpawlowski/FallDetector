@@ -1,16 +1,15 @@
 package com.example.bpawlowski.falldetector.ui.base.activity
 
 import android.app.Activity
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
 import com.example.bpawlowski.falldetector.BR
-import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -34,7 +33,6 @@ abstract class BaseActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.tag(javaClass.simpleName).v("ON_CREATE")
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(getViewModelClass())

@@ -16,7 +16,7 @@ class AppSettingsPreferencesData(
             DARK_MODE_KEY -> appSettings.darkMode = sharedPreferences.getBoolean(key, false)
             SEND_SMS_KEY -> appSettings.sendingSms = sharedPreferences.getBoolean(key, false)
             SEND_LOCATION_KEY -> appSettings.sendingLocation = sharedPreferences.getBoolean(key, false)
-            SENSITIVITY_KEY -> appSettings.sensitivity = mapSensitivity(sharedPreferences.getInt(key, 0))
+            SENSITIVITY_KEY -> appSettings.sensitivity = mapSensitivity(sharedPreferences.getString(key, "0"))
         }
         postValue(appSettings)
     }
@@ -37,13 +37,13 @@ class AppSettingsPreferencesData(
         darkMode = sharedPreferences.getBoolean(DARK_MODE_KEY, false),
         sendingSms = sharedPreferences.getBoolean(SEND_SMS_KEY, false),
         sendingLocation = sharedPreferences.getBoolean(SEND_LOCATION_KEY, false),
-        sensitivity = mapSensitivity(sharedPreferences.getInt(SENSITIVITY_KEY, 0))
+        sensitivity = mapSensitivity(sharedPreferences.getString(SENSITIVITY_KEY, "0"))
     )
 
-    private fun mapSensitivity(sensitivity: Int): Sensitivity = when (sensitivity) {
-        0 -> Sensitivity.LOW
-        1 -> Sensitivity.MEDIUM
-        2 -> Sensitivity.HIGH
+    private fun mapSensitivity(sensitivity: String?): Sensitivity = when (sensitivity) {
+        "0" -> Sensitivity.LOW
+        "1" -> Sensitivity.MEDIUM
+        "2" -> Sensitivity.HIGH
         else -> Sensitivity.LOW
     }
 

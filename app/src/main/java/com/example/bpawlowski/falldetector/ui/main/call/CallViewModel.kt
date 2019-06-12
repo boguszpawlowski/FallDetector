@@ -22,6 +22,8 @@ class CallViewModel @Inject constructor(
         getAllContacts()
     }
 
+    fun callContact(context: Context, contact: Contact) = callService.call(context, contact)
+
     private fun getAllContacts() {
         disposable.add(
             contactRepository.getAllContacts()
@@ -33,6 +35,4 @@ class CallViewModel @Inject constructor(
                 )
         )
     }
-
-    fun callContact(context: Context, contact: Contact) = callService.call(context, contact)
 }

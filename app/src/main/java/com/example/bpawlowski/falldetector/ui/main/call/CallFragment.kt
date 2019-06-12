@@ -3,11 +3,11 @@ package com.example.bpawlowski.falldetector.ui.main.call
 import android.Manifest
 import android.os.Bundle
 import com.example.bpawlowski.falldetector.R
+import com.example.bpawlowski.falldetector.databinding.FragmentCallBinding
 import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.ui.main.MainScreenState
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.recycler.ContactViewAdapter
-import com.example.bpawlowski.falldetector.databinding.FragmentCallBinding
 import com.example.bpawlowski.falldetector.util.checkPermission
 
 class CallFragment : BaseFragment<CallViewModel, MainViewModel, FragmentCallBinding>() {
@@ -33,12 +33,10 @@ class CallFragment : BaseFragment<CallViewModel, MainViewModel, FragmentCallBind
         super.onResume()
 
         disposable.add(
-            viewModel.contactsSubject
-                .subscribe(
-                    { (binding.recyclerContact.adapter as? ContactViewAdapter)?.updateData(it.toMutableList()) },
-                    { parentViewModel.changeState(MainScreenState.ErrorState(it)) }
-                )
-
+            viewModel.contactsSubject.subscribe(
+                { (binding.recyclerContact.adapter as? ContactViewAdapter)?.updateData(it.toMutableList()) },
+                { parentViewModel.changeState(MainScreenState.ErrorState(it)) }
+            )
         )
     }
 

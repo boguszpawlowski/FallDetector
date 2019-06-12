@@ -10,7 +10,6 @@ import com.example.bpawlowski.falldetector.ui.main.call.CallViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.ContactsViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.FormDialogViewModel
 import com.example.bpawlowski.falldetector.ui.main.home.HomeViewModel
-import com.example.bpawlowski.falldetector.ui.main.settings.SettingsViewModel
 import com.example.bpawlowski.falldetector.ui.main.sms.MessageViewModel
 import dagger.Binds
 import dagger.Module
@@ -53,11 +52,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AlarmViewModel::class)
     abstract fun bindAlarmViewModel(alarmViewModel: AlarmViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SettingsViewModel::class)
-    abstract fun bindSettingsViewModel(settingsViewModel: SettingsViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

@@ -1,35 +1,30 @@
 package com.example.bpawlowski.falldetector.ui.main.contacts
 
 import android.annotation.SuppressLint
-import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
 import bogusz.com.service.model.Contact
 import bogusz.com.service.model.UserPriority
+import bogusz.com.service.util.doNothing
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.DialogFormBinding
+import com.example.bpawlowski.falldetector.di.Injectable
 import com.example.bpawlowski.falldetector.ui.base.activity.ViewModelFactory
 import com.example.bpawlowski.falldetector.util.toast
 import com.example.bpawlowski.falldetector.util.value
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.dialog_form.*
 import javax.inject.Inject
 
-class FormDialogFragment : BottomSheetDialogFragment() {
-
-    private lateinit var parentViewModel: ContactsViewModel
+class FormDialogFragment : BottomSheetDialogFragment(), Injectable { //TODO refactor
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -38,11 +33,14 @@ class FormDialogFragment : BottomSheetDialogFragment() {
 
     lateinit var viewModel: FormDialogViewModel
 
+    private lateinit var parentViewModel: ContactsViewModel
+
     private val disposable = CompositeDisposable()
 
     private var contactId: Long? = null
 
-    override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), theme)
+    override fun onCreateDialog(savedInstanceState: Bundle?) =
+        BottomSheetDialog(requireContext(), theme)//TODO remove bottom sheet - add transition
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,13 +48,15 @@ class FormDialogFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_form, container, false)
+
+        binding.lifecycleOwner = this
+
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(FormDialogViewModel::class.java)
         parentViewModel = ViewModelProviders.of(this, viewModelFactory).get(ContactsViewModel::class.java)
@@ -66,17 +66,21 @@ class FormDialogFragment : BottomSheetDialogFragment() {
     override fun onResume() {
         super.onResume()
 
-        arguments?.getLong(CONTACT_ID, -1).takeUnless { it == -1L }?.let {
-            contactId = it
-            disposable.add(
-                viewModel.initEditingData(it).subscribe { contact ->
-                    binding.txtContactName.setText(contact.name)
-                    binding.txtContactMobile.setText(contact.mobile.toString())
-                    binding.txtContactEmail.setText(contact.email.toString()) //TODO remove rx from binding
-                    binding.cbxIce.isChecked = contact.priority == UserPriority.PRIORITY_ICE
-                }
-            )
-        }
+        val contactId = arguments?.getLong(CONTACT_ID, -1) ?: -1
+
+        disposable.add(
+            viewModel.initEditingData(contactId).subscribeBy(
+                onSuccess = { contact ->
+                    val (_, name, mobile, email, priority) = contact
+                    with(binding) {
+                        txtContactName.setText(name)
+                        txtContactMobile.setText(mobile.toString())
+                        txtContactEmail.setText(email)
+                        cbxIce.isChecked = priority == UserPriority.PRIORITY_ICE  //fixme
+                    }
+                },
+                onError = { doNothing }
+            ))
 
         initListeners()
     }

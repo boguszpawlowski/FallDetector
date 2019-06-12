@@ -2,8 +2,10 @@ package bogusz.com.service.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
+import javax.inject.Named
 
 @Module
 object SharedPreferencesModule {
@@ -11,9 +13,8 @@ object SharedPreferencesModule {
     @AppScope
     @JvmStatic
     @Provides
+    @Named("Default")
     fun provideSharedPreferences(context: Context): SharedPreferences {
-        return context.getSharedPreferences(PREFERENCES_NAME, 0)
+        return PreferenceManager.getDefaultSharedPreferences(context)
     }
-
-    private const val PREFERENCES_NAME = "fall_detector_preferences"
 }

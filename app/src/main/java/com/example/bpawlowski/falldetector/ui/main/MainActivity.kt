@@ -1,7 +1,6 @@
 package com.example.bpawlowski.falldetector.ui.main
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -28,8 +27,6 @@ import com.example.bpawlowski.falldetector.util.doNothing
 import com.example.bpawlowski.falldetector.util.getPermissions
 import com.example.bpawlowski.falldetector.util.screenTitles
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_navigation.*
 import timber.log.Timber
 
@@ -37,18 +34,11 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     NavigationView.OnNavigationItemSelectedListener {
 
     private val appSettingsObserver: Observer<AppSettings> by lazy {
-        Observer<AppSettings> {appSettings ->
-            appSettings.let { updateApp(it) }
+        Observer<AppSettings> { appSettings ->
+            appSettings?.let { updateApp(it) }
         }
     }
 
-    override fun getViewModelClass(): Class<MainViewModel> = MainViewModel::class.java
-
-    override fun getLayoutID(): Int = R.layout.activity_main
-
-    override fun keepInBackStack(): Boolean = true
-
-    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
@@ -56,37 +46,23 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         if (savedInstanceState == null) {
             changeView(HomeFragment::class.java, false)
         }
-        disposable.add(
-            viewModel.stateSubject.subscribe {
-                when (it) {
-                    is MainScreenState.ErrorState -> {
-                        Snackbar.make(
-                            this.nav_view,
-                            it.error.message.orEmpty(),
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-                        Timber.e(it.error)
-                    }
-                    else -> doNothing
-                }
-            })
 
         val toggle = ActionBarDrawerToggle(
-            this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            this, binding.drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
-        drawer_layout.addDrawerListener(toggle)
+        binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+        binding.navView.setNavigationItemSelectedListener(this)
 
-        nav_view.setNavigationItemSelectedListener(this)
-
+        initObservers()
         checkPermissions()
     }
 
     override fun onBackPressed() {
         binding.navView.checkedItem?.isChecked = false
 
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START)
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }
@@ -118,13 +94,17 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         }
         Handler(Looper.getMainLooper()).postDelayed({
             item.isChecked = true
-            drawer_layout.closeDrawer(GravityCompat.START)
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
         }, CLOSE_DRAWER_DELAY)
 
         return true
     }
 
-    private fun updateApp(appSettings: AppSettings){
+    private fun initObservers() {
+        viewModel.appSettingsPreferencesData.observe(this, appSettingsObserver)
+    }
+
+    private fun updateApp(appSettings: AppSettings) {
         //TODO change DARK mode, sensitivity etc.
     }
 
@@ -139,15 +119,16 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
             )
         )
 
-    private fun goToActivity(activityClass: Class<*>) {
-        with(Intent(this, activityClass)) {
-            startActivity(this)
-        }
+    private fun goToActivity(activityClass: Class<*>) = with(Intent(this, activityClass)) {
+        startActivity(this)
     }
 
     private fun changeView(fragmentClass: Class<*>, keepInBackStack: Boolean = true) {
         val newFragment =
-            supportFragmentManager.findFragmentByTag(fragmentClass.canonicalName) ?: instantiateFragment(fragmentClass)
+            supportFragmentManager.findFragmentByTag(fragmentClass.canonicalName) ?: Fragment.instantiate(
+                this,
+                fragmentClass.canonicalName
+            )
 
         supportFragmentManager.popBackStack(FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
@@ -161,14 +142,17 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         toolbar.title = screenTitles[fragmentClass]
     }
 
-    private fun instantiateFragment(fragmentClass: Class<*>) =
-        Fragment.instantiate(this, fragmentClass.canonicalName)
-
     override fun onNavigateUp(): Boolean {
         binding.navView.menu.getItem(0).isChecked = true
 
         return super.onNavigateUp()
     }
+
+    override fun getViewModelClass() = MainViewModel::class.java
+
+    override fun getLayoutID() = R.layout.activity_main
+
+    override fun keepInBackStack() = true
 
     companion object {
         private const val CLOSE_DRAWER_DELAY = 200L

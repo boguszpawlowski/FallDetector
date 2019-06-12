@@ -1,6 +1,5 @@
 package com.example.bpawlowski.falldetector.ui.main.contacts
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -41,7 +40,6 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
         touchHelper.attachToRecyclerView(binding.recyclerContact)
     }
 
-    @SuppressLint("CheckResult")
     override fun onResume() {
         super.onResume()
 

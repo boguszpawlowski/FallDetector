@@ -31,7 +31,7 @@
             android:defaultValue="true"
             android:summary="When sending text messages, share my location"/>
 
-    <com.example.bpawlowski.falldetector.ui.custom.ListDialogPreference
+    <ListPreference
             app:iconSpaceReserved="false"
             android:key="sensitivity"
             android:title="Sensitivity"
