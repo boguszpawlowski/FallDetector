@@ -7,19 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import bogusz.com.service.model.Contact
 import bogusz.com.service.model.UserPriority
-import bogusz.com.service.util.doNothing
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.DialogFormBinding
 import com.example.bpawlowski.falldetector.di.Injectable
 import com.example.bpawlowski.falldetector.ui.base.activity.ViewModelFactory
 import com.example.bpawlowski.falldetector.util.toast
 import com.example.bpawlowski.falldetector.util.value
-import io.reactivex.Completable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.dialog_form.*
 import javax.inject.Inject
 
@@ -32,7 +29,31 @@ class FormDialogFragment : DialogFragment(), Injectable {
 
     lateinit var viewModel: FormDialogViewModel
 
-    private val disposable = CompositeDisposable()
+    private val resultObserver: Observer<Boolean> by lazy {
+        Observer<Boolean> { isSuccessful ->
+            isSuccessful?.let {
+                if (isSuccessful) {
+                    dismiss()
+                } else {
+                    requireContext().toast("Ice contact already exists")
+                }
+            }
+        }
+    }
+
+    private val initialDataObserver: Observer<Contact> by lazy {
+        Observer<Contact> { contact ->
+            contact?.let {
+                val (_, name, mobile, email, priority) = it
+                with(binding) {
+                    txtContactName.setText(name)
+                    txtContactMobile.setText(mobile.toString())
+                    txtContactEmail.setText(email)
+                    cbxIce.isChecked = priority == UserPriority.PRIORITY_ICE  //fixme
+                }
+            }
+        }
+    }
 
     private var contactId: Long? = null
 
@@ -55,69 +76,35 @@ class FormDialogFragment : DialogFragment(), Injectable {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(FormDialogViewModel::class.java)
         binding.viewModel = viewModel
+
+        viewModel.addContactResultData.observe(this, resultObserver)
+        viewModel.initialContactData.observe(this, initialDataObserver)
     }
 
     override fun onResume() {
         super.onResume()
 
-        val id = arguments?.getLong(CONTACT_ID, -1) ?: -1
-
-        disposable.add(
-            viewModel.initEditingData(id).subscribeBy(
-                onSuccess = { contact ->
-                    val (_, name, mobile, email, priority) = contact
-                    with(binding) {
-                        txtContactName.setText(name)
-                        txtContactMobile.setText(mobile.toString())
-                        txtContactEmail.setText(email)
-                        cbxIce.isChecked = priority == UserPriority.PRIORITY_ICE
-                        imgProfile.transitionName = arguments?.getString(TRANSITION_NAME)
-                    }
-                    contactId = id
-                },
-                onError = { doNothing }
-            ))
-
+        val contactId = (arguments?.getLong(CONTACT_ID, -1) ?: -1).also {
+            if (it != -1L) contactId = it
+        }
+        viewModel.initEditingData(contactId)
         initListeners()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        disposable.dispose()
     }
 
     private fun initListeners() {
         binding.btnApply.setOnClickListener {
-            val name = binding.txtContactName.value
-            val email = binding.txtContactEmail.value
-            val mobile = binding.txtContactMobile.value.toInt()
-            val priority = if (cbx_ice.isChecked) UserPriority.PRIORITY_ICE else UserPriority.PRIORITY_NORMAL
 
             val contact = Contact(
                 id = contactId,
-                name = name,
-                mobile = mobile,
-                email = email,
-                priority = priority
+                name = binding.txtContactName.value,
+                mobile = binding.txtContactMobile.value.toInt(),
+                email = binding.txtContactEmail.value,
+                priority = if (cbx_ice.isChecked) UserPriority.PRIORITY_ICE else UserPriority.PRIORITY_NORMAL
             )
-            tryToAddContact(contact)
+            viewModel.tryToAddContact(contact)
         }
         binding.btnCancel.setOnClickListener {
             dismiss()
         }
-    }
-
-    private fun tryToAddContact(contact: Contact) {
-        disposable.add(viewModel.checkIfIceExists().flatMapCompletable { exists ->
-            if (exists && contact.priority == UserPriority.PRIORITY_ICE) {
-                Completable.error(Throwable("Ice already exists"))
-            } else {
-                viewModel.addContact(contact)
-            }
-        }.subscribeBy(
-            onComplete = { dismiss() },
-            onError = { context?.toast("Ice Contact already exists") }
-        ))
     }
 }

@@ -49,6 +49,7 @@ dependencies {
 
     //lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha01"
 
     // Dagger 2
     kapt "com.google.dagger:dagger-android-processor:$dagger2_version"

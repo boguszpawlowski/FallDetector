@@ -1,52 +1,29 @@
 package com.example.bpawlowski.falldetector.ui.main.sms
 
-import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import bogusz.com.service.connectivity.SmsService
 import bogusz.com.service.database.repository.ContactRepository
 import bogusz.com.service.location.LocationProvider
 import bogusz.com.service.model.Contact
-import bogusz.com.service.rx.SchedulerProvider
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
-import com.example.bpawlowski.falldetector.util.toast
-import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class MessageViewModel @Inject constructor(
     private val contactRepository: ContactRepository,
-    private val schedulerProvider: SchedulerProvider,
     private val locationProvider: LocationProvider,
-    private val smsService: SmsService,
-    private val context: Context
+    private val smsService: SmsService
 ) : BaseViewModel() {
 
-    val contactsSubject = BehaviorSubject.create<List<Contact>>()
+    val contactsData: LiveData<List<Contact>>
+        get() = contactRepository.getAllContactsData()
 
-    init {
-        getAllContacts()
-    }
-
-    fun sendMessage(contact: Contact) =
-        disposable.add(
-            locationProvider.getLastKnownLocation()
-                .subscribeOn(schedulerProvider.IO)
-                .subscribe(
-                    { location ->
-                        smsService.sendMessage(contact.mobile, location)
-                        context.toast("Message sent") //TODO replace with snackbar
-                    },
-                    contactsSubject::onError
-                )
-        )
-
-    private fun getAllContacts() {
-        disposable.add(
-            contactRepository.getAllContacts()
-                .observeOn(schedulerProvider.MAIN)
-                .subscribe(
-                    contactsSubject::onNext,
-                    contactsSubject::onError,
-                    contactsSubject::onComplete
-                )
-        )
+    fun sendMessage(contact: Contact) = viewModelScope.launch {
+        runCatching {
+            val lastKnownLocation = locationProvider.getLastKnownLocation()
+            smsService.sendMessage(contact.mobile, lastKnownLocation)
+        }.onFailure { Timber.e(it) }
     }
 }

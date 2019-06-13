@@ -13,6 +13,7 @@ import com.example.bpawlowski.falldetector.di.Injectable
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.ui.base.activity.ViewModelFactory
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.CoroutineScope
 import timber.log.Timber
 import javax.inject.Inject
 

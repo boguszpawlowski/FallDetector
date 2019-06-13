@@ -1,5 +1,6 @@
 package bogusz.com.service.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import bogusz.com.service.model.Contact
 import io.reactivex.Completable
@@ -7,29 +8,30 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 
 @Dao
-internal interface ContactDao {
+internal interface
+ContactDao {
 
     @Query("SELECT * FROM contact")
-    fun getAll(): Flowable<List<Contact>>
+    fun getAllData(): LiveData<List<Contact>>
 
     @Query("SELECT * FROM contact WHERE id like :id")
-    fun getContactById(id: Long): Single<Contact>
+    suspend fun getContactById(id: Long): Contact
 
     @Query("SELECT * FROM contact")
-    fun fetchAll(): Single<List<Contact>>
+    suspend fun getAll(): List<Contact>
 
     @Query("SELECT * FROM contact WHERE mobile LIKE :mobile")
-    fun getContactByMobile(mobile: Int): Single<Contact>
+    suspend fun getContactByMobile(mobile: Int): Contact
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(contact: Contact): Completable
+    suspend fun insert(contact: Contact): Long
 
     @Delete
-    fun delete(contact: Contact): Completable
+    suspend fun delete(contact: Contact): Int
 
     @Query(value = "UPDATE contact SET email=:email WHERE id like :id")
-    fun updateEmail(id: Long, email: String): Completable
+    suspend fun updateEmail(id: Long, email: String): Int
 
     @Query(value = "SELECT id FROM contact WHERE user_priority = 1")
-    fun findIceContact(): Single<Long>
+    suspend fun findIceContact(): Long
 }

@@ -1,57 +1,43 @@
 package bogusz.com.service.database.repository
 
+import androidx.lifecycle.LiveData
 import bogusz.com.service.database.dbservice.DatabaseService
 import bogusz.com.service.database.repository.base.BaseRepository
 import bogusz.com.service.model.Contact
-import bogusz.com.service.rx.SchedulerProvider
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Single
+import bogusz.com.service.util.sortedBy
 import javax.inject.Inject
 
 internal class ContactRepositoryImpl @Inject constructor(
-    databaseService: DatabaseService,
-    private val schedulerProvider: SchedulerProvider
+    databaseService: DatabaseService
 ) : BaseRepository(), ContactRepository {
 
-    private val contactDao by lazy { databaseService.getContactDao() }
+    private val contactDao by lazy { databaseService.getContactDao() } //TODO convert all to Result
 
-    override fun addContact(contact: Contact): Completable =
+    override suspend fun addContact(contact: Contact): Long =
         contactDao.insert(contact)
-            .subscribeOn(schedulerProvider.IO)
 
-    override fun getContact(id: Long): Single<Contact> =
+    override suspend fun getContact(id: Long): Contact =
         contactDao.getContactById(id)
-            .subscribeOn(schedulerProvider.IO)
 
-    override fun getAllContacts(): Flowable<List<Contact>> =
-        contactDao.getAll()
-            .subscribeOn(schedulerProvider.IO)
-            .map { it.sortedBy { it.priority } }
+    override fun getAllContactsData(): LiveData<List<Contact>> =
+        contactDao.getAllData().sortedBy { it.priority }
 
-    override fun getContactByMobile(mobile: Int): Single<Contact> =
-        contactDao.getContactByMobile(mobile)
-            .subscribeOn(schedulerProvider.IO)
-
-    override fun updateContactEmail(contact: Contact): Completable {
-        val id = contact.id ?: return Completable.error(Throwable("No contact id"))
-        val email = contact.email ?: return Completable.error(Throwable("No contact email"))
+    override suspend fun updateContactEmail(contact: Contact): Int {
+        val id = contact.id ?: throw IllegalArgumentException("No contact id")
+        val email = contact.email ?: throw IllegalArgumentException("No contact email")
 
         return contactDao.updateEmail(id, email)
-            .subscribeOn(schedulerProvider.IO)
     }
 
-    override fun fetchAllContacts(): Single<List<Contact>> =
-        contactDao.fetchAll()
-            .subscribeOn(schedulerProvider.IO)
+    override suspend fun getContactByMobile(mobile: Int): Contact =
+        contactDao.getContactByMobile(mobile)
 
-    override fun removeContact(contact: Contact): Completable =
+    override suspend fun getAllContacts(): List<Contact> =
+        contactDao.getAll()
+
+    override suspend fun removeContact(contact: Contact): Int =
         contactDao.delete(contact)
-            .subscribeOn(schedulerProvider.IO)
 
-    override fun isIceContactExisting(): Single<Boolean> =
-        contactDao.findIceContact()
-            .subscribeOn(schedulerProvider.IO)
-            .map { true }
-            .onErrorResumeNext { Single.just(false) }
+    override suspend fun isIceContactExisting(): Boolean =
+        contactDao.findIceContact() != null
 }

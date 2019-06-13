@@ -2,42 +2,44 @@ package com.example.bpawlowski.falldetector.ui.main.call
 
 import android.Manifest
 import android.os.Bundle
+import androidx.lifecycle.Observer
+import bogusz.com.service.model.Contact
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentCallBinding
 import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
-import com.example.bpawlowski.falldetector.ui.main.MainScreenState
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.recycler.ContactViewAdapter
 import com.example.bpawlowski.falldetector.util.checkPermission
 
 class CallFragment : BaseFragment<CallViewModel, MainViewModel, FragmentCallBinding>() {
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    private var adapter: ContactViewAdapter? = null
 
-        binding.recyclerContact.apply {
-            adapter = ContactViewAdapter(
-                viewType = R.layout.contact_item_call,
-                onClickListener = { contact ->
-                    checkPermission(
-                        activity = requireActivity(),
-                        permission = Manifest.permission.CALL_PHONE,
-                        onGranted = { viewModel.callContact(requireContext(), contact) }
-                    )
-                }
-            )
+    private val contactsObserver: Observer<List<Contact>> by lazy {
+        Observer<List<Contact>> { contacts ->
+            contacts?.let {
+                adapter?.updateData(it.toMutableList())
+            }
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
-        disposable.add(
-            viewModel.contactsSubject.subscribe(
-                { (binding.recyclerContact.adapter as? ContactViewAdapter)?.updateData(it.toMutableList()) },
-                { parentViewModel.changeState(MainScreenState.ErrorState(it)) }
-            )
+        adapter = ContactViewAdapter(
+            viewType = R.layout.contact_item_call,
+            onClickListener = { contact ->
+                checkPermission(
+                    activity = requireActivity(),
+                    permission = Manifest.permission.CALL_PHONE,
+                    onGranted = { viewModel.callContact(requireContext(), contact) }
+                )
+            }
         )
+
+        binding.recyclerContact.adapter = this@CallFragment.adapter
+
+        viewModel.contactsLiveData.observe(this, contactsObserver)
     }
 
     override fun getViewModelClass() = CallViewModel::class.java

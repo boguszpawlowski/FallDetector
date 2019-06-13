@@ -1,24 +1,25 @@
 package bogusz.com.service.database.repository
 
+import androidx.lifecycle.LiveData
 import bogusz.com.service.model.Contact
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 
 interface ContactRepository {
-    fun addContact(contact: Contact): Completable
+    suspend fun addContact(contact: Contact): Long
 
-    fun getContact(id: Long): Single<Contact>
+    suspend fun getContact(id: Long): Contact
 
-    fun getAllContacts(): Flowable<List<Contact>>
+    fun getAllContactsData(): LiveData<List<Contact>>
 
-    fun fetchAllContacts(): Single<List<Contact>>
+    suspend fun getAllContacts(): List<Contact>
 
-    fun getContactByMobile(mobile: Int): Single<Contact>
+    suspend fun getContactByMobile(mobile: Int): Contact
 
-    fun updateContactEmail(contact: Contact): Completable
+    suspend fun updateContactEmail(contact: Contact): Int
 
-    fun removeContact(contact: Contact): Completable
+    suspend fun removeContact(contact: Contact): Int
 
-    fun isIceContactExisting(): Single<Boolean>
+    suspend fun isIceContactExisting(): Boolean
 }

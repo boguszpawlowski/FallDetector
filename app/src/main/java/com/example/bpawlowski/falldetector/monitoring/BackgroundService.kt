@@ -21,8 +21,8 @@ import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.*
 import com.example.bpawlowski.falldetector.util.doNothing
 import com.example.bpawlowski.falldetector.util.notificationManager
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.zipWith
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -45,6 +45,10 @@ class BackgroundService : Service() {
     private val fallDetector: FallDetector by lazy {
         FallDetector(applicationContext, schedulerProvider, sensitivity)
     }
+
+    private val job = SupervisorJob()
+
+    private val coroutineScope = CoroutineScope(Dispatchers.Default + job)
 
     private val disposable = CompositeDisposable()
 
@@ -143,16 +147,14 @@ class BackgroundService : Service() {
     private fun raiseAlarm(shouldRaise: Boolean) {
         Timber.e("alarm: $shouldRaise")
         if (shouldRaise) {
-            disposable.add(
-                locationProvider.getLastKnownLocation()
-                    .observeOn(schedulerProvider.IO)
-                    .toSingle()
-                    .zipWith(contactRepository.fetchAllContacts()) { location, list -> location to list }
-                    .subscribe(
-                        { pair -> alarmService.raiseAlarm(pair.second, pair.first) },
-                        { Timber.e(it) }
+            coroutineScope.launch {
+                runCatching {
+                    alarmService.raiseAlarm(
+                        contactRepository.getAllContacts() ,
+                        locationProvider.getLastKnownLocation()
                     )
-            )
+                }.onFailure { Timber.e(it) }
+            }
         }
     }
 

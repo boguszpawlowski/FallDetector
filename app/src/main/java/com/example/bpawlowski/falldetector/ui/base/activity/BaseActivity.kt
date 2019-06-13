@@ -13,7 +13,6 @@ import com.example.bpawlowski.falldetector.BR
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -28,8 +27,6 @@ abstract class BaseActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActi
     lateinit var viewModel: VM
 
     lateinit var binding: B
-
-    internal val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.tag(javaClass.simpleName).v("ON_CREATE")
@@ -63,23 +60,21 @@ abstract class BaseActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActi
     override fun onDestroy() {
         Timber.tag(javaClass.simpleName).v("ON_DESTROY")
         super.onDestroy()
-
-        disposable.dispose()
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = supportFragmentInjector
 
-    fun navigateToActivity(activity: Activity){
-        val intent = Intent(this, activity::class.java)
+    fun navigateToActivity(activity: Activity) {
+        Intent(this, activity::class.java).run {
+            startActivity(intent)
+        }
 
-        startActivity(intent)
-
-        if(!keepInBackStack()){
+        if (keepInBackStack.not()) {
             finish()
         }
     }
 
-    open fun keepInBackStack(): Boolean = false
+    open val keepInBackStack: Boolean = false
 
     abstract fun getViewModelClass(): Class<VM>
 

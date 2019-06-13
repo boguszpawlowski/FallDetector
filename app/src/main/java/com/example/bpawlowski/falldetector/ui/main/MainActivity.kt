@@ -23,12 +23,10 @@ import com.example.bpawlowski.falldetector.ui.main.contacts.ContactsFragment
 import com.example.bpawlowski.falldetector.ui.main.home.HomeFragment
 import com.example.bpawlowski.falldetector.ui.main.settings.SettingsFragment
 import com.example.bpawlowski.falldetector.ui.main.sms.MessageFragment
-import com.example.bpawlowski.falldetector.util.doNothing
 import com.example.bpawlowski.falldetector.util.getPermissions
 import com.example.bpawlowski.falldetector.util.screenTitles
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.app_bar_navigation.*
-import timber.log.Timber
 
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     NavigationView.OnNavigationItemSelectedListener {
@@ -152,7 +150,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 
     override fun getLayoutID() = R.layout.activity_main
 
-    override fun keepInBackStack() = true
+    override val keepInBackStack = true
 
     companion object {
         private const val CLOSE_DRAWER_DELAY = 200L

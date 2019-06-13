@@ -4,5 +4,5 @@ import android.location.Location
 import io.reactivex.Maybe
 
 interface LocationProvider {
-    fun getLastKnownLocation(): Maybe<Location>
+    suspend fun getLastKnownLocation(): Location
 }
