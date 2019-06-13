@@ -73,11 +73,15 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
         super.onStop()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        disposable.dispose()
+    }
+
     override fun onDestroy() {
         Timber.tag(javaClass.simpleName).v("ON_DESTROY")
         super.onDestroy()
-
-        disposable.dispose()
     }
 
     abstract fun getViewModelClass(): Class<VM>

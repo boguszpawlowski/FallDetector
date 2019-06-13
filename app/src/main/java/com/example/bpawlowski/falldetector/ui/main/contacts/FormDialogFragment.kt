@@ -60,10 +60,10 @@ class FormDialogFragment : DialogFragment(), Injectable {
     override fun onResume() {
         super.onResume()
 
-        val contactId = arguments?.getLong(CONTACT_ID, -1) ?: -1
+        val id = arguments?.getLong(CONTACT_ID, -1) ?: -1
 
         disposable.add(
-            viewModel.initEditingData(contactId).subscribeBy(
+            viewModel.initEditingData(id).subscribeBy(
                 onSuccess = { contact ->
                     val (_, name, mobile, email, priority) = contact
                     with(binding) {
@@ -73,6 +73,7 @@ class FormDialogFragment : DialogFragment(), Injectable {
                         cbxIce.isChecked = priority == UserPriority.PRIORITY_ICE
                         imgProfile.transitionName = arguments?.getString(TRANSITION_NAME)
                     }
+                    contactId = id
                 },
                 onError = { doNothing }
             ))
