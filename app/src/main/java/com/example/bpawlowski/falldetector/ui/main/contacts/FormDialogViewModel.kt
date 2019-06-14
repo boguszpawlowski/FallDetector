@@ -6,22 +6,24 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import bogusz.com.service.database.onFailure
+import bogusz.com.service.database.onSuccess
 import bogusz.com.service.database.repository.ContactRepository
 import bogusz.com.service.model.Contact
-import bogusz.com.service.model.UserPriority
 import bogusz.com.service.rx.SchedulerProvider
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.util.validate
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @SuppressLint("CheckResult")
 class FormDialogViewModel @Inject constructor(
     private val contactsRepository: ContactRepository,
     private val schedulerProvider: SchedulerProvider
-) : BaseViewModel() {
+) : BaseViewModel() { //TODO exception handling: Snackbar/Toast?
 
     val dataValid = ObservableBoolean(false)
     val nameError = ObservableField<String>()
@@ -35,7 +37,7 @@ class FormDialogViewModel @Inject constructor(
     val addContactResultData: LiveData<Boolean>
         get() = _addContactResultData
 
-    private val _initialContactData = MutableLiveData<Contact>() //TODO binding
+    private val _initialContactData = MutableLiveData<Contact>() //TODO binding - one model for it
     val initialContactData: LiveData<Contact>
         get() = _initialContactData
 
@@ -43,22 +45,19 @@ class FormDialogViewModel @Inject constructor(
         initValidator()
     }
 
-    fun initEditingData(id: Long) {
-        viewModelScope.launch {
-            _initialContactData.postValue(contactsRepository.getContact(id))
-        }
+    fun initEditingData(id: Long) = viewModelScope.launch {
+        contactsRepository.getContact(id)
+            .onSuccess { _initialContactData.postValue(it) }
+            .onFailure { Timber.e(it) }
     }
 
-    fun tryToAddContact(contact: Contact) {
-        viewModelScope.launch {
-            val existing = contactsRepository.isIceContactExisting()
-            if (existing && contact.priority == UserPriority.PRIORITY_ICE) { //TODO return some kind of result
+    fun tryToAddContact(contact: Contact) = viewModelScope.launch {
+        contactsRepository.addContact(contact)
+            .onSuccess { _addContactResultData.postValue(true) }
+            .onFailure {
+                Timber.e(it)
                 _addContactResultData.postValue(false)
-            } else {
-                contactsRepository.addContact(contact)
-                _addContactResultData.postValue(true)
             }
-        }
     }
 
     private fun initValidator() {

@@ -3,6 +3,7 @@ package com.example.bpawlowski.falldetector.ui.alarm
 import androidx.lifecycle.viewModelScope
 import bogusz.com.service.alarm.AlarmService
 import bogusz.com.service.database.repository.ContactRepository
+import bogusz.com.service.database.success
 import bogusz.com.service.location.LocationProvider
 import bogusz.com.service.rx.SchedulerProvider
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
@@ -20,7 +21,7 @@ class AlarmViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 alarmService.raiseAlarm(
-                    contactRepository.getAllContacts() ,
+                    contactRepository.getAllContacts().success,
                     locationProvider.getLastKnownLocation()
                 )
             }.onFailure { Timber.e(it) }

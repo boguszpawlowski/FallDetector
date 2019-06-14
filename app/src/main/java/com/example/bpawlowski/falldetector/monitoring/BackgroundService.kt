@@ -10,6 +10,7 @@ import androidx.core.app.NotificationCompat
 import bogusz.com.service.accelometer.FallDetector
 import bogusz.com.service.alarm.AlarmService
 import bogusz.com.service.database.repository.ContactRepository
+import bogusz.com.service.database.success
 import bogusz.com.service.location.LocationProvider
 import bogusz.com.service.model.Sensitivity
 import bogusz.com.service.rx.SchedulerProvider
@@ -150,7 +151,7 @@ class BackgroundService : Service() {
             coroutineScope.launch {
                 runCatching {
                     alarmService.raiseAlarm(
-                        contactRepository.getAllContacts() ,
+                        contactRepository.getAllContacts().success ,
                         locationProvider.getLastKnownLocation()
                     )
                 }.onFailure { Timber.e(it) }

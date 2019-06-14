@@ -14,10 +14,10 @@ internal class AlarmServiceImpl @Inject constructor(
     private val context: Context
 ) : AlarmService {
 
-    override fun raiseAlarm(contacts: List<Contact>, location: Location) { //TODO check if it always works
+    override fun raiseAlarm(contacts: List<Contact>?, location: Location) { //TODO check if it always works
         contacts
-            .onEach { smsService.sendMessage(it.mobile, location) }
-            .firstOrNull { it.priority == UserPriority.PRIORITY_ICE }
+            ?.onEach { smsService.sendMessage(it.mobile, location) }
+            ?.firstOrNull { it.priority == UserPriority.PRIORITY_ICE }
             ?.let {
                 callIce(it)
             }

@@ -3,25 +3,21 @@ package bogusz.com.service.database.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import bogusz.com.service.model.Contact
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Single
 
 @Dao
-internal interface
-ContactDao {
+internal interface ContactDao {
 
     @Query("SELECT * FROM contact")
     fun getAllData(): LiveData<List<Contact>>
 
     @Query("SELECT * FROM contact WHERE id like :id")
-    suspend fun getContactById(id: Long): Contact
+    suspend fun getContactById(id: Long): Contact?
 
     @Query("SELECT * FROM contact")
     suspend fun getAll(): List<Contact>
 
     @Query("SELECT * FROM contact WHERE mobile LIKE :mobile")
-    suspend fun getContactByMobile(mobile: Int): Contact
+    suspend fun getContactByMobile(mobile: Int): Contact?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(contact: Contact): Long
@@ -33,5 +29,5 @@ ContactDao {
     suspend fun updateEmail(id: Long, email: String): Int
 
     @Query(value = "SELECT id FROM contact WHERE user_priority = 1")
-    suspend fun findIceContact(): Long
+    suspend fun findIceContact(): Long?
 }
