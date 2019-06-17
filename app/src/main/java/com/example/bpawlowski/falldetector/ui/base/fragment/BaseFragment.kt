@@ -12,8 +12,6 @@ import com.example.bpawlowski.falldetector.BR
 import com.example.bpawlowski.falldetector.di.Injectable
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.ui.base.activity.ViewModelFactory
-import io.reactivex.disposables.CompositeDisposable
-import kotlinx.coroutines.CoroutineScope
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -24,7 +22,7 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
 
     lateinit var viewModel: VM
 
-    lateinit var parentViewModel: SVM
+    lateinit var sharedViewModel: SVM
 
     lateinit var binding: B
 
@@ -46,7 +44,7 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(getViewModelClass())
-        parentViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(getParentViewModeClass())
+        sharedViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(getParentViewModeClass())
         binding.setVariable(BR.viewModel, viewModel)
     }
 

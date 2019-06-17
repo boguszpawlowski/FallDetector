@@ -42,6 +42,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true"
+                app:error="@{viewModel.contactForm.nameError}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
                 app:layout_constraintStart_toEndOf="@id/img_profile">
@@ -60,6 +61,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true"
+                app:error="@{viewModel.contactForm.mobileError}"
                 android:layout_marginBottom="16dp"
                 app:layout_constraintTop_toBottomOf="@+id/txt_layout_name"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
@@ -80,6 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:errorEnabled="true"
+                app:error="@{viewModel.contactForm.emailError}"
                 app:layout_constraintTop_toBottomOf="@+id/txt_layout_mobile"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
                 app:layout_constraintStart_toStartOf="@id/guideline_start">

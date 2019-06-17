@@ -13,8 +13,6 @@ import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.DialogFormBinding
 import com.example.bpawlowski.falldetector.di.Injectable
-import com.example.bpawlowski.falldetector.domain.ContactForm
-import com.example.bpawlowski.falldetector.domain.mapToContact
 import com.example.bpawlowski.falldetector.ui.base.activity.ViewModelFactory
 import com.example.bpawlowski.falldetector.util.toast
 import javax.inject.Inject
@@ -67,16 +65,12 @@ class FormDialogFragment : DialogFragment(), Injectable {
         super.onResume()
 
         val contactId = (arguments?.getLong(CONTACT_ID, -1) ?: -1)
-        viewModel.initEditingData(contactId)
+        viewModel.initData(contactId)
         initListeners(contactId.takeUnless { it == -1L })
     }
 
-    private fun initListeners(contactId: Long?) {
-        binding.btnApply.setOnClickListener {
-                viewModel.tryToAddContact(contactId)
-        }
-        binding.btnCancel.setOnClickListener {
-            dismiss()
-        }
+    private fun initListeners(contactId: Long?) = with(binding) {
+        btnApply.setOnClickListener { this@FormDialogFragment.viewModel.tryToAddContact(contactId) }
+        btnCancel.setOnClickListener { dismiss() }
     }
 }

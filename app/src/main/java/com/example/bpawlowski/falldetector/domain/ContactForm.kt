@@ -1,38 +1,60 @@
 package com.example.bpawlowski.falldetector.domain
 
-import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
-import bogusz.com.service.model.Contact
-import bogusz.com.service.model.UserPriority
+import android.util.Patterns
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import androidx.databinding.library.baseAdapters.BR
 import com.example.bpawlowski.falldetector.util.empty
 
-data class ContactForm( //TODO this class should extend observable
-    val name: ObservableField<String>,
-    val mobile: ObservableField<String>,
-    val email: ObservableField<String>,
-    val priority: ObservableBoolean
-) {
-    constructor() : this(
-        ObservableField(""),
-        ObservableField(""),
-        ObservableField(""),
-        ObservableBoolean(false)
-    )
+class ContactForm : BaseObservable() {
+
+    @Bindable
+    var name: String = String.empty
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.name)
+            notifyPropertyChanged(BR.valid)
+            notifyPropertyChanged(BR.nameError)
+        }
+
+    @Bindable
+    var mobile: String = String.empty
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.mobile)
+            notifyPropertyChanged(BR.valid)
+            notifyPropertyChanged(BR.mobileError)
+        }
+
+    @Bindable
+    var email: String = String.empty
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.email)
+            notifyPropertyChanged(BR.valid)
+            notifyPropertyChanged(BR.emailError)
+        }
+
+    @Bindable
+    var priority: Boolean = false
+
+    val nameError: String?
+        @Bindable
+        get() = if (nameIsValid().not()) "Name can't be empty" else null
+
+    val mobileError: String?
+        @Bindable
+        get() = if (mobileIsValid().not()) "Mobile must contain 9 digits" else null
+
+    val emailError: String?
+        @Bindable
+        get() = if (emailIsValid().not()) "Email is not valid" else null
+
+    val isValid: Boolean
+        @Bindable
+        get() = nameIsValid() && mobileIsValid() && emailIsValid()
+
+    private fun nameIsValid() = name.isNotBlank()
+    private fun mobileIsValid() = mobile.matches(Regex("\\d{9}"))
+    private fun emailIsValid() = email.matches(Patterns.EMAIL_ADDRESS.toRegex()) or email.isEmpty()
 }
-
-fun Contact.copyToForm(form: ContactForm) =
-    form.apply {
-        name.set(this@copyToForm.name)
-        mobile.set(this@copyToForm.mobile.toString())
-        email.set(this@copyToForm.email)
-        priority.set(this@copyToForm.priority == UserPriority.PRIORITY_ICE)
-    }
-
-
-fun ContactForm.mapToContact(): Contact =
-    Contact(
-        name = name.get() ?: String.empty,
-        mobile = mobile.get()?.toInt() ?: 0,
-        email = email.get(),
-        priority = if (priority.get()) UserPriority.PRIORITY_ICE else UserPriority.PRIORITY_NORMAL
-    )
