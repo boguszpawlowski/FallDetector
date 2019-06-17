@@ -5,7 +5,7 @@ import bogusz.com.service.database.repository.ContactRepository
 import dagger.Binds
 import dagger.Module
 
-@Module(includes = [DatabaseServiceModule::class]) //TODO change visibility of database service to service module only
+@Module(includes = [DatabaseServiceModule::class])
 abstract class RepositoryModule {
 
     @Binds

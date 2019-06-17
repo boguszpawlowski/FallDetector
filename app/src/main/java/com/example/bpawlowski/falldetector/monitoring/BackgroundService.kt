@@ -9,21 +9,25 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import bogusz.com.service.accelometer.FallDetector
 import bogusz.com.service.alarm.AlarmService
+import bogusz.com.service.database.onFailure
+import bogusz.com.service.database.onSuccess
 import bogusz.com.service.database.repository.ContactRepository
-import bogusz.com.service.database.success
+import bogusz.com.service.database.zip
 import bogusz.com.service.location.LocationProvider
 import bogusz.com.service.model.Sensitivity
 import bogusz.com.service.rx.SchedulerProvider
 import com.example.bpawlowski.falldetector.FallDetectorApp
 import com.example.bpawlowski.falldetector.R
-import com.example.bpawlowski.falldetector.ui.main.MainActivity
 import com.example.bpawlowski.falldetector.di.component.DaggerAppComponent
 import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.*
+import com.example.bpawlowski.falldetector.ui.main.MainActivity
 import com.example.bpawlowski.falldetector.util.doNothing
 import com.example.bpawlowski.falldetector.util.notificationManager
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.subjects.BehaviorSubject
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -76,7 +80,7 @@ class BackgroundService : Service() {
         super.onCreate()
 
         injectSelf()
-        isServiceRunningSubject.onNext(true)
+        isRunning = true
     }
 
     override fun onDestroy() {
@@ -88,7 +92,7 @@ class BackgroundService : Service() {
     private fun stopService() {
         Timber.i("STOP")
 
-        isServiceRunningSubject.onNext(false)
+        isRunning = false
         stopForeground(true)
         stopSelf()
     }
@@ -149,12 +153,10 @@ class BackgroundService : Service() {
         Timber.e("alarm: $shouldRaise")
         if (shouldRaise) {
             coroutineScope.launch {
-                runCatching {
-                    alarmService.raiseAlarm(
-                        contactRepository.getAllContacts().success ,
-                        locationProvider.getLastKnownLocation()
-                    )
-                }.onFailure { Timber.e(it) }
+                zip(contactRepository.getAllContacts(), locationProvider.getLastKnownLocation()) { first, second ->
+                    first to second
+                }.onSuccess { alarmService.raiseAlarm(it.first, it.second) }
+                    .onFailure { Timber.e(it) }
             }
         }
     }
@@ -201,6 +203,6 @@ class BackgroundService : Service() {
         }
 
         @JvmStatic
-        val isServiceRunningSubject = BehaviorSubject.createDefault(false)
+        var isRunning = false //TODO change for database connection
     }
 }

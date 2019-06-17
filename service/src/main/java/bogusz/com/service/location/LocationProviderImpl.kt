@@ -3,9 +3,12 @@ package bogusz.com.service.location
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
+import bogusz.com.service.database.FallDetectorResult
+import bogusz.com.service.database.failure
+import bogusz.com.service.database.success
 import com.google.android.gms.location.LocationServices
 import javax.inject.Inject
-import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 internal class LocationProviderImpl @Inject constructor(
@@ -15,12 +18,12 @@ internal class LocationProviderImpl @Inject constructor(
     private var fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
 
     @SuppressLint("MissingPermission")
-    override suspend fun getLastKnownLocation(): Location = suspendCoroutine { cont ->
+    override suspend fun getLastKnownLocation(): FallDetectorResult<Location> = suspendCoroutine { cont ->
         fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-            location?.let { cont.resumeWith(Result.success(it)) }
+            location?.let { cont.resume(success(it)) }
         }
         fusedLocationProviderClient.lastLocation.addOnFailureListener {
-            cont.resumeWithException(it)
+            cont.resume(failure(it))
         }
     }
 }

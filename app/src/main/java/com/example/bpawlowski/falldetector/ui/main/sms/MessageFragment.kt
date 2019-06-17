@@ -3,6 +3,7 @@ package com.example.bpawlowski.falldetector.ui.main.sms
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import bogusz.com.service.model.Contact
+import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentMessageBinding
 import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
@@ -31,7 +32,7 @@ class MessageFragment : BaseFragment<MessageViewModel, MainViewModel, FragmentMe
 
         binding.recyclerContact.adapter = this@MessageFragment.adapter
 
-        viewModel.contactsData.observe(this, contactsObserver)
+        viewModel.contactsData.reObserve(this, contactsObserver)
     }
 
     override fun getViewModelClass() = MessageViewModel::class.java

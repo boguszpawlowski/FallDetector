@@ -28,8 +28,6 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
 
     lateinit var binding: B
 
-    val disposable = CompositeDisposable()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.tag(javaClass.simpleName).v("ON_CREATE")
         super.onCreate(savedInstanceState)
@@ -75,9 +73,8 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
     }
 
     override fun onDestroyView() {
+        Timber.tag(javaClass.simpleName).v("ON_DESTROY_VIEW")
         super.onDestroyView()
-
-        disposable.dispose()
     }
 
     override fun onDestroy() {

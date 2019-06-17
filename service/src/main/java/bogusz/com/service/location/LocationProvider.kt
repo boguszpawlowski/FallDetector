@@ -1,8 +1,8 @@
 package bogusz.com.service.location
 
 import android.location.Location
-import io.reactivex.Maybe
+import bogusz.com.service.database.FallDetectorResult
 
 interface LocationProvider {
-    suspend fun getLastKnownLocation(): Location
+    suspend fun getLastKnownLocation(): FallDetectorResult<Location>
 }

@@ -6,6 +6,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import bogusz.com.service.model.Contact
+import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentContactsBinding
 import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
@@ -44,7 +45,7 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
         ItemTouchHelper(ItemMoveCallBack(requireContext(), adapter as ItemTouchHelperAdapter))
             .attachToRecyclerView(binding.recyclerContact)
 
-        viewModel.contactsLiveData.observe(this, contactsObserver)//TODO reobserve
+        viewModel.contactsLiveData.reObserve(this, contactsObserver)
     }
 
     private fun showDialog(ticketId: Long? = null, transitionName: String = "", imageView: View? = null) {

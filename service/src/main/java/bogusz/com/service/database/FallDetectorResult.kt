@@ -13,14 +13,31 @@ inline fun <T> FallDetectorResult<T>.onSuccess(block: (T) -> Unit): FallDetector
     return this
 }
 
-inline fun <T, R> FallDetectorResult<T>.map(block: (T) -> R): R? =
-    if (this is FallDetectorResult.Success) block(data)
-    else null
+inline fun <T, R> FallDetectorResult<T>.map(block: (T) -> R): FallDetectorResult<R> =
+    when (this) {
+        is FallDetectorResult.Success -> success(block(data))
+        is FallDetectorResult.Failure -> this
+    }
 
 inline fun <T, R> FallDetectorResult<T>.flatMap(block: (T) -> FallDetectorResult<R>): FallDetectorResult<R> =
-    when(this) {
+    when (this) {
         is FallDetectorResult.Success -> block(data)
         is FallDetectorResult.Failure -> this
+    }
+
+inline fun <T, R, D> zip(
+    first: FallDetectorResult<T>,
+    second: FallDetectorResult<D>,
+    transform: (T, D) -> R
+): FallDetectorResult<R> =
+    when {
+        first is FallDetectorResult.Success && second is FallDetectorResult.Success ->
+            success(transform(first.data, second.data))
+        first is FallDetectorResult.Success && second is FallDetectorResult.Failure ->
+            second
+        first is FallDetectorResult.Failure && second is FallDetectorResult.Success ->
+            first
+        else -> failure(RuntimeException("Both functions failed"))
     }
 
 /**
@@ -31,18 +48,11 @@ inline fun <T> FallDetectorResult<T>.onFailure(block: (Exception) -> Unit): Fall
     return this
 }
 
-inline fun <T, R> FallDetectorResult<T>.mapFailure(block: (Exception) -> R): R? =
-    if (this is FallDetectorResult.Failure) block(error)
-    else null
-
 /**
- * Get nullable values
+ * Get nullable value
  */
-val <T> FallDetectorResult<T>.success: T?
-    get() = (this as? FallDetectorResult.Success)?.data
-
-val <T> FallDetectorResult<T>.error: Exception?
-    get() = (this as? FallDetectorResult.Failure)?.error
+fun <T> FallDetectorResult<T>.getOrNull(): T? =
+    (this as? FallDetectorResult.Success)?.data
 
 /**
  * Builders

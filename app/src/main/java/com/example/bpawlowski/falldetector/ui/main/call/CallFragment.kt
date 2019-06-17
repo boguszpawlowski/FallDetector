@@ -4,6 +4,7 @@ import android.Manifest
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import bogusz.com.service.model.Contact
+import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentCallBinding
 import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
@@ -39,7 +40,7 @@ class CallFragment : BaseFragment<CallViewModel, MainViewModel, FragmentCallBind
 
         binding.recyclerContact.adapter = this@CallFragment.adapter
 
-        viewModel.contactsLiveData.observe(this, contactsObserver)
+        viewModel.contactsLiveData.reObserve(this, contactsObserver)
     }
 
     override fun getViewModelClass() = CallViewModel::class.java

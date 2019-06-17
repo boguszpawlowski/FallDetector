@@ -5,6 +5,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import androidx.databinding.BindingAdapter
+import androidx.lifecycle.MutableLiveData
 import com.google.android.material.textfield.TextInputLayout
 import io.reactivex.subjects.BehaviorSubject
 
@@ -15,7 +16,7 @@ fun View.setVisible(visible: Boolean) {
 
 @BindingAdapter(value = ["rxText"])
 fun EditText.rxText(subject: BehaviorSubject<String>) {
-    setText(subject.value?: "")
+    setText(subject.value ?: "")
 
     addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(editable: Editable) {
@@ -29,3 +30,19 @@ fun EditText.rxText(subject: BehaviorSubject<String>) {
 
 @BindingAdapter(value = ["error"])
 fun TextInputLayout.error(error: String?) = setError(error)
+
+@BindingAdapter(value = ["mobile"])
+fun EditText.mobile(mobile: MutableLiveData<Int>) {
+    if (value != mobile.value.toString()) {
+        setText(mobile.value.toString())
+    }
+
+    addTextChangedListener(object : TextWatcher {
+        override fun afterTextChanged(editable: Editable) {
+            mobile.value = editable.toString().toInt()
+        }
+
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = doNothing
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = doNothing
+    })
+}
