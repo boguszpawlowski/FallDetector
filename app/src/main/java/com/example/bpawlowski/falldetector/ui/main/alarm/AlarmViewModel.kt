@@ -1,4 +1,4 @@
-package com.example.bpawlowski.falldetector.ui.alarm
+package com.example.bpawlowski.falldetector.ui.main.alarm
 
 import androidx.lifecycle.viewModelScope
 import bogusz.com.service.alarm.AlarmService

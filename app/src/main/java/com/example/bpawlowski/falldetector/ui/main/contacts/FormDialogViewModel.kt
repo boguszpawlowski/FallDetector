@@ -3,6 +3,7 @@ package com.example.bpawlowski.falldetector.ui.main.contacts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import bogusz.com.service.database.exceptions.FallDetectorException
 import bogusz.com.service.database.onFailure
 import bogusz.com.service.database.onSuccess
 import bogusz.com.service.database.repository.ContactRepository
@@ -27,7 +28,9 @@ class FormDialogViewModel @Inject constructor(
     fun initData(id: Long) = viewModelScope.launch {
         contactsRepository.getContact(id)
             .onSuccess { it.copyToForm(contactForm) }
-            .onFailure { Timber.e(it) }
+            .onFailure {
+                if (it !is FallDetectorException.NoSuchContactException) Timber.e(it)
+            }
     }
 
     fun tryToAddContact(contactId: Long? = null) = viewModelScope.launch {

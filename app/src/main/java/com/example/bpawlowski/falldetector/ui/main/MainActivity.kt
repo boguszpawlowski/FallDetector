@@ -10,20 +10,20 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import bogusz.com.service.model.AppSettings
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
-import com.example.bpawlowski.falldetector.ui.alarm.AlarmActivity
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseActivity
+import com.example.bpawlowski.falldetector.ui.main.alarm.AlarmFragment
 import com.example.bpawlowski.falldetector.ui.main.call.CallFragment
 import com.example.bpawlowski.falldetector.ui.main.contacts.ContactsFragment
 import com.example.bpawlowski.falldetector.ui.main.home.HomeFragment
 import com.example.bpawlowski.falldetector.ui.main.settings.SettingsFragment
 import com.example.bpawlowski.falldetector.ui.main.sms.MessageFragment
 import com.example.bpawlowski.falldetector.util.getPermissions
+import com.example.bpawlowski.falldetector.util.instantiate
 import com.example.bpawlowski.falldetector.util.screenTitles
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.app_bar_navigation.*
@@ -84,7 +84,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         when (item.itemId) {
             R.id.nav_home -> changeView(HomeFragment::class.java)
             R.id.nav_contacts -> changeView(ContactsFragment::class.java)
-            R.id.nav_alarm -> goToActivity(AlarmActivity::class.java)
+            R.id.nav_alarm -> changeView(AlarmFragment::class.java)
             R.id.nav_settings -> changeView(SettingsFragment::class.java)
 
             R.id.nav_call -> changeView(CallFragment::class.java)
@@ -96,6 +96,12 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         }, CLOSE_DRAWER_DELAY)
 
         return true
+    }
+
+    override fun onNavigateUp(): Boolean {
+        binding.navView.menu.getItem(0).isChecked = true
+
+        return super.onNavigateUp()
     }
 
     private fun initObservers() {
@@ -117,19 +123,13 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
             )
         )
 
-    private fun goToActivity(activityClass: Class<*>) = with(Intent(this, activityClass)) {
-        startActivity(this)
-    }
-
     private fun changeView(fragmentClass: Class<*>, keepInBackStack: Boolean = true) {
         val newFragment =
-            supportFragmentManager.findFragmentByTag(fragmentClass.canonicalName) ?: Fragment.instantiate(
-                this,
-                fragmentClass.canonicalName
+            supportFragmentManager.findFragmentByTag(fragmentClass.canonicalName) ?: supportFragmentManager.instantiate(
+                fragmentClass
             )
 
         supportFragmentManager.popBackStack(FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
         supportFragmentManager.beginTransaction().run {
             replace(R.id.fragment_container, newFragment, fragmentClass.canonicalName)
             if (keepInBackStack) addToBackStack(FRAGMENT_TAG)
@@ -138,12 +138,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         supportFragmentManager.executePendingTransactions()
 
         toolbar.title = screenTitles[fragmentClass]
-    }
-
-    override fun onNavigateUp(): Boolean {
-        binding.navView.menu.getItem(0).isChecked = true
-
-        return super.onNavigateUp()
     }
 
     override fun getViewModelClass() = MainViewModel::class.java

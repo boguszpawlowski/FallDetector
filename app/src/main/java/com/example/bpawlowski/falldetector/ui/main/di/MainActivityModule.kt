@@ -1,5 +1,6 @@
 package com.example.bpawlowski.falldetector.ui.main.di
 
+import com.example.bpawlowski.falldetector.ui.main.alarm.AlarmFragment
 import com.example.bpawlowski.falldetector.ui.main.call.CallFragment
 import com.example.bpawlowski.falldetector.ui.main.contacts.ContactsFragment
 import com.example.bpawlowski.falldetector.ui.main.contacts.FormDialogFragment
@@ -35,4 +36,8 @@ abstract class MainActivityModule {
     @MainActivityScope
     @ContributesAndroidInjector
     abstract fun bindCallFragment(): CallFragment
+
+    @MainActivityScope
+    @ContributesAndroidInjector
+    abstract fun bindAlarmFragment(): AlarmFragment
 }

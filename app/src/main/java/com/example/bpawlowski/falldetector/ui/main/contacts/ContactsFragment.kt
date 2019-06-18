@@ -14,6 +14,7 @@ import com.example.bpawlowski.falldetector.ui.base.recycler.ItemMoveCallBack
 import com.example.bpawlowski.falldetector.ui.base.recycler.ItemTouchHelperAdapter
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.recycler.ContactViewAdapter
+import com.example.bpawlowski.falldetector.util.instantiate
 
 const val CONTACT_ID = "contact_id"
 const val TRANSITION_NAME = "transition_name"
@@ -35,7 +36,7 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
 
         adapter = ContactViewAdapter(
             onDismissListener = { viewModel.removeContact(it) },
-            onSelectListener = {  contact, position -> showDialog(contact.id, "tr_$position") }
+            onSelectListener = { contact, position -> showDialog(contact.id, "tr_$position") }
         )
 
         binding.recyclerContact.adapter = this@ContactsFragment.adapter
@@ -61,10 +62,8 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
             fragmentTransaction.addSharedElement(imageView, transitionName)
         }
 
-        val fragment = childFragmentManager.fragmentFactory.instantiate(
-            ClassLoader.getSystemClassLoader(),
-            FormDialogFragment::class.java.name
-        ).apply { arguments = args } as DialogFragment
+        val fragment = childFragmentManager.instantiate(FormDialogFragment::class.java)
+            .apply { arguments = args } as DialogFragment
 
         fragment.show(fragmentTransaction, "FormDialogFragment")
     }

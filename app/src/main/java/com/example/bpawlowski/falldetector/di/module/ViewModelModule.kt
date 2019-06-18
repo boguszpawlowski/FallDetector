@@ -3,9 +3,9 @@ package com.example.bpawlowski.falldetector.di.module
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.bpawlowski.falldetector.di.annotation.ViewModelKey
-import com.example.bpawlowski.falldetector.ui.alarm.AlarmViewModel
 import com.example.bpawlowski.falldetector.ui.base.activity.ViewModelFactory
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
+import com.example.bpawlowski.falldetector.ui.main.alarm.AlarmViewModel
 import com.example.bpawlowski.falldetector.ui.main.call.CallViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.ContactsViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.FormDialogViewModel
