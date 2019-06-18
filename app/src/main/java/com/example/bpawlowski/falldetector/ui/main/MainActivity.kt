@@ -8,28 +8,23 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import bogusz.com.service.model.AppSettings
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseActivity
-import com.example.bpawlowski.falldetector.ui.main.alarm.AlarmFragment
-import com.example.bpawlowski.falldetector.ui.main.call.CallFragment
-import com.example.bpawlowski.falldetector.ui.main.contacts.ContactsFragment
-import com.example.bpawlowski.falldetector.ui.main.home.HomeFragment
-import com.example.bpawlowski.falldetector.ui.main.settings.SettingsFragment
-import com.example.bpawlowski.falldetector.ui.main.sms.MessageFragment
 import com.example.bpawlowski.falldetector.util.getPermissions
-import com.example.bpawlowski.falldetector.util.instantiate
-import com.example.bpawlowski.falldetector.util.screenTitles
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.app_bar_navigation.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     NavigationView.OnNavigationItemSelectedListener {
+
+    lateinit var navController: NavController
 
     private val appSettingsObserver: Observer<AppSettings> by lazy {
         Observer<AppSettings> { appSettings ->
@@ -41,15 +36,11 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
 
-        if (savedInstanceState == null) {
-            changeView(HomeFragment::class.java, false)
-        }
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
 
-        val toggle = ActionBarDrawerToggle(
-            this, binding.drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
-        )
-        binding.drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
+        NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
+        NavigationUI.setupWithNavController(binding.navView, navController)
+
         binding.navView.setNavigationItemSelectedListener(this)
 
         initObservers()
@@ -74,7 +65,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     override fun onOptionsItemSelected(item: MenuItem) =
         when (item.itemId) {
             R.id.action_settings -> {
-                changeView(SettingsFragment::class.java)
+                navController.navigate(R.id.homeFragment)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -82,13 +73,13 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_home -> changeView(HomeFragment::class.java)
-            R.id.nav_contacts -> changeView(ContactsFragment::class.java)
-            R.id.nav_alarm -> changeView(AlarmFragment::class.java)
-            R.id.nav_settings -> changeView(SettingsFragment::class.java)
+            R.id.nav_home -> navController.navigate(R.id.homeFragment)
+            R.id.nav_contacts -> navController.navigate(R.id.contactsFragment)
+            R.id.nav_alarm -> navController.navigate(R.id.alarmFragment)
+            R.id.nav_settings -> navController.navigate(R.id.settingsFragment)
 
-            R.id.nav_call -> changeView(CallFragment::class.java)
-            R.id.nav_sms -> changeView(MessageFragment::class.java)
+            R.id.nav_call -> navController.navigate(R.id.callFragment)
+            R.id.nav_sms -> navController.navigate(R.id.messageFragment)
         }
         Handler(Looper.getMainLooper()).postDelayed({
             item.isChecked = true
@@ -98,11 +89,8 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         return true
     }
 
-    override fun onNavigateUp(): Boolean {
-        binding.navView.menu.getItem(0).isChecked = true
-
-        return super.onNavigateUp()
-    }
+    override fun onSupportNavigateUp() =
+        NavigationUI.navigateUp(Navigation.findNavController(this, R.id.nav_host_fragment), binding.drawerLayout)
 
     private fun initObservers() {
         viewModel.appSettingsPreferencesData.observe(this, appSettingsObserver)
@@ -123,23 +111,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
             )
         )
 
-    private fun changeView(fragmentClass: Class<*>, keepInBackStack: Boolean = true) {
-        val newFragment =
-            supportFragmentManager.findFragmentByTag(fragmentClass.canonicalName) ?: supportFragmentManager.instantiate(
-                fragmentClass
-            )
-
-        supportFragmentManager.popBackStack(FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        supportFragmentManager.beginTransaction().run {
-            replace(R.id.fragment_container, newFragment, fragmentClass.canonicalName)
-            if (keepInBackStack) addToBackStack(FRAGMENT_TAG)
-            commit()
-        }
-        supportFragmentManager.executePendingTransactions()
-
-        toolbar.title = screenTitles[fragmentClass]
-    }
-
     override fun getViewModelClass() = MainViewModel::class.java
 
     override fun getLayoutID() = R.layout.activity_main
@@ -148,7 +119,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 
     companion object {
         private const val CLOSE_DRAWER_DELAY = 200L
-        private const val FRAGMENT_TAG = "fragment_tag"
 
         @JvmStatic
         fun getIntent(context: Context) = Intent(context, MainActivity::class.java)
