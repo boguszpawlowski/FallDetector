@@ -16,7 +16,7 @@ class ItemMoveCallBack(
 ) : ItemTouchHelper.Callback() {
 
     private val background = ColorDrawable()
-    private val backgroundColor = ContextCompat.getColor(context, R.color.colorAccent)
+    private val backgroundColor = ContextCompat.getColor(context, R.color.accent)
     private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.icon_delete)
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {

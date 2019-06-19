@@ -47,9 +47,10 @@ class FormDialogFragment : DialogFragment(), Injectable {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.dialog_form, container, false)
-        binding.lifecycleOwner = this
-        return binding.root
+        val dataBinding = DataBindingUtil.inflate<DialogFormBinding>(inflater, R.layout.dialog_form, container, false)
+        binding = dataBinding
+        binding.lifecycleOwner = viewLifecycleOwner
+        return dataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

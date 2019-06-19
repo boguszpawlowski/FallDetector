@@ -12,6 +12,7 @@ import com.example.bpawlowski.falldetector.BR
 import com.example.bpawlowski.falldetector.di.Injectable
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.ui.base.activity.ViewModelFactory
+import com.example.bpawlowski.falldetector.util.autoCleared
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -24,7 +25,7 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
 
     lateinit var sharedViewModel: SVM
 
-    lateinit var binding: B
+    protected var binding by autoCleared<B>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.tag(javaClass.simpleName).v("ON_CREATE")
