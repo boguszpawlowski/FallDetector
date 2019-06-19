@@ -37,6 +37,10 @@ class ContactForm : BaseObservable() {
 
     @Bindable
     var priority: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.priority)
+        }
 
     val nameError: String?
         @Bindable

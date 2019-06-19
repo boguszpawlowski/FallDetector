@@ -59,14 +59,10 @@ class FormDialogFragment : DialogFragment(), Injectable {
         binding.viewModel = viewModel
 
         viewModel.addContactResultData.reObserve(this, resultObserver)
-    }
 
-    override fun onResume() {
-        super.onResume()
-
-        val contactId = (arguments?.getLong(CONTACT_ID, -1) ?: -1)
+        val contactId = arguments?.getLong(CONTACT_ID, -1)
         viewModel.initData(contactId)
-        initListeners(contactId.takeUnless { it == -1L })
+        initListeners(contactId)
     }
 
     private fun initListeners(contactId: Long?) = with(binding) {

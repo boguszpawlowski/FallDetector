@@ -6,32 +6,42 @@
 
     <fragment android:id="@+id/alarmFragment"
               android:name="com.example.bpawlowski.falldetector.ui.main.alarm.AlarmFragment"
-              android:label="AlarmFragment"/>
+              android:label="Alarm"/>
 
     <fragment android:id="@+id/callFragment"
               android:name="com.example.bpawlowski.falldetector.ui.main.call.CallFragment"
-              android:label="CallFragment"/>
+              android:label="Dial"/>
 
     <fragment android:id="@+id/contactsFragment"
               android:name="com.example.bpawlowski.falldetector.ui.main.contacts.ContactsFragment"
-              android:label="ContactsFragment">
-        <action android:id="@+id/action_contactsFragment_to_formDialogFragment"
+              android:label="Contacts">
+        <action android:id="@+id/showDialog"
                 app:destination="@id/formDialogFragment"/>
     </fragment>
 
     <dialog android:id="@+id/formDialogFragment"
             android:name="com.example.bpawlowski.falldetector.ui.main.contacts.FormDialogFragment"
-            android:label="FormDialogFragment"/>
+            android:label="Add Contact">
+        <argument
+                android:name="contact_id"
+                app:argType="long"/>
+        <argument
+                android:name="transition_name"
+                app:argType="string"/>
+    </dialog>
 
     <fragment android:id="@+id/settingsFragment"
               android:name="com.example.bpawlowski.falldetector.ui.main.settings.SettingsFragment"
-              android:label="SettingsFragment"/>
+              android:label="Settings"/>
 
     <fragment android:id="@+id/homeFragment"
               android:name="com.example.bpawlowski.falldetector.ui.main.home.HomeFragment"
-              android:label="HomeFragment"/>
+              android:label="Home">
+        <action android:id="@+id/showSettings"
+                app:destination="@id/settingsFragment"/>
+    </fragment>
 
     <fragment android:id="@+id/messageFragment"
               android:name="com.example.bpawlowski.falldetector.ui.main.sms.MessageFragment"
-              android:label="MessageFragment"/>
+              android:label="Message"/>
 </navigation>

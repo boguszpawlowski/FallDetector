@@ -11,12 +11,15 @@ import android.view.MenuItem
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI.navigateUp
+import androidx.navigation.ui.NavigationUI.setupWithNavController
+import androidx.navigation.ui.setupActionBarWithNavController
 import bogusz.com.service.model.AppSettings
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseActivity
+import com.example.bpawlowski.falldetector.ui.main.home.HomeFragmentDirections
 import com.example.bpawlowski.falldetector.util.getPermissions
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,10 +39,10 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
 
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        navController = findNavController(R.id.nav_host_fragment)
 
-        NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
-        NavigationUI.setupWithNavController(binding.navView, navController)
+        setupActionBarWithNavController(navController, binding.drawerLayout)
+        setupWithNavController(binding.navView, navController)
 
         binding.navView.setNavigationItemSelectedListener(this)
 
@@ -65,7 +68,9 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     override fun onOptionsItemSelected(item: MenuItem) =
         when (item.itemId) {
             R.id.action_settings -> {
-                navController.navigate(R.id.homeFragment)
+                navController.navigate(
+                    HomeFragmentDirections.showSettings()
+                )
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -89,8 +94,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         return true
     }
 
-    override fun onSupportNavigateUp() =
-        NavigationUI.navigateUp(Navigation.findNavController(this, R.id.nav_host_fragment), binding.drawerLayout)
+    override fun onSupportNavigateUp() = navigateUp(findNavController(R.id.nav_host_fragment), binding.drawerLayout)
 
     private fun initObservers() {
         viewModel.appSettingsPreferencesData.observe(this, appSettingsObserver)

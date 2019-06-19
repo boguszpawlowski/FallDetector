@@ -34,9 +34,10 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Timber.tag(javaClass.simpleName).v("ON_CREATE_VIEW")
 
-        binding = DataBindingUtil.inflate(inflater, getLayoutID(), container, false)
-        binding.lifecycleOwner = this
-        return binding.root
+        val dataBinding = DataBindingUtil.inflate<B>(inflater, getLayoutID(), container, false)
+
+        binding = dataBinding
+        return dataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,7 +45,8 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(getViewModelClass())
-        sharedViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(getParentViewModeClass())
+        sharedViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(getSharedViewModeClass())
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.setVariable(BR.viewModel, viewModel)
     }
 
@@ -84,5 +86,5 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
 
     abstract fun getLayoutID(): Int
 
-    abstract fun getParentViewModeClass(): Class<SVM>
+    abstract fun getSharedViewModeClass(): Class<SVM>
 }

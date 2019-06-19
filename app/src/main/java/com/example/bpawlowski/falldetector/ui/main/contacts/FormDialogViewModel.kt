@@ -25,12 +25,14 @@ class FormDialogViewModel @Inject constructor(
 
     val contactForm = ContactForm()
 
-    fun initData(id: Long) = viewModelScope.launch {
-        contactsRepository.getContact(id)
-            .onSuccess { it.copyToForm(contactForm) }
-            .onFailure {
-                if (it !is FallDetectorException.NoSuchContactException) Timber.e(it)
-            }
+    fun initData(id: Long?) = id?.let {
+        viewModelScope.launch {
+            contactsRepository.getContact(id)
+                .onSuccess { it.copyToForm(contactForm) }
+                .onFailure {
+                    if (it !is FallDetectorException.NoSuchContactException) Timber.e(it)
+                }
+        }
     }
 
     fun tryToAddContact(contactId: Long? = null) = viewModelScope.launch {

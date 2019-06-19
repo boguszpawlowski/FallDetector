@@ -1,19 +1,18 @@
 package com.example.bpawlowski.falldetector.ui.main.home
 
-import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.View
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentHomeBinding
 import com.example.bpawlowski.falldetector.monitoring.BackgroundService
 import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 
-class HomeFragment :
-    BaseFragment<HomeViewModel, MainViewModel, FragmentHomeBinding>() { //TODO add database table for Service Flags
+class HomeFragment : BaseFragment<HomeViewModel, MainViewModel, FragmentHomeBinding>() {
+//TODO add database table for Service Flags
 
-    @SuppressLint("CheckResult")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.btnMonitor.setOnClickListener {
             if (BackgroundService.isRunning) {
@@ -28,5 +27,5 @@ class HomeFragment :
 
     override fun getLayoutID(): Int = R.layout.fragment_home
 
-    override fun getParentViewModeClass(): Class<MainViewModel> = MainViewModel::class.java
+    override fun getSharedViewModeClass(): Class<MainViewModel> = MainViewModel::class.java
 }

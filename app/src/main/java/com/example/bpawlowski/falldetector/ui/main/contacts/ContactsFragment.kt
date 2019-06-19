@@ -2,8 +2,8 @@ package com.example.bpawlowski.falldetector.ui.main.contacts
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import bogusz.com.service.model.Contact
 import bogusz.com.service.util.reObserve
@@ -14,25 +14,25 @@ import com.example.bpawlowski.falldetector.ui.base.recycler.ItemMoveCallBack
 import com.example.bpawlowski.falldetector.ui.base.recycler.ItemTouchHelperAdapter
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.recycler.ContactViewAdapter
-import com.example.bpawlowski.falldetector.util.instantiate
+import com.example.bpawlowski.falldetector.util.autoCleared
 
 const val CONTACT_ID = "contact_id"
 const val TRANSITION_NAME = "transition_name"
 
 class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, FragmentContactsBinding>() {
 
-    private var adapter: ContactViewAdapter? = null
+    private var adapter by autoCleared<ContactViewAdapter>()
 
     private val contactsObserver: Observer<List<Contact>> by lazy {
         Observer<List<Contact>> { contacts ->
             contacts?.let {
-                adapter?.updateData(it.toMutableList())
+                adapter.updateData(it.toMutableList())
             }
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         adapter = ContactViewAdapter(
             onDismissListener = { viewModel.removeContact(it) },
@@ -49,28 +49,16 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
         viewModel.contactsLiveData.reObserve(this, contactsObserver)
     }
 
-    private fun showDialog(ticketId: Long? = null, transitionName: String = "", imageView: View? = null) {
-        val args = Bundle()
-        ticketId?.let {
-            args.putLong(CONTACT_ID, it)
-            args.putString(TRANSITION_NAME, transitionName)
-        }
-
-        val fragmentTransaction = childFragmentManager.beginTransaction()
-
-        imageView?.let {
-            fragmentTransaction.addSharedElement(imageView, transitionName)
-        }
-
-        val fragment = childFragmentManager.instantiate(FormDialogFragment::class.java)
-            .apply { arguments = args } as DialogFragment
-
-        fragment.show(fragmentTransaction, "FormDialogFragment")
+    private fun showDialog(id: Long? = null, transitionName: String = "") {
+        val contactId = id ?: -1
+        findNavController().navigate(
+            ContactsFragmentDirections.showDialog(contactId, transitionName)
+        )
     }
 
     override fun getViewModelClass() = ContactsViewModel::class.java
 
     override fun getLayoutID() = R.layout.fragment_contacts
 
-    override fun getParentViewModeClass() = MainViewModel::class.java
+    override fun getSharedViewModeClass() = MainViewModel::class.java
 }

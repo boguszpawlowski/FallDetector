@@ -29,7 +29,6 @@ class ContactViewHolder(
             UserPriority.PRIORITY_NORMAL -> ""
             UserPriority.PRIORITY_ICE -> "ICE"
         }
-
         container.setOnClickListener { onSelectListener?.invoke(data, adapterPosition) }
     }
 
