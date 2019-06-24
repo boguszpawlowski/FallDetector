@@ -1,17 +1,18 @@
 package com.example.bpawlowski.falldetector.monitoring
 
-import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.Observer
 import bogusz.com.service.accelometer.FallDetector
 import bogusz.com.service.alarm.AlarmService
 import bogusz.com.service.database.onFailure
 import bogusz.com.service.database.onSuccess
 import bogusz.com.service.database.repository.ContactRepository
+import bogusz.com.service.database.repository.ServiceStateRepository
 import bogusz.com.service.database.zip
 import bogusz.com.service.location.LocationProvider
 import bogusz.com.service.model.Sensitivity
@@ -19,7 +20,8 @@ import bogusz.com.service.rx.SchedulerProvider
 import com.example.bpawlowski.falldetector.FallDetectorApp
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.di.component.DaggerAppComponent
-import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.*
+import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.START_SERVICE
+import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.STOP_SERVICE
 import com.example.bpawlowski.falldetector.ui.main.MainActivity
 import com.example.bpawlowski.falldetector.util.doNothing
 import com.example.bpawlowski.falldetector.util.notificationManager
@@ -31,7 +33,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-class BackgroundService : Service() {
+class BackgroundService : Service(), CoroutineScope {
 
     @Inject
     lateinit var schedulerProvider: SchedulerProvider
@@ -45,17 +47,28 @@ class BackgroundService : Service() {
     @Inject
     lateinit var contactRepository: ContactRepository
 
-    private var sensitivity: Sensitivity = Sensitivity.HIGH
+    @Inject
+    lateinit var serviceStateRepository: ServiceStateRepository
 
-    private val fallDetector: FallDetector by lazy {
-        FallDetector(applicationContext, schedulerProvider, sensitivity)
-    }
-
-    private val job = SupervisorJob()
-
-    private val coroutineScope = CoroutineScope(Dispatchers.Default + job)
+    override val coroutineContext = Dispatchers.Main + SupervisorJob()
 
     private val disposable = CompositeDisposable()
+
+    private val fallDetector: FallDetector by lazy {
+        FallDetector(applicationContext, schedulerProvider)
+    }
+
+    private val sensitivityData by lazy {
+        serviceStateRepository.getSensitivityData()
+    }
+
+    private val sensitivityObserver by lazy {
+        Observer<Sensitivity> { sensitivity ->
+            sensitivity?.let {
+                fallDetector.changeSensitivity(it)
+            }
+        }
+    }
 
     override fun onBind(intent: Intent?) = null
 
@@ -66,7 +79,6 @@ class BackgroundService : Service() {
         when (intent?.action) {
             START_SERVICE.name -> startService()
             STOP_SERVICE.name -> stopService()
-            CHANGE_SENSITIVITY.name -> changeSensitivity(intent)
             else -> startService()
         }
         return START_STICKY
@@ -80,40 +92,43 @@ class BackgroundService : Service() {
         super.onCreate()
 
         injectSelf()
-        isRunning = true
+        launch {
+            serviceStateRepository.initiateState()
+        }
+        sensitivityData.observeForever(sensitivityObserver)
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
+        sensitivityData.removeObserver(sensitivityObserver)
         disposable.dispose()
     }
 
     private fun stopService() {
         Timber.i("STOP")
 
-        isRunning = false
-        stopForeground(true)
-        stopSelf()
+        launch {
+            serviceStateRepository.updateIsRunning(false)
+            stopForeground(true)
+            stopSelf()
+        }
     }
 
-    @SuppressLint("CheckResult")
     private fun startService() {
         Timber.i("START")
 
+        launch {
+            serviceStateRepository.updateIsRunning(true)
+        }
         disposable.add(
-            fallDetector.getFallEvents()
-                .subscribe(
-                    { raiseAlarm(it) },
-                    { Timber.e(it) },
-                    { doNothing }
-                )
+            fallDetector.getFallEvents().subscribe(
+                { raiseAlarm(it) },
+                { Timber.e(it) },
+                { doNothing }
+            )
         )
     } //TODO show AlarmActivity Screen
-
-    private fun changeSensitivity(intent: Intent?) {
-        TODO("implement changing sensitivity")
-    }
 
     @Suppress("DEPRECATION")
     private fun buildNotification(): Notification {
@@ -152,7 +167,7 @@ class BackgroundService : Service() {
     private fun raiseAlarm(shouldRaise: Boolean) {
         Timber.e("alarm: $shouldRaise")
         if (shouldRaise) {
-            coroutineScope.launch {
+            launch {
                 zip(contactRepository.getAllContacts(), locationProvider.getLastKnownLocation()) { first, second ->
                     first to second
                 }.onSuccess { alarmService.raiseAlarm(it.first, it.second) }
@@ -170,7 +185,6 @@ class BackgroundService : Service() {
 
     companion object {
         private const val CHANNEL_ID = "background_service_id"
-        private const val SENSITIVITY_EXTRA = "sensiticity_extra"
         private const val ONGOING_NOTIFICATION_ID = 9999
 
         @JvmStatic
@@ -192,17 +206,5 @@ class BackgroundService : Service() {
                 context.startService(this)
             }
         }
-
-        @JvmStatic
-        fun changeSensitivity(context: Context, sensitivity: Sensitivity) {
-            with(Intent(context, BackgroundService::class.java)) {
-                action = CHANGE_SENSITIVITY.name
-                putExtra(SENSITIVITY_EXTRA, sensitivity)
-                context.startService(this)
-            }
-        }
-
-        @JvmStatic
-        var isRunning = false //TODO change for database connection
     }
 }

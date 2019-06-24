@@ -2,9 +2,9 @@ package bogusz.com.service.model
 
 import androidx.room.TypeConverter
 
-enum class UserPriority(val priority: Int) {
-    PRIORITY_ICE(1),
-    PRIORITY_NORMAL(0);
+enum class UserPriority() {
+    PRIORITY_ICE,
+    PRIORITY_NORMAL;
 }
 
 internal object UserPriorityConverter {
@@ -20,5 +20,5 @@ internal object UserPriorityConverter {
 
     @TypeConverter
     @JvmStatic
-    fun toInt(priority: UserPriority): Int = priority.priority
+    fun toInt(priority: UserPriority): Int = priority.ordinal
 }

@@ -6,7 +6,6 @@ import bogusz.com.service.database.catching
 import bogusz.com.service.database.dbservice.DatabaseService
 import bogusz.com.service.database.exceptions.FallDetectorException
 import bogusz.com.service.database.failure
-import bogusz.com.service.database.repository.base.BaseRepository
 import bogusz.com.service.database.success
 import bogusz.com.service.model.Contact
 import bogusz.com.service.model.UserPriority
@@ -15,7 +14,7 @@ import javax.inject.Inject
 
 internal class ContactRepositoryImpl @Inject constructor(
     databaseService: DatabaseService
-) : BaseRepository(), ContactRepository {
+) : ContactRepository {
 
     private val contactDao by lazy { databaseService.getContactDao() }
 
@@ -35,7 +34,7 @@ internal class ContactRepositoryImpl @Inject constructor(
             if (contact != null) {
                 success(contact)
             } else {
-                failure(FallDetectorException.NoSuchContactException)
+                failure(FallDetectorException.NoSuchRecordException)
             }
         }
 
@@ -51,7 +50,7 @@ internal class ContactRepositoryImpl @Inject constructor(
             if (columnsAffected != 0) {
                 success(columnsAffected)
             } else {
-                failure(FallDetectorException.NoSuchContactException)
+                failure(FallDetectorException.NoSuchRecordException)
             }
         }
     }
@@ -62,7 +61,7 @@ internal class ContactRepositoryImpl @Inject constructor(
             if (contact != null) {
                 success(contact)
             } else {
-                failure(FallDetectorException.NoSuchContactException)
+                failure(FallDetectorException.NoSuchRecordException)
             }
         }
 
@@ -72,7 +71,7 @@ internal class ContactRepositoryImpl @Inject constructor(
             if (contacts.isNotEmpty()) {
                 success(contacts)
             } else {
-                failure(FallDetectorException.NoContactsException)
+                failure(FallDetectorException.NoRecordsException)
             }
         }
 
@@ -82,7 +81,7 @@ internal class ContactRepositoryImpl @Inject constructor(
             if (columnsAffected != 0) {
                 success(columnsAffected)
             } else {
-                failure(FallDetectorException.NoSuchContactException)
+                failure(FallDetectorException.NoSuchRecordException)
             }
         }
 }

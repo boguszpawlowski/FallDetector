@@ -12,7 +12,7 @@ import javax.inject.Inject
 class FallDetector (
     private val context: Context,
     private val schedulerProvider: SchedulerProvider,
-    private var sensitivity: Sensitivity
+    private var sensitivity: Sensitivity = Sensitivity.HIGH
 ) {
 
     private val accelerometerFlowable by lazy {
@@ -32,7 +32,6 @@ class FallDetector (
 
 private fun Flowable<AccelerometerEvent>.skipUntilPeak(sensitivity: Sensitivity): Flowable<AccelerometerEvent> =
     skipWhile { event ->
-        Timber.d("timestamp: ${event.timestamp}, mean: ${event.mean}")
         event.mean < sensitivity.maxAcc
     }
 
@@ -47,7 +46,5 @@ private fun Flowable<AccelerometerEvent>.detectNoMovement(sensitivity: Sensitivi
         .map { buffer ->
             abs(buffer.toTypedArray().average()) < sensitivity.meanAccDuringNoMovement
         }
-        .doOnNext { Timber.i("no movement $it") }
         .take(1)
-        .doOnComplete { Timber.i("completed") }
         .repeat()

@@ -107,6 +107,9 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 
     private fun updateApp(appSettings: AppSettings) {
         //TODO change DARK mode, sensitivity etc.
+        val (darkMode, sendingSms, sensingLocation, sensitivity) = appSettings
+
+        viewModel.changeSensitivity(sensitivity)
     }
 
     private fun checkPermissions() =

@@ -9,17 +9,12 @@ import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 
 class HomeFragment : BaseFragment<HomeViewModel, MainViewModel, FragmentHomeBinding>() {
-//TODO add database table for Service Flags
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnMonitor.setOnClickListener {
-            if (BackgroundService.isRunning) {
-                BackgroundService.stopService(requireActivity())
-            } else {
-                BackgroundService.startService(requireActivity())
-            }
+            viewModel.toggleService(requireContext())
         }
     }
 

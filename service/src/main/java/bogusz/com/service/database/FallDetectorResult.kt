@@ -25,6 +25,14 @@ inline fun <T, R> FallDetectorResult<T>.flatMap(block: (T) -> FallDetectorResult
         is FallDetectorResult.Failure -> this
     }
 
+inline fun <T, R> FallDetectorResult<T>.fold(onSuccess: (T) -> R, onFailure: (Exception) -> R): FallDetectorResult<T> {
+    when (this) {
+        is FallDetectorResult.Success -> onSuccess(data)
+        is FallDetectorResult.Failure -> onFailure(error)
+    }
+    return this
+}
+
 inline fun <T, R, D> zip(
     first: FallDetectorResult<T>,
     second: FallDetectorResult<D>,
@@ -53,6 +61,12 @@ inline fun <T> FallDetectorResult<T>.onFailure(block: (Exception) -> Unit): Fall
  */
 fun <T> FallDetectorResult<T>.getOrNull(): T? =
     (this as? FallDetectorResult.Success)?.data
+
+fun <T> FallDetectorResult<T>.getOrThrow(): T? =
+    when (this) {
+        is FallDetectorResult.Success -> data
+        is FallDetectorResult.Failure -> throw error
+    }
 
 /**
  * Builders

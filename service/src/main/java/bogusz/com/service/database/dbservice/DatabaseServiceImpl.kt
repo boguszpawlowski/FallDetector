@@ -4,12 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import bogusz.com.service.database.FallDetectorDatabase
 import bogusz.com.service.database.dao.ContactDao
+import bogusz.com.service.database.dao.ServiceStateDao
 import javax.inject.Inject
 
 internal class DatabaseServiceImpl @Inject constructor(
-     context: Context
-): DatabaseService{
-
+    context: Context
+) : DatabaseService {
     private var dbInstance: FallDetectorDatabase
 
     init {
@@ -24,7 +24,9 @@ internal class DatabaseServiceImpl @Inject constructor(
 
     override fun getContactDao(): ContactDao = getDatabaseInstance().contactDao()
 
+    override fun getServiceStateDao(): ServiceStateDao = getDatabaseInstance().serviceStateDao()
+
     companion object {
-        const val name = "FDDatabase"
+        private const val name = "FDDatabase"
     }
 }

@@ -30,7 +30,7 @@ class FormDialogViewModel @Inject constructor(
             contactsRepository.getContact(id)
                 .onSuccess { it.copyToForm(contactForm) }
                 .onFailure {
-                    if (it !is FallDetectorException.NoSuchContactException) Timber.e(it)
+                    if (it !is FallDetectorException.NoSuchRecordException) Timber.e(it)
                 }
         }
     }
