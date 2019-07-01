@@ -1,26 +1,27 @@
-package com.example.bpawlowski.falldetector.ui.main.contacts.recycler
+package com.example.bpawlowski.falldetector.ui.main.contacts
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.view.View
 import bogusz.com.service.model.Contact
 import bogusz.com.service.model.UserPriority
-import com.example.bpawlowski.falldetector.BR
+import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.ContactItemBinding
-import com.example.bpawlowski.falldetector.ui.base.recycler.BaseViewHolder
-import com.example.bpawlowski.falldetector.ui.base.recycler.ItemTouchHelperViewHolder
+import com.example.bpawlowski.falldetector.ui.base.recycler.Item
 
-class ContactViewHolder(
-    view: View,
-    private val onSelectListener: OnContactTouchedListener? = null //todo add items, fixed alarm not working
-) : BaseViewHolder<ContactItemBinding, Contact>(view), ItemTouchHelperViewHolder {
+typealias OnContactTouchedListener = (Contact) -> Unit
+
+class ContactItem(
+    data: Contact,
+    onDismissListener: ((Contact) -> Unit)? = null,
+    private val onSelectListener: OnContactTouchedListener? = null
+) : Item<Contact, ContactItemBinding>(data, onDismissListener) {
 
     private lateinit var itemBackgroundDrawable: Drawable
 
-    override fun bindingId(): Int = BR.contact
+    override val layoutResId = R.layout.contact_item
 
-    override fun onBind(data: Contact) = with(binding) {
+    override fun onBind() = with(binding) {
         txtName.text = data.name
         txtNumber.text = data.mobile.toString()
         txtEmail.text = data.email
@@ -31,12 +32,12 @@ class ContactViewHolder(
         container.setOnClickListener { onSelectListener?.invoke(data) }
     }
 
-    override fun onItemSelected() {
+    override fun onSwipeStarted() {
         itemBackgroundDrawable = itemView.background
         itemView.background = ColorDrawable(Color.WHITE)
     }
 
-    override fun onItemClear() {
+    override fun onSwipeEnded() {
         itemView.background = itemBackgroundDrawable
     }
 }

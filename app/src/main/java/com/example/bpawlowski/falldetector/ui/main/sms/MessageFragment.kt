@@ -8,18 +8,21 @@ import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentMessageBinding
 import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
+import com.example.bpawlowski.falldetector.ui.base.recycler.ItemsAdapter
+import com.example.bpawlowski.falldetector.ui.base.recycler.ViewHolder
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
-import com.example.bpawlowski.falldetector.ui.main.contacts.recycler.ContactViewAdapter
 import com.example.bpawlowski.falldetector.util.autoCleared
 
 class MessageFragment : BaseFragment<MessageViewModel, MainViewModel, FragmentMessageBinding>() {
 
-    private var adapter by autoCleared<ContactViewAdapter>()
+    private var adapter by autoCleared<ItemsAdapter<ViewHolder>>()
 
     private val contactsObserver: Observer<List<Contact>> by lazy {
         Observer<List<Contact>> { contacts ->
             contacts?.let {
-                adapter.updateData(it.toMutableList())
+                adapter.update(it.map { contact ->
+                    MessageContactItem(contact) { viewModel.sendMessage(contact) }
+                })
             }
         }
     }
@@ -27,13 +30,8 @@ class MessageFragment : BaseFragment<MessageViewModel, MainViewModel, FragmentMe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = ContactViewAdapter(
-            viewType = R.layout.contact_item_sms,
-            onClickListener = { viewModel.sendMessage(it) }
-        )
-
+        adapter = ItemsAdapter()
         binding.recyclerContact.adapter = this@MessageFragment.adapter
-
         viewModel.contactsData.reObserve(this, contactsObserver)
     }
 

@@ -19,12 +19,6 @@ class MainViewModel @Inject constructor(
     val appSettingsPreferencesData: AppSettingsPreferencesData
         get() = AppSettingsPreferencesData(sharedPreferences)
 
-    var isLoading: ObservableBoolean = ObservableBoolean(false)
-
-    fun changeState(state: MainScreenState) {
-        isLoading.set(state is MainScreenState.LoadingState)
-    }
-
     fun changeSensitivity(sensitivity: Sensitivity) = viewModelScope.launch {
         serviceStateRepository.updateSensitivity(sensitivity)
     }

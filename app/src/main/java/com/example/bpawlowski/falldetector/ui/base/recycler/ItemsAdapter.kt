@@ -1,49 +1,47 @@
 package com.example.bpawlowski.falldetector.ui.base.recycler
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bpawlowski.falldetector.util.layoutInflater
 
-abstract class BaseRecyclerViewAdapter<D, VH : BaseViewHolder<*, D>>(var items: MutableList<D> = mutableListOf()) :
-    RecyclerView.Adapter<VH>() {
+open class ItemsAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {
 
-    fun updateData(value: MutableList<D>) {
+    private var items = mutableListOf<Item<*, *>>()
+    private var lastItemForViewTypeLookup: Item<*, *>? = null
+
+
+    fun update(value: List<Item<*, *>>) {
         val diff = DiffUtil.calculateDiff(getDiffCallback(value))
         diff.dispatchUpdatesTo(this)
-        items = value
+        items = value.toMutableList()
     }
 
-    private fun getDiffCallback(value: MutableList<D>): DiffUtil.Callback =
+    private fun getDiffCallback(value: List<Item<*, *>>): DiffUtil.Callback =
         DiffCallback(items.size, value.size, items, value)
-
-    open fun areItemsSame(oldItem: D, newItem: D) = oldItem == newItem
-
-    open fun areContentsSame(oldItem: D, newItem: D) = oldItem === newItem
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val view = parent.context.layoutInflater.inflate(viewType, parent, false)
-        return createHolder(view, viewType)
+        val item = getItemForViewType(viewType)
+        return item.createHolder(view) as VH
     }
 
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        holder.bind(items[position])
+        items[position].bind()
     }
 
-    override fun getItemViewType(position: Int) = getViewType(position)  //FixMe create Items
-
-    abstract fun getViewType(position: Int): Int
-
-    abstract fun createHolder(inflatedView: View, viewType: Int): VH
+    override fun getItemViewType(position: Int): Int {
+        lastItemForViewTypeLookup = items[position]
+        return lastItemForViewTypeLookup?.layoutResId ?: throw RuntimeException("Invalid position $position")
+    }
 
     inner class DiffCallback(
         private val oldBodyItemCount: Int,
         private val newBodyItemCount: Int,
-        private val oldItems: List<D>,
-        private val newItems: List<D>
+        private val oldItems: List<Item<*, *>>,
+        private val newItems: List<Item<*, *>>
     ) : DiffUtil.Callback() {
 
         override fun getOldListSize(): Int {
@@ -57,13 +55,29 @@ abstract class BaseRecyclerViewAdapter<D, VH : BaseViewHolder<*, D>>(var items: 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldItems[oldItemPosition]
             val newItem = newItems[newItemPosition]
-            return areItemsSame(oldItem, newItem)
+            return oldItem.isSameAs(newItem)
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldItems[oldItemPosition]
             val newItem = newItems[newItemPosition]
-            return areContentsSame(oldItem, newItem)
+            return oldItem.hasSameContentAs(newItem)
         }
+    }
+
+    private fun getItemForViewType(layoutResId: Int): Item<*, *> {
+        lastItemForViewTypeLookup?.let {
+            if (it.layoutResId == layoutResId) {
+                return it
+            }
+        }
+
+        for (i in 0 until itemCount) {
+            val item = items[i]
+            if (item.layoutResId == layoutResId) {
+                return item
+            }
+        }
+        throw IllegalStateException("Could not find model for view type: $layoutResId")
     }
 }
