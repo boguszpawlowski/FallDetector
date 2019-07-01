@@ -13,7 +13,7 @@ import com.example.bpawlowski.falldetector.ui.base.recycler.ItemTouchHelperViewH
 
 class ContactViewHolder(
     view: View,
-    private val onSelectListener: OnClickedListener? = null
+    private val onSelectListener: OnContactTouchedListener? = null //todo add items, fixed alarm not working
 ) : BaseViewHolder<ContactItemBinding, Contact>(view), ItemTouchHelperViewHolder {
 
     private lateinit var itemBackgroundDrawable: Drawable
@@ -21,7 +21,6 @@ class ContactViewHolder(
     override fun bindingId(): Int = BR.contact
 
     override fun onBind(data: Contact) = with(binding) {
-        imgContact.transitionName = "tr_$adapterPosition"
         txtName.text = data.name
         txtNumber.text = data.mobile.toString()
         txtEmail.text = data.email
@@ -29,7 +28,7 @@ class ContactViewHolder(
             UserPriority.PRIORITY_NORMAL -> ""
             UserPriority.PRIORITY_ICE -> "ICE"
         }
-        container.setOnClickListener { onSelectListener?.invoke(data, adapterPosition) }
+        container.setOnClickListener { onSelectListener?.invoke(data) }
     }
 
     override fun onItemSelected() {

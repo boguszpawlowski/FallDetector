@@ -17,7 +17,6 @@ import com.example.bpawlowski.falldetector.ui.main.contacts.recycler.ContactView
 import com.example.bpawlowski.falldetector.util.autoCleared
 
 const val CONTACT_ID = "contact_id"
-const val TRANSITION_NAME = "transition_name"
 
 class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, FragmentContactsBinding>() {
 
@@ -36,7 +35,7 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
 
         adapter = ContactViewAdapter(
             onDismissListener = { viewModel.removeContact(it) },
-            onSelectListener = { contact, position -> showDialog(contact.id, "tr_$position") }
+            onSelectListener = { showDialog(it.id) }
         )
 
         binding.recyclerContact.adapter = this@ContactsFragment.adapter
@@ -49,10 +48,10 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
         viewModel.contactsLiveData.reObserve(this, contactsObserver)
     }
 
-    private fun showDialog(id: Long? = null, transitionName: String = "") {
+    private fun showDialog(id: Long? = null) {
         val contactId = id ?: -1
         findNavController().navigate(
-            ContactsFragmentDirections.showDialog(contactId, transitionName)
+            ContactsFragmentDirections.showDialog(contactId)
         )
     }
 

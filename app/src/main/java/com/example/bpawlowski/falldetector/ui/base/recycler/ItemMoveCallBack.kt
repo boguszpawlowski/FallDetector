@@ -21,10 +21,14 @@ class ItemMoveCallBack(
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
-        return makeMovementFlags(0,swipeFlags)
+        return makeMovementFlags(0, swipeFlags)
     }
 
-    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder) = false
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ) = false
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         adapter.onItemDismiss(viewHolder.adapterPosition)
@@ -79,6 +83,7 @@ class ItemMoveCallBack(
             itemViewHolder.onItemClear()
         }
     }
+
     override fun isItemViewSwipeEnabled() = true
 
     companion object {
@@ -95,11 +100,11 @@ fun Drawable.calculateBounds(itemView: View, dX: Float): Drawable {
     val deleteIconLeft: Int
     val deleteIconRight: Int
     if (dX > 0) {
-        deleteIconLeft = itemView.left + deleteIconMargin - intrinsicWidth
+        deleteIconLeft = itemView.left + deleteIconMargin - intrinsicWidth //fixme something is wrong here
         deleteIconRight = itemView.left + deleteIconMargin
     } else {
-        deleteIconLeft = itemView.right - deleteIconMargin + intrinsicWidth
-        deleteIconRight = itemView.right - deleteIconMargin
+        deleteIconLeft = itemView.right - intrinsicWidth
+        deleteIconRight = itemView.right
     }
     setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
     return this

@@ -25,9 +25,6 @@
         <argument
                 android:name="contact_id"
                 app:argType="long"/>
-        <argument
-                android:name="transition_name"
-                app:argType="string"/>
     </dialog>
 
     <fragment android:id="@+id/settingsFragment"

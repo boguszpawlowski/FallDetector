@@ -54,7 +54,7 @@ internal class ServiceStateRepositoryImpl @Inject constructor(
             if (updated != 0) {
                 success(Unit)
             } else {
-                failure(FallDetectorException.RecordNotUpdatedException)
+                failure(FallDetectorException.RecordNotUpdatedException())
             }
         }
 
@@ -64,7 +64,7 @@ internal class ServiceStateRepositoryImpl @Inject constructor(
             if (updated != 0) {
                 success(Unit)
             } else {
-                failure(FallDetectorException.RecordNotUpdatedException)
+                failure(FallDetectorException.RecordNotUpdatedException())
             }
         }
 }

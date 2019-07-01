@@ -2,9 +2,9 @@ package bogusz.com.service.model
 
 import androidx.room.TypeConverter
 
-enum class UserPriority() {
-    PRIORITY_ICE,
-    PRIORITY_NORMAL;
+enum class UserPriority {
+    PRIORITY_NORMAL,
+    PRIORITY_ICE;
 }
 
 internal object UserPriorityConverter {

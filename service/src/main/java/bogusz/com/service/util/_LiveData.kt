@@ -14,6 +14,9 @@ fun <T, R> LiveData<T>.switchMap(transform: (T) -> LiveData<R>): LiveData<R> =
 inline fun <T, R : Comparable<R>> LiveData<List<T>>.sortedBy(crossinline selector: (T) -> R?): LiveData<List<T>> =
     map { it.sortedWith(compareBy(selector)) }
 
+inline fun <T, R : Comparable<R>> LiveData<List<T>>.sortedByDescending(crossinline selector: (T) -> R?): LiveData<List<T>> =
+    map { it.sortedByDescending(selector) }
+
 fun <T> LiveData<T>.reObserve(owner: LifecycleOwner, observer: Observer<T>) {
     removeObserver(observer)
     observe(owner, observer)

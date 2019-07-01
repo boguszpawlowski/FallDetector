@@ -26,7 +26,6 @@ class ContactForm : BaseObservable() {
             notifyPropertyChanged(BR.mobileError)
         }
 
-    @Bindable
     var email: String = String.empty
         set(value) {
             field = value

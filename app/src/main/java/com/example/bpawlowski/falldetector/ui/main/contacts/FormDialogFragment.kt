@@ -61,7 +61,7 @@ class FormDialogFragment : DialogFragment(), Injectable {
 
         viewModel.addContactResultData.reObserve(this, resultObserver)
 
-        val contactId = arguments?.getLong(CONTACT_ID, -1)
+        val contactId = arguments?.getLong(CONTACT_ID).takeUnless { it == -1L }
         viewModel.initData(contactId)
         initListeners(contactId)
     }
