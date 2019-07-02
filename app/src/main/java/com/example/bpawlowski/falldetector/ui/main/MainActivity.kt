@@ -20,7 +20,6 @@ import bogusz.com.service.model.AppSettings
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseActivity
-import com.example.bpawlowski.falldetector.ui.main.home.HomeFragmentDirections
 import com.example.bpawlowski.falldetector.util.drawerItems
 import com.example.bpawlowski.falldetector.util.getPermissions
 import com.google.android.material.navigation.NavigationView
@@ -80,7 +79,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     override fun onOptionsItemSelected(item: MenuItem) =
         when (item.itemId) {
             R.id.action_settings -> {
-                navController?.navigate(HomeFragmentDirections.showSettings())
+                navController?.navigate(R.id.settingsFragment)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -135,7 +134,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     override val keepInBackStack = true
 
     companion object {
-        private const val CLOSE_DRAWER_DELAY = 200L
+        private const val CLOSE_DRAWER_DELAY = 150L
 
         @JvmStatic
         fun getIntent(context: Context) = Intent(context, MainActivity::class.java)
