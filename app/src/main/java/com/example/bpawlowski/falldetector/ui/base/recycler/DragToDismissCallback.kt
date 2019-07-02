@@ -10,20 +10,12 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bpawlowski.falldetector.R
 
-class ItemMoveCallBack(
-    private val context: Context
+class DragToDismissCallback(
+    context: Context
 ) : TouchCallback() {
 
-    private val background = ColorDrawable()
-    private lateinit var itemBackgroundDrawable: Drawable
-    private val backgroundColor = ContextCompat.getColor(context, R.color.accent)
+    private val background = ColorDrawable(ContextCompat.getColor(context, R.color.accent))
     private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.icon_delete)
-
-    override fun onMove(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder
-    ) = false
 
     override fun onChildDraw(
         c: Canvas,
@@ -36,32 +28,27 @@ class ItemMoveCallBack(
     ) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             val itemView = viewHolder.itemView
-            itemBackgroundDrawable = itemView.background
+            if (dX == 0f) {
+                background.clear(c)
+                deleteIcon?.clear(c)
+            } else {
+                background.setBounds(itemView.left, itemView.top, itemView.right, itemView.bottom)
+                background.draw(c)
+                deleteIcon?.calculateBounds(itemView, dX)?.draw(c)
 
-            itemView.background = ContextCompat.getDrawable(context, R.drawable.background_rounded_small)
-
-            background.apply {
-                color = backgroundColor
-                setBounds(itemView.left, itemView.top, itemView.right, itemView.bottom)
-            }.draw(c)
-
-            deleteIcon?.calculateBounds(itemView, dX)?.draw(c)
-
-            val alpha = ALPHA_FULL - Math.abs(dX) / itemView.width.toFloat()
-            itemView.apply {
-                this.alpha = alpha
-                elevation = ELEVATION
-                translationX = dX
+                itemView.apply {
+                    elevation = ELEVATION_SWIPE
+                    translationX = dX
+                }
             }
         }
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE && viewHolder is ViewHolder) {
+        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE && viewHolder is ViewHolder && viewHolder.item is SwipeableItem) {
             viewHolder.item.onSwipeStarted()
         }
-
         super.onSelectedChanged(viewHolder, actionState)
     }
 
@@ -69,14 +56,9 @@ class ItemMoveCallBack(
         super.clearView(recyclerView, viewHolder)
         val itemView = viewHolder.itemView
 
-        itemView.alpha = ALPHA_FULL
-        itemView.elevation = 0F
-        itemView.background = itemBackgroundDrawable //todo not working
+        itemView.elevation = ELEVATION_FLAT
 
-        deleteIcon?.setVisible(false, false)
-        background.setVisible(false, false) //todo remove
-
-        if (viewHolder is ViewHolder) {
+        if (viewHolder is ViewHolder && viewHolder.item is SwipeableItem) {
             viewHolder.item.onSwipeEnded()
         }
     }
@@ -84,12 +66,12 @@ class ItemMoveCallBack(
     override fun isItemViewSwipeEnabled() = true
 
     companion object {
-        const val ALPHA_FULL = 1.0f
-        const val ELEVATION = 8f
+        const val ELEVATION_SWIPE = 8f
+        const val ELEVATION_FLAT = 0f
     }
 }
 
-fun Drawable.calculateBounds(itemView: View, dX: Float): Drawable {
+fun Drawable.calculateBounds(itemView: View, dX: Float): Drawable { //fixme fixed bounds
     val itemHeight = itemView.bottom - itemView.top
     val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
     val deleteIconMargin = (itemHeight - intrinsicHeight) / 2
@@ -105,4 +87,9 @@ fun Drawable.calculateBounds(itemView: View, dX: Float): Drawable {
     }
     setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
     return this
+}
+
+fun Drawable.clear(c: Canvas) {
+    setBounds(0, 0, 0, 0)
+    draw(c)
 }

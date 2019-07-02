@@ -3,7 +3,6 @@ package com.example.bpawlowski.falldetector.ui.base.recycler
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-
 abstract class TouchCallback : ItemTouchHelper.SimpleCallback(0, 0) {
 
     override fun getSwipeDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
@@ -21,6 +20,12 @@ abstract class TouchCallback : ItemTouchHelper.SimpleCallback(0, 0) {
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        (viewHolder as? ViewHolder)?.item?.onDismissed()
+        ((viewHolder as? ViewHolder)?.item as? SwipeableItem)?.onDismissed()
     }
+
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ) = false
 }

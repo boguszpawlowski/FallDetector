@@ -1,6 +1,7 @@
 package com.example.bpawlowski.falldetector.util
 
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -10,11 +11,25 @@ import kotlin.reflect.KProperty
 class AutoClearedValue<T : Any>(val fragment: Fragment) : ReadWriteProperty<Fragment, T> {
     private var _value: T? = null
 
+    private val lifecycleCallback = object : FragmentManager.FragmentLifecycleCallbacks() {
+        override fun onFragmentViewDestroyed(fm: FragmentManager, f: Fragment) {
+            if (f == fragment) {
+                _value = null
+            }
+        }
+    }
+
     init {
         fragment.lifecycle.addObserver(object : LifecycleObserver {
+            @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+            fun onCreate() {
+                fragment.requireFragmentManager().registerFragmentLifecycleCallbacks(
+                    lifecycleCallback, false
+                )
+            }
             @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
             fun onDestroy() {
-                _value = null
+                fragment.requireFragmentManager().unregisterFragmentLifecycleCallbacks(lifecycleCallback)
             }
         })
     }

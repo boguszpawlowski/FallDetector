@@ -9,7 +9,6 @@ import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentCallBinding
 import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
-import com.example.bpawlowski.falldetector.ui.base.recycler.ItemAdapter
 import com.example.bpawlowski.falldetector.ui.base.recycler.ItemsAdapter
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
@@ -17,7 +16,7 @@ import com.example.bpawlowski.falldetector.util.checkPermission
 
 class CallFragment : BaseFragment<CallViewModel, MainViewModel, FragmentCallBinding>() {
 
-    private var adapter by autoCleared<ItemAdapter>()
+    private var adapter by autoCleared<ItemsAdapter>()
 
     private val contactsObserver: Observer<List<Contact>> by lazy {
         Observer<List<Contact>> { contacts ->

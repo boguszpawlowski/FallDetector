@@ -5,33 +5,30 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bpawlowski.falldetector.util.layoutInflater
 
-typealias ItemAdapter = ItemsAdapter<ViewHolder>
+open class ItemsAdapter : RecyclerView.Adapter<ViewHolder>() {
 
-open class ItemsAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {
-
-    private var items = mutableListOf<Item<*, *>>()
+    private var items = listOf<Item<*, *>>()
     private var lastItemForViewTypeLookup: Item<*, *>? = null
-
 
     fun update(value: List<Item<*, *>>) {
         val diff = DiffUtil.calculateDiff(getDiffCallback(value))
+        items = value
         diff.dispatchUpdatesTo(this)
-        items = value.toMutableList()
     }
 
     private fun getDiffCallback(value: List<Item<*, *>>): DiffUtil.Callback =
         DiffCallback(items.size, value.size, items, value)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = parent.context.layoutInflater.inflate(viewType, parent, false)
         val item = getItemForViewType(viewType)
-        return item.createHolder(view) as VH
+        return item.createHolder(view)
     }
 
     override fun getItemCount() = items.size
 
-    override fun onBindViewHolder(holder: VH, position: Int) {
-        (holder as ViewHolder).item.bind()
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.item.bind()
     }
 
     override fun getItemViewType(position: Int): Int {
