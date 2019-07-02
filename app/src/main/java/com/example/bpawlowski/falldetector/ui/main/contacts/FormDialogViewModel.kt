@@ -3,11 +3,10 @@ package com.example.bpawlowski.falldetector.ui.main.contacts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import bogusz.com.service.database.FallDetectorResult
 import bogusz.com.service.database.exceptions.FallDetectorException
-import bogusz.com.service.database.onFailure
-import bogusz.com.service.database.onSuccess
 import bogusz.com.service.database.repository.ContactRepository
-import com.example.bpawlowski.falldetector.domain.ContactForm
+import com.example.bpawlowski.falldetector.domain.ContactFormModel
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.util.copyToForm
 import com.example.bpawlowski.falldetector.util.mapToContact
@@ -19,11 +18,11 @@ class FormDialogViewModel @Inject constructor(
     private val contactsRepository: ContactRepository
 ) : BaseViewModel() {
 
-    private val _addContactResultData = MutableLiveData<Boolean>()
-    val addContactResultData: LiveData<Boolean>
+    private val _addContactResultData = MutableLiveData<FallDetectorResult<Long>>()
+    val addContactResultData: LiveData<FallDetectorResult<Long>>
         get() = _addContactResultData
 
-    val contactForm = ContactForm()
+    val contactForm = ContactFormModel()
 
     fun initData(id: Long?) = id?.let {
         viewModelScope.launch {
@@ -38,11 +37,9 @@ class FormDialogViewModel @Inject constructor(
     fun tryToAddContact(contactId: Long? = null) = viewModelScope.launch {
         val contact = contactForm.mapToContact().apply { id = contactId }
 
-        contactsRepository.addContact(contact)
-            .onSuccess { _addContactResultData.postValue(true) }
-            .onFailure {
-                Timber.e(it)
-                _addContactResultData.postValue(false)
-            }
+        _addContactResultData.postValue(
+            contactsRepository.addContact(contact)
+                .onFailure { Timber.e(it) }
+        )
     }
 }

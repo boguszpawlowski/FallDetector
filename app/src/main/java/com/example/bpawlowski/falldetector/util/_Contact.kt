@@ -2,9 +2,9 @@ package com.example.bpawlowski.falldetector.util
 
 import bogusz.com.service.model.Contact
 import bogusz.com.service.model.UserPriority
-import com.example.bpawlowski.falldetector.domain.ContactForm
+import com.example.bpawlowski.falldetector.domain.ContactFormModel
 
-fun Contact.copyToForm(form: ContactForm) =
+fun Contact.copyToForm(form: ContactFormModel) =
     form.apply {
         name = this@copyToForm.name
         mobile = this@copyToForm.mobile.toString()
@@ -13,7 +13,7 @@ fun Contact.copyToForm(form: ContactForm) =
     }
 
 
-fun ContactForm.mapToContact(): Contact =
+fun ContactFormModel.mapToContact(): Contact =
     Contact(
         name = name,
         mobile = mobile.toInt(),

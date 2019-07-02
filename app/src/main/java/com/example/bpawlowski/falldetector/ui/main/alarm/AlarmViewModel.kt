@@ -2,8 +2,6 @@ package com.example.bpawlowski.falldetector.ui.main.alarm
 
 import androidx.lifecycle.viewModelScope
 import bogusz.com.service.alarm.AlarmService
-import bogusz.com.service.database.onFailure
-import bogusz.com.service.database.onSuccess
 import bogusz.com.service.database.repository.ContactRepository
 import bogusz.com.service.database.zip
 import bogusz.com.service.location.LocationProvider

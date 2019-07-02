@@ -33,7 +33,8 @@ abstract class BaseActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActi
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(getViewModelClass())
-        binding = DataBindingUtil.setContentView(this, getLayoutID())
+        val viewBinding = DataBindingUtil.setContentView<B>(this, getLayoutID())
+        binding = viewBinding
         binding.setVariable(BR.viewModel, viewModel)
     }
 

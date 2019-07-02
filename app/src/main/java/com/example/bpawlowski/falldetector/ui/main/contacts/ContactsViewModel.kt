@@ -2,7 +2,6 @@ package com.example.bpawlowski.falldetector.ui.main.contacts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import bogusz.com.service.database.onFailure
 import bogusz.com.service.database.repository.ContactRepository
 import bogusz.com.service.model.Contact
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel

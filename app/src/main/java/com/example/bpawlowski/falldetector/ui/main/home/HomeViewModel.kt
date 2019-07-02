@@ -3,7 +3,6 @@ package com.example.bpawlowski.falldetector.ui.main.home
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import bogusz.com.service.database.exceptions.FallDetectorException
-import bogusz.com.service.database.fold
 import bogusz.com.service.database.repository.ServiceStateRepository
 import com.example.bpawlowski.falldetector.monitoring.BackgroundService
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel

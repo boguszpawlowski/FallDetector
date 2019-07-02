@@ -9,8 +9,6 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.Observer
 import bogusz.com.service.accelometer.FallDetector
 import bogusz.com.service.alarm.AlarmService
-import bogusz.com.service.database.onFailure
-import bogusz.com.service.database.onSuccess
 import bogusz.com.service.database.repository.ContactRepository
 import bogusz.com.service.database.repository.ServiceStateRepository
 import bogusz.com.service.database.zip
@@ -165,7 +163,6 @@ class BackgroundService : Service(), CoroutineScope {
      * If There is no movement, raise alarm, if there is still ask user if everything is ok
      */
     private fun raiseAlarm(shouldRaise: Boolean) {
-        Timber.e("alarm: $shouldRaise")
         if (shouldRaise) {
             launch {
                 zip(contactRepository.getAllContacts(), locationProvider.getLastKnownLocation()) { first, second ->

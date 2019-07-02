@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var navController: NavController
+    private var navController: NavController? = null
 
     private val appBarConfiguration by lazy {
         AppBarConfiguration(drawerItems, binding.drawerLayout)
@@ -45,15 +45,21 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
 
-        navController = findNavController(R.id.nav_host_fragment)
-
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        binding.navView.setupWithNavController(navController)
+        navController = findNavController(R.id.nav_host_fragment).also {
+            setupActionBarWithNavController(it, appBarConfiguration)
+            binding.navView.setupWithNavController(it)
+        }
 
         binding.navView.setNavigationItemSelectedListener(this)
 
         initObservers()
         checkPermissions()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        navController = null
     }
 
     override fun onBackPressed() {
@@ -74,7 +80,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     override fun onOptionsItemSelected(item: MenuItem) =
         when (item.itemId) {
             R.id.action_settings -> {
-                navController.navigate(HomeFragmentDirections.showSettings())
+                navController?.navigate(HomeFragmentDirections.showSettings())
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -82,12 +88,12 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_home -> navController.navigate(R.id.homeFragment)
-            R.id.nav_contacts -> navController.navigate(R.id.contactsFragment)
-            R.id.nav_alarm -> navController.navigate(R.id.alarmFragment)
+            R.id.nav_home -> navController?.navigate(R.id.homeFragment)
+            R.id.nav_contacts -> navController?.navigate(R.id.contactsFragment)
+            R.id.nav_alarm -> navController?.navigate(R.id.alarmFragment)
 
-            R.id.nav_call -> navController.navigate(R.id.callFragment)
-            R.id.nav_sms -> navController.navigate(R.id.messageFragment)
+            R.id.nav_call -> navController?.navigate(R.id.callFragment)
+            R.id.nav_sms -> navController?.navigate(R.id.messageFragment)
         }
         Handler(Looper.getMainLooper()).postDelayed({
             item.isChecked = true
@@ -97,9 +103,8 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
         return true
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return navigateUp(navController, appBarConfiguration)
-    }
+    override fun onSupportNavigateUp() =
+        navigateUp(navController!!, appBarConfiguration)
 
     private fun initObservers() {
         viewModel.appSettingsPreferencesData.observe(this, appSettingsObserver)

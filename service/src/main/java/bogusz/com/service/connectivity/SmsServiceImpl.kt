@@ -10,7 +10,7 @@ internal class SmsServiceImpl @Inject constructor() : SmsService {
         val smsManager = SmsManager.getDefault()
         with(smsManager) {
             val parts = divideMessage(location.smsBody)
-            sendMultipartTextMessage(number.toString(), null, parts, null, null)
+//            sendMultipartTextMessage(number.toString(), null, parts, null, null)
         }
     }
 

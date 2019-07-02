@@ -9,11 +9,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import bogusz.com.service.database.FallDetectorResult
 import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.DialogFormBinding
 import com.example.bpawlowski.falldetector.di.Injectable
 import com.example.bpawlowski.falldetector.ui.base.activity.ViewModelFactory
+import com.example.bpawlowski.falldetector.util.autoCleared
 import com.example.bpawlowski.falldetector.util.toast
 import javax.inject.Inject
 
@@ -22,18 +24,16 @@ class FormDialogFragment : DialogFragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    lateinit var binding: DialogFormBinding
+    private var binding by autoCleared<DialogFormBinding>()
 
     lateinit var viewModel: FormDialogViewModel
 
-    private val resultObserver: Observer<Boolean> by lazy {
-        Observer<Boolean> { isSuccessful ->
-            isSuccessful?.let {
-                if (isSuccessful) {
-                    dismiss()
-                } else {
-                    requireContext().toast("Ice contact already exists")
-                }
+    private val resultObserver: Observer<FallDetectorResult<Long>> by lazy {
+        Observer<FallDetectorResult<Long>> { result ->
+            result.onSuccess {
+                dismiss()
+            }.onKnownFailure {
+                requireContext().toast(it.rationale) //todo pass failure to mainViewModel, event bus??
             }
         }
     }
@@ -49,7 +49,6 @@ class FormDialogFragment : DialogFragment(), Injectable {
     ): View? {
         val dataBinding = DataBindingUtil.inflate<DialogFormBinding>(inflater, R.layout.dialog_form, container, false)
         binding = dataBinding
-        binding.lifecycleOwner = viewLifecycleOwner
         return dataBinding.root
     }
 
@@ -57,6 +56,7 @@ class FormDialogFragment : DialogFragment(), Injectable {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(FormDialogViewModel::class.java)
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
         viewModel.addContactResultData.reObserve(this, resultObserver)

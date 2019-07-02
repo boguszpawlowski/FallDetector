@@ -5,11 +5,10 @@ import bogusz.com.service.model.AccelerometerEvent
 import bogusz.com.service.model.Sensitivity
 import bogusz.com.service.rx.SchedulerProvider
 import io.reactivex.Flowable
-import timber.log.Timber
 import java.lang.Math.abs
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-class FallDetector (
+
+class FallDetector(
     private val context: Context,
     private val schedulerProvider: SchedulerProvider,
     private var sensitivity: Sensitivity = Sensitivity.HIGH
@@ -20,10 +19,10 @@ class FallDetector (
     }
 
     fun getFallEvents(): Flowable<Boolean> =
-            accelerometerFlowable
-                .subscribeOn(schedulerProvider.COMPUTATION)
-                .skipUntilPeak(sensitivity)
-                .detectNoMovement(sensitivity)
+        accelerometerFlowable
+            .subscribeOn(schedulerProvider.COMPUTATION)
+            .skipUntilPeak(sensitivity)
+            .detectNoMovement(sensitivity)
 
     fun changeSensitivity(sensitivity: Sensitivity) {
         this.sensitivity = sensitivity

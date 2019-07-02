@@ -3,7 +3,6 @@ package com.example.bpawlowski.falldetector.ui.main.sms
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import bogusz.com.service.connectivity.SmsService
-import bogusz.com.service.database.onSuccess
 import bogusz.com.service.database.repository.ContactRepository
 import bogusz.com.service.location.LocationProvider
 import bogusz.com.service.model.Contact

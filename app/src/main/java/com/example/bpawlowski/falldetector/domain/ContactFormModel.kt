@@ -6,7 +6,7 @@ import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
 import com.example.bpawlowski.falldetector.util.empty
 
-class ContactForm : BaseObservable() {
+class ContactFormModel : BaseObservable() {
 
     @Bindable
     var name: String = String.empty
@@ -26,6 +26,7 @@ class ContactForm : BaseObservable() {
             notifyPropertyChanged(BR.mobileError)
         }
 
+    @Bindable
     var email: String = String.empty
         set(value) {
             field = value
