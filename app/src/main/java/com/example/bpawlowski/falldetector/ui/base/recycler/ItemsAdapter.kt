@@ -5,6 +5,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bpawlowski.falldetector.util.layoutInflater
 
+typealias ItemAdapter = ItemsAdapter<ViewHolder>
+
 open class ItemsAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {
 
     private var items = mutableListOf<Item<*, *>>()
@@ -29,7 +31,7 @@ open class ItemsAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        items[position].bind()
+        (holder as ViewHolder).item.bind()
     }
 
     override fun getItemViewType(position: Int): Int {

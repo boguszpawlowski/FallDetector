@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.bpawlowski.falldetector.util.doNothing
 
 abstract class Item<D, B : ViewDataBinding>(
-    val data: D,
-    val onSwipeListener: ((D) -> Unit)? = null
+    val data: D
 ) {
 
     protected lateinit var binding: B
@@ -17,10 +16,14 @@ abstract class Item<D, B : ViewDataBinding>(
 
     abstract val layoutResId: Int
 
-    fun createHolder(itemView: View): RecyclerView.ViewHolder {
+    open val swipeDirs = 0
+
+    open val dragDirs = 0
+
+    fun createHolder(itemView: View): ViewHolder {
         this.itemView = itemView
         binding = DataBindingUtil.bind(itemView) ?: throw RuntimeException("Couldn't bind this view")
-        return ViewHolder(binding)
+        return ViewHolder(this, binding)
     }
 
     fun bind() {
@@ -33,10 +36,11 @@ abstract class Item<D, B : ViewDataBinding>(
     /**
      * Methods for swiping
      */
-
     open fun onSwipeStarted() = doNothing
 
     open fun onSwipeEnded() = doNothing
+
+    open fun onDismissed() = doNothing
 
     open fun isSameAs(other: Item<*, *>): Boolean {
         return this == other
@@ -47,4 +51,8 @@ abstract class Item<D, B : ViewDataBinding>(
     }
 }
 
-class ViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
+class ViewHolder(val item: Item<*, *>, binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
+    val swipeDirs = item.swipeDirs
+
+    val dragDirs = item.dragDirs
+}

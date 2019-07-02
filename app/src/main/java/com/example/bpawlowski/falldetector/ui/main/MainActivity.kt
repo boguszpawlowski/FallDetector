@@ -4,8 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
@@ -17,6 +15,7 @@ import androidx.navigation.ui.NavigationUI.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import bogusz.com.service.model.AppSettings
+import bogusz.com.service.util.postDelayed
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseActivity
@@ -94,10 +93,10 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
             R.id.nav_call -> navController?.navigate(R.id.callFragment)
             R.id.nav_sms -> navController?.navigate(R.id.messageFragment)
         }
-        Handler(Looper.getMainLooper()).postDelayed({
+        postDelayed {
             item.isChecked = true
             binding.drawerLayout.closeDrawer(GravityCompat.START)
-        }, CLOSE_DRAWER_DELAY)
+        }
 
         return true
     }

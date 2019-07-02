@@ -3,6 +3,7 @@ package com.example.bpawlowski.falldetector.ui.main.contacts
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import androidx.recyclerview.widget.ItemTouchHelper
 import bogusz.com.service.model.Contact
 import bogusz.com.service.model.UserPriority
 import com.example.bpawlowski.falldetector.R
@@ -13,9 +14,9 @@ typealias OnContactTouchedListener = (Contact) -> Unit
 
 class ContactItem(
     data: Contact,
-    onDismissListener: ((Contact) -> Unit)? = null,
+    private val onDismissListener: ((Contact) -> Unit)? = null,
     private val onSelectListener: OnContactTouchedListener? = null
-) : Item<Contact, ContactItemBinding>(data, onDismissListener) {
+) : Item<Contact, ContactItemBinding>(data) {
 
     private lateinit var itemBackgroundDrawable: Drawable
 
@@ -32,6 +33,8 @@ class ContactItem(
         container.setOnClickListener { onSelectListener?.invoke(data) }
     }
 
+    override val swipeDirs = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+
     override fun onSwipeStarted() {
         itemBackgroundDrawable = itemView.background
         itemView.background = ColorDrawable(Color.WHITE)
@@ -39,5 +42,22 @@ class ContactItem(
 
     override fun onSwipeEnded() {
         itemView.background = itemBackgroundDrawable
+    }
+
+    override fun onDismissed() {
+        onDismissListener?.invoke(data)
+    }
+
+    override fun isSameAs(other: Item<*, *>): Boolean {
+        val otherItem = other.data as? Contact ?: return false
+        return data.id == otherItem.id
+    }
+
+    override fun hasSameContentAs(other: Item<*, *>): Boolean {
+        val otherItem = other.data as? Contact ?: return false
+        return data.priority == otherItem.priority &&
+                data.email == otherItem.email &&
+                data.mobile == otherItem.mobile &&
+                data.name == otherItem.name
     }
 }
