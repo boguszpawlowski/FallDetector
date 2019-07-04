@@ -6,6 +6,7 @@ import bogusz.com.service.database.repository.ContactRepository
 import bogusz.com.service.database.zip
 import bogusz.com.service.location.LocationProvider
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -16,7 +17,10 @@ class AlarmViewModel(
 ) : BaseViewModel() {
 
     fun raiseAlarm() = viewModelScope.launch {
-        zip(contactRepository.getAllContacts(), locationProvider.getLastKnownLocation()) { first, second ->
+        val contacts = async { contactRepository.getAllContacts() }
+        val location = async { locationProvider.getLastKnownLocation() }
+
+        zip(contacts.await(), location.await()) { first, second ->
             first to second
         }.onSuccess { alarmService.raiseAlarm(it.first, it.second) }
             .onFailure { Timber.e(it) }

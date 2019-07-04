@@ -28,7 +28,7 @@ open class ItemsAdapter : RecyclerView.Adapter<ViewHolder>() {
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        items[position].bind(holder)
+        holder.bind(items[position])
     }
 
     override fun onViewRecycled(holder: ViewHolder) {

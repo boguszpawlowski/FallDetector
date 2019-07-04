@@ -12,56 +12,56 @@ import timber.log.Timber
 
 abstract class BaseActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActivity() {
 
-	abstract val viewModel: VM
+    abstract val viewModel: VM
 
-	lateinit var binding: B
+    lateinit var binding: B
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		Timber.tag(javaClass.simpleName).v("ON_CREATE")
-		super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Timber.tag(javaClass.simpleName).v("ON_CREATE")
+        super.onCreate(savedInstanceState)
 
 
-		val viewBinding = DataBindingUtil.setContentView<B>(this, layoutId)
-		binding = viewBinding
-		binding.setVariable(BR.viewModel, viewModel)
-	}
+        val viewBinding = DataBindingUtil.setContentView<B>(this, layoutId)
+        binding = viewBinding
+        binding.setVariable(BR.viewModel, viewModel)
+    }
 
-	override fun onStart() {
-		Timber.tag(javaClass.simpleName).v("ON_START")
-		super.onStart()
-	}
+    override fun onStart() {
+        Timber.tag(javaClass.simpleName).v("ON_START")
+        super.onStart()
+    }
 
-	override fun onResume() {
-		Timber.tag(javaClass.simpleName).v("ON_RESUME")
-		super.onResume()
-	}
+    override fun onResume() {
+        Timber.tag(javaClass.simpleName).v("ON_RESUME")
+        super.onResume()
+    }
 
-	override fun onPause() {
-		Timber.tag(javaClass.simpleName).v("ON_PAUSE")
-		super.onPause()
-	}
+    override fun onPause() {
+        Timber.tag(javaClass.simpleName).v("ON_PAUSE")
+        super.onPause()
+    }
 
-	override fun onStop() {
-		Timber.tag(javaClass.simpleName).v("ON_STOP")
-		super.onStop()
-	}
+    override fun onStop() {
+        Timber.tag(javaClass.simpleName).v("ON_STOP")
+        super.onStop()
+    }
 
-	override fun onDestroy() {
-		Timber.tag(javaClass.simpleName).v("ON_DESTROY")
-		super.onDestroy()
-	}
+    override fun onDestroy() {
+        Timber.tag(javaClass.simpleName).v("ON_DESTROY")
+        super.onDestroy()
+    }
 
-	fun navigateToActivity(activity: Activity) {
-		Intent(this, activity::class.java).run {
-			startActivity(intent)
-		}
+    fun navigateToActivity(activity: Activity) {
+        Intent(this, activity::class.java).run {
+            startActivity(intent)
+        }
 
-		if (keepInBackStack.not()) {
-			finish()
-		}
-	}
+        if (keepInBackStack.not()) {
+            finish()
+        }
+    }
 
-	open val keepInBackStack: Boolean = false
+    open val keepInBackStack: Boolean = false
 
-	abstract val layoutId: Int
+    abstract val layoutId: Int
 }

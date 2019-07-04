@@ -29,9 +29,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     NavigationView.OnNavigationItemSelectedListener {
 
-	override val viewModel: MainViewModel by viewModel()
+    override val viewModel: MainViewModel by viewModel()
 
-	private var navController: NavController? = null
+    private var navController: NavController? = null
 
     private val appBarConfiguration by lazy {
         AppBarConfiguration(drawerItems, binding.drawerLayout)

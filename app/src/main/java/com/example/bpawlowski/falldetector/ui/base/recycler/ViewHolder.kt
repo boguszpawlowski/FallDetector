@@ -6,15 +6,19 @@ import androidx.recyclerview.widget.RecyclerView
 class ViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
 
     var item: Item<*, *>? = null
+
     val swipeDirs: Int
         get() = (item as? SwipeableItem)?.swipeDirs ?: 0
-    val dragDirs = 0 //todo implement if necessary
+
+    val dragDirs = 0
 
     fun unbind() {
         item = null
     }
 
-    fun bind(item: Item<*, *>) {
+    fun <B : ViewDataBinding> bind(item: Item<*, B>) {
         this.item = item
+        item.onBind(binding as B)
+        binding.executePendingBindings()
     }
 }

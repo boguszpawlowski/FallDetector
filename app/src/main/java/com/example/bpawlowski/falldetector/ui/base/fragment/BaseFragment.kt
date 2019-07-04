@@ -14,65 +14,65 @@ import timber.log.Timber
 
 abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDataBinding> : Fragment() {
 
-	abstract val viewModel: VM
+    abstract val viewModel: VM
 
-	abstract val sharedViewModel: SVM
+    abstract val sharedViewModel: SVM
 
-	protected var binding by autoCleared<B>()
+    protected var binding by autoCleared<B>()
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		Timber.tag(javaClass.simpleName).v("ON_CREATE")
-		super.onCreate(savedInstanceState)
-	}
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Timber.tag(javaClass.simpleName).v("ON_CREATE")
+        super.onCreate(savedInstanceState)
+    }
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		Timber.tag(javaClass.simpleName).v("ON_CREATE_VIEW")
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Timber.tag(javaClass.simpleName).v("ON_CREATE_VIEW")
 
-		val dataBinding = DataBindingUtil.inflate<B>(inflater, getLayoutID(), container, false)
+        val dataBinding = DataBindingUtil.inflate<B>(inflater, getLayoutID(), container, false)
 
-		binding = dataBinding
-		return dataBinding.root
-	}
+        binding = dataBinding
+        return dataBinding.root
+    }
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		Timber.tag(javaClass.simpleName).v("ON_VIEW_CREATED")
-		super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Timber.tag(javaClass.simpleName).v("ON_VIEW_CREATED")
+        super.onViewCreated(view, savedInstanceState)
 
-		binding.lifecycleOwner = viewLifecycleOwner
-		binding.setVariable(BR.viewModel, viewModel)
-	}
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.setVariable(BR.viewModel, viewModel)
+    }
 
-	override fun onStart() {
-		Timber.tag(javaClass.simpleName).v("ON_START")
-		super.onStart()
-	}
+    override fun onStart() {
+        Timber.tag(javaClass.simpleName).v("ON_START")
+        super.onStart()
+    }
 
-	override fun onResume() {
-		Timber.tag(javaClass.simpleName).v("ON_RESUME")
-		super.onResume()
+    override fun onResume() {
+        Timber.tag(javaClass.simpleName).v("ON_RESUME")
+        super.onResume()
 
-		viewModel.onResume()
-	}
+        viewModel.onResume()
+    }
 
-	override fun onPause() {
-		Timber.tag(javaClass.simpleName).v("ON_PAUSE")
-		super.onPause()
-	}
+    override fun onPause() {
+        Timber.tag(javaClass.simpleName).v("ON_PAUSE")
+        super.onPause()
+    }
 
-	override fun onStop() {
-		Timber.tag(javaClass.simpleName).v("ON_STOP")
-		super.onStop()
-	}
+    override fun onStop() {
+        Timber.tag(javaClass.simpleName).v("ON_STOP")
+        super.onStop()
+    }
 
-	override fun onDestroyView() {
-		Timber.tag(javaClass.simpleName).v("ON_DESTROY_VIEW")
-		super.onDestroyView()
-	}
+    override fun onDestroyView() {
+        Timber.tag(javaClass.simpleName).v("ON_DESTROY_VIEW")
+        super.onDestroyView()
+    }
 
-	override fun onDestroy() {
-		Timber.tag(javaClass.simpleName).v("ON_DESTROY")
-		super.onDestroy()
-	}
+    override fun onDestroy() {
+        Timber.tag(javaClass.simpleName).v("ON_DESTROY")
+        super.onDestroy()
+    }
 
-	abstract fun getLayoutID(): Int
+    abstract fun getLayoutID(): Int
 }
