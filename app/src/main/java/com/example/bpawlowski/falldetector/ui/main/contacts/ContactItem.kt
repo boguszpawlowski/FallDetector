@@ -22,7 +22,8 @@ class ContactItem(
 
     override val layoutResId = R.layout.contact_item
 
-    override fun onBind() = with(binding) {
+    override fun onBind(viewBinding: ContactItemBinding) = with(viewBinding) {
+        viewBinding.contact = data
         txtName.text = data.name
         txtNumber.text = data.mobile.toString()
         txtEmail.text = data.email

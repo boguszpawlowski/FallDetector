@@ -14,8 +14,8 @@ class MessageContactItem(
 
     override val layoutResId = R.layout.contact_item_sms
 
-    override fun onBind() = with(binding) {
-        binding.contact = data
+    override fun onBind(viewBinding: ContactItemSmsBinding) = with(viewBinding) {
+        viewBinding.contact = data
         txtName.text = data.name
         txtNumber.text = data.mobile.toString()
         txtEmail.text = data.email

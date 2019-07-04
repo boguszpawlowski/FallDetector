@@ -46,8 +46,8 @@ class DragToDismissCallback(
     }
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE && viewHolder is ViewHolder && viewHolder.item is SwipeableItem) {
-            viewHolder.item.onSwipeStarted()
+        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE && viewHolder is ViewHolder) {
+            (viewHolder.item as? SwipeableItem)?.onSwipeStarted()
         }
         super.onSelectedChanged(viewHolder, actionState)
     }
@@ -58,8 +58,8 @@ class DragToDismissCallback(
 
         itemView.elevation = ELEVATION_FLAT
 
-        if (viewHolder is ViewHolder && viewHolder.item is SwipeableItem) {
-            viewHolder.item.onSwipeEnded()
+        if (viewHolder is ViewHolder) {
+            (viewHolder.item as? SwipeableItem)?.onSwipeEnded()
         }
     }
 

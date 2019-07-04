@@ -7,25 +7,23 @@ import androidx.databinding.ViewDataBinding
 abstract class Item<D, B : ViewDataBinding>(
     val data: D
 ) {
-
-    protected lateinit var binding: B
-
     protected lateinit var itemView: View
 
     abstract val layoutResId: Int
 
     fun createHolder(itemView: View): ViewHolder {
         this.itemView = itemView
-        binding = DataBindingUtil.bind(itemView) ?: throw RuntimeException("Couldn't bind this view")
-        return ViewHolder(this, binding)
+        val binding = DataBindingUtil.bind<B>(itemView) ?: throw RuntimeException("Couldn't bind this view")
+        return ViewHolder(binding)
     }
 
-    fun bind() {
-        onBind()
-        binding.executePendingBindings()
+    fun bind(holder: ViewHolder) {
+        holder.bind(this)
+        onBind(holder.binding as B)
+        holder.binding.executePendingBindings()
     }
 
-    abstract fun onBind()
+    abstract fun onBind(viewBinding: B)
 
     open fun isSameAs(other: Item<*, *>): Boolean {
         return this === other

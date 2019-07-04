@@ -14,7 +14,8 @@ class CallContactItem(
 
     override val layoutResId = R.layout.contact_item_call
 
-    override fun onBind() = with(binding) {
+    override fun onBind(viewBinding: ContactItemCallBinding) = with(viewBinding) {
+        viewBinding.contact = data
         txtName.text = data.name
         txtNumber.text = data.mobile.toString()
         txtEmail.text = data.email
