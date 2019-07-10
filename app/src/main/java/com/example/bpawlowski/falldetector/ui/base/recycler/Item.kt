@@ -12,12 +12,12 @@ abstract class Item<D, B : ViewDataBinding>(
     abstract val layoutResId: Int
 
     fun createHolder(itemView: View): ViewHolder {
-        this.itemView = itemView
         val binding = DataBindingUtil.bind<B>(itemView) ?: throw RuntimeException("Couldn't bind this view")
         return ViewHolder(binding)
     }
 
     fun bind(holder: ViewHolder) {
+		this.itemView = holder.itemView
         holder.bind(this)
         onBind(holder.binding as B)
         holder.binding.executePendingBindings()
