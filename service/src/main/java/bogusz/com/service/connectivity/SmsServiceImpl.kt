@@ -4,13 +4,13 @@ import android.location.Location
 import android.telephony.SmsManager
 import javax.inject.Inject
 
-internal class SmsServiceImpl @Inject constructor() : SmsService {
+internal class SmsServiceImpl : SmsService {
 
     override fun sendMessage(number: Int, location: Location) {
         val smsManager = SmsManager.getDefault()
         with(smsManager) {
             val parts = divideMessage(location.smsBody)
-//            sendMultipartTextMessage(number.toString(), null, parts, null, null)
+//            sendMultipartTextMessage(number.toString(), null, parts, null, null) //todo
         }
     }
 

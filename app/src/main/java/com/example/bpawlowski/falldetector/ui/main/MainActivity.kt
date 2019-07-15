@@ -23,11 +23,15 @@ import com.example.bpawlowski.falldetector.util.drawerItems
 import com.example.bpawlowski.falldetector.util.getPermissions
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     NavigationView.OnNavigationItemSelectedListener {
 
-    private var navController: NavController? = null
+	override val viewModel: MainViewModel by viewModel()
+
+	private var navController: NavController? = null
 
     private val appBarConfiguration by lazy {
         AppBarConfiguration(drawerItems, binding.drawerLayout)
@@ -126,14 +130,11 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
             )
         )
 
-    override fun getViewModelClass() = MainViewModel::class.java
-
-    override fun getLayoutID() = R.layout.activity_main
+    override val layoutId = R.layout.activity_main
 
     override val keepInBackStack = true
 
     companion object {
-        private const val CLOSE_DRAWER_DELAY = 150L
 
         @JvmStatic
         fun getIntent(context: Context) = Intent(context, MainActivity::class.java)

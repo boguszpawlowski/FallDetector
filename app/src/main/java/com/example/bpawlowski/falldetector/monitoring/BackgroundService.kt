@@ -1,6 +1,10 @@
 package com.example.bpawlowski.falldetector.monitoring
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -15,9 +19,7 @@ import bogusz.com.service.database.zip
 import bogusz.com.service.location.LocationProvider
 import bogusz.com.service.model.Sensitivity
 import bogusz.com.service.rx.SchedulerProvider
-import com.example.bpawlowski.falldetector.FallDetectorApp
 import com.example.bpawlowski.falldetector.R
-import com.example.bpawlowski.falldetector.di.component.DaggerAppComponent
 import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.START_SERVICE
 import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.STOP_SERVICE
 import com.example.bpawlowski.falldetector.ui.main.MainActivity
@@ -28,180 +30,163 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import timber.log.Timber
-import javax.inject.Inject
 
 class BackgroundService : Service(), CoroutineScope {
 
-    @Inject
-    lateinit var schedulerProvider: SchedulerProvider
+	private val schedulerProvider: SchedulerProvider by inject()
+	private val alarmService: AlarmService by inject()
+	private val locationProvider: LocationProvider by inject()
+	private val contactRepository: ContactRepository by inject()
+	private val serviceStateRepository: ServiceStateRepository by inject()
 
-    @Inject
-    lateinit var alarmService: AlarmService
+	override val coroutineContext = Dispatchers.Main + SupervisorJob()
 
-    @Inject
-    lateinit var locationProvider: LocationProvider
+	private val disposable = CompositeDisposable()
 
-    @Inject
-    lateinit var contactRepository: ContactRepository
+	private val fallDetector: FallDetector by lazy {
+		FallDetector(applicationContext, schedulerProvider)
+	}
 
-    @Inject
-    lateinit var serviceStateRepository: ServiceStateRepository
+	private val sensitivityData by lazy {
+		serviceStateRepository.getSensitivityData()
+	}
 
-    override val coroutineContext = Dispatchers.Main + SupervisorJob()
+	private val sensitivityObserver by lazy {
+		Observer<Sensitivity> { sensitivity ->
+			sensitivity?.let {
+				fallDetector.changeSensitivity(it)
+			}
+		}
+	}
 
-    private val disposable = CompositeDisposable()
+	override fun onBind(intent: Intent?) = null
 
-    private val fallDetector: FallDetector by lazy {
-        FallDetector(applicationContext, schedulerProvider)
-    }
+	/**
+	 * The else branch is for situation when START_STICKY will restart service via intent with null action
+	 */
+	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+		when (intent?.action) {
+			START_SERVICE.name -> startService()
+			STOP_SERVICE.name -> stopService()
+			else -> startService()
+		}
+		return START_STICKY
+	}
 
-    private val sensitivityData by lazy {
-        serviceStateRepository.getSensitivityData()
-    }
+	/**
+	 * Calling startForeground as soon as possible to avoid RemoteServiceException
+	 */
+	override fun onCreate() {
+		startForeground(ONGOING_NOTIFICATION_ID, buildNotification())
+		super.onCreate()
 
-    private val sensitivityObserver by lazy {
-        Observer<Sensitivity> { sensitivity ->
-            sensitivity?.let {
-                fallDetector.changeSensitivity(it)
-            }
-        }
-    }
+		launch {
+			serviceStateRepository.initiateState()
+		}
+		sensitivityData.observeForever(sensitivityObserver)
+	}
 
-    override fun onBind(intent: Intent?) = null
+	override fun onDestroy() {
+		super.onDestroy()
 
-    /**
-     * The else branch is for situation when START_STICKY will restart service via intent with null action
-     */
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        when (intent?.action) {
-            START_SERVICE.name -> startService()
-            STOP_SERVICE.name -> stopService()
-            else -> startService()
-        }
-        return START_STICKY
-    }
+		sensitivityData.removeObserver(sensitivityObserver)
+		disposable.dispose()
+	}
 
-    /**
-     * Calling startForeground as soon as possible to avoid RemoteServiceException
-     */
-    override fun onCreate() {
-        startForeground(ONGOING_NOTIFICATION_ID, buildNotification())
-        super.onCreate()
+	private fun stopService() {
+		Timber.i("STOP")
 
-        injectSelf()
-        launch {
-            serviceStateRepository.initiateState()
-        }
-        sensitivityData.observeForever(sensitivityObserver)
-    }
+		launch {
+			serviceStateRepository.updateIsRunning(false)
+			stopForeground(true)
+			stopSelf()
+		}
+	}
 
-    override fun onDestroy() {
-        super.onDestroy()
+	private fun startService() {
+		Timber.i("START")
 
-        sensitivityData.removeObserver(sensitivityObserver)
-        disposable.dispose()
-    }
+		launch {
+			serviceStateRepository.updateIsRunning(true)
+		}
+		disposable.add(
+			fallDetector.getFallEvents().subscribe(
+				{ raiseAlarm(it) },
+				{ Timber.e(it) },
+				{ doNothing }
+			)
+		)
+	} //TODO show AlarmActivity Screen
 
-    private fun stopService() {
-        Timber.i("STOP")
+	@Suppress("DEPRECATION")
+	private fun buildNotification(): Notification {
+		val pendingIntent: PendingIntent =
+			Intent(this, MainActivity::class.java).let { notificationIntent ->
+				PendingIntent.getActivity(this, 0, notificationIntent, 0)
+			}
 
-        launch {
-            serviceStateRepository.updateIsRunning(false)
-            stopForeground(true)
-            stopSelf()
-        }
-    }
+		return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			createNotificationChannel()
+			NotificationCompat.Builder(this, CHANNEL_ID)
+		} else {
+			NotificationCompat.Builder(this)
+		}.setContentTitle(getText(R.string.notification_title))
+			.setContentText(getText(R.string.notification_message))
+			.setSmallIcon(R.drawable.icon_fall)
+			.setContentIntent(pendingIntent)
+			.setTicker(getText(R.string.ticker_text))
+			.build()
+	}
 
-    private fun startService() {
-        Timber.i("START")
+	@RequiresApi(Build.VERSION_CODES.O)
+	private fun createNotificationChannel() {
+		val name = getString(R.string.channel_name)
+		val descriptionText = getString(R.string.channel_description)
+		val importance = NotificationManager.IMPORTANCE_LOW
+		with(NotificationChannel(CHANNEL_ID, name, importance)) {
+			description = descriptionText
+			notificationManager.createNotificationChannel(this)
+		}
+	}
 
-        launch {
-            serviceStateRepository.updateIsRunning(true)
-        }
-        disposable.add(
-            fallDetector.getFallEvents().subscribe(
-                { raiseAlarm(it) },
-                { Timber.e(it) },
-                { doNothing }
-            )
-        )
-    } //TODO show AlarmActivity Screen
+	/**
+	 * If There is no movement, raise alarm, if there is still ask user if everything is ok
+	 */
+	private fun raiseAlarm(shouldRaise: Boolean) {
+		if (shouldRaise) {
+			launch {
+				zip(contactRepository.getAllContacts(), locationProvider.getLastKnownLocation()) { first, second ->
+					first to second
+				}.onSuccess { alarmService.raiseAlarm(it.first, it.second) }
+					.onFailure { Timber.e(it) }
+			}
+		}
+	}
 
-    @Suppress("DEPRECATION")
-    private fun buildNotification(): Notification {
-        val pendingIntent: PendingIntent =
-            Intent(this, MainActivity::class.java).let { notificationIntent ->
-                PendingIntent.getActivity(this, 0, notificationIntent, 0)
-            }
+	companion object {
+		private const val CHANNEL_ID = "background_service_id"
+		private const val ONGOING_NOTIFICATION_ID = 9999
 
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel()
-            NotificationCompat.Builder(this, CHANNEL_ID)
-        } else {
-            NotificationCompat.Builder(this)
-        }.setContentTitle(getText(R.string.notification_title))
-            .setContentText(getText(R.string.notification_message))
-            .setSmallIcon(R.drawable.icon_fall)
-            .setContentIntent(pendingIntent)
-            .setTicker(getText(R.string.ticker_text))
-            .build()
-    }
+		@JvmStatic
+		fun startService(context: Context) {
+			with(Intent(context, BackgroundService::class.java)) {
+				action = START_SERVICE.name
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+					context.startForegroundService(this@with)
+				} else {
+					context.startService(this@with)
+				}
+			}
+		}
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationChannel() {
-        val name = getString(R.string.channel_name)
-        val descriptionText = getString(R.string.channel_description)
-        val importance = NotificationManager.IMPORTANCE_LOW
-        with(NotificationChannel(CHANNEL_ID, name, importance)) {
-            description = descriptionText
-            notificationManager.createNotificationChannel(this)
-        }
-    }
-
-    /**
-     * If There is no movement, raise alarm, if there is still ask user if everything is ok
-     */
-    private fun raiseAlarm(shouldRaise: Boolean) {
-        if (shouldRaise) {
-            launch {
-                zip(contactRepository.getAllContacts(), locationProvider.getLastKnownLocation()) { first, second ->
-                    first to second
-                }.onSuccess { alarmService.raiseAlarm(it.first, it.second) }
-                    .onFailure { Timber.e(it) }
-            }
-        }
-    }
-
-    private fun injectSelf() {
-        DaggerAppComponent.builder()
-            .application(application as FallDetectorApp)
-            .build()
-            .inject(this)
-    }
-
-    companion object {
-        private const val CHANNEL_ID = "background_service_id"
-        private const val ONGOING_NOTIFICATION_ID = 9999
-
-        @JvmStatic
-        fun startService(context: Context) {
-            with(Intent(context, BackgroundService::class.java)) {
-                action = START_SERVICE.name
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.startForegroundService(this@with)
-                } else {
-                    context.startService(this@with)
-                }
-            }
-        }
-
-        @JvmStatic
-        fun stopService(context: Context) {
-            with(Intent(context, BackgroundService::class.java)) {
-                action = STOP_SERVICE.name
-                context.startService(this)
-            }
-        }
-    }
+		@JvmStatic
+		fun stopService(context: Context) {
+			with(Intent(context, BackgroundService::class.java)) {
+				action = STOP_SERVICE.name
+				context.startService(this)
+			}
+		}
+	}
 }

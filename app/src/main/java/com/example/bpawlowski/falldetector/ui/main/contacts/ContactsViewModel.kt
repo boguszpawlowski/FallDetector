@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-class ContactsViewModel @Inject constructor(
+class ContactsViewModel(
     private val contactsRepository: ContactRepository
 ) : BaseViewModel() {
 

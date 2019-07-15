@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-class AlarmViewModel @Inject constructor(
+class AlarmViewModel(
     private val locationProvider: LocationProvider,
     private val contactRepository: ContactRepository,
     private val alarmService: AlarmService

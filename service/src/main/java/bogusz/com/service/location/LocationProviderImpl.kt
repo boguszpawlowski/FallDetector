@@ -7,23 +7,22 @@ import bogusz.com.service.database.FallDetectorResult
 import bogusz.com.service.database.failure
 import bogusz.com.service.database.success
 import com.google.android.gms.location.LocationServices
-import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-internal class LocationProviderImpl @Inject constructor(
-    context: Context
+internal class LocationProviderImpl(
+	context: Context
 ) : LocationProvider {
 
-    private var fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+	private var fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
 
-    @SuppressLint("MissingPermission")
-    override suspend fun getLastKnownLocation(): FallDetectorResult<Location> = suspendCoroutine { cont ->
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-            location?.let { cont.resume(success(it)) }
-        }
-        fusedLocationProviderClient.lastLocation.addOnFailureListener {
-            cont.resume(failure(it))
-        }
-    }
+	@SuppressLint("MissingPermission")
+	override suspend fun getLastKnownLocation(): FallDetectorResult<Location> = suspendCoroutine { cont ->
+		fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+			location?.let { cont.resume(success(it)) }
+		}
+		fusedLocationProviderClient.lastLocation.addOnFailureListener {
+			cont.resume(failure(it))
+		}
+	}
 }

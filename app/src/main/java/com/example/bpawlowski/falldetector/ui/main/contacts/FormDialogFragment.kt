@@ -8,25 +8,19 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import bogusz.com.service.database.FallDetectorResult
 import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.DialogFormBinding
-import com.example.bpawlowski.falldetector.di.Injectable
-import com.example.bpawlowski.falldetector.ui.base.activity.ViewModelFactory
 import com.example.bpawlowski.falldetector.util.autoCleared
 import com.example.bpawlowski.falldetector.util.toast
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FormDialogFragment : DialogFragment(), Injectable {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+class FormDialogFragment : DialogFragment() {
 
     private var binding by autoCleared<DialogFormBinding>()
 
-    lateinit var viewModel: FormDialogViewModel
+    private val formViewModel: FormDialogViewModel by viewModel()
 
     private val resultObserver: Observer<FallDetectorResult<Long>> by lazy {
         Observer<FallDetectorResult<Long>> { result ->
@@ -55,19 +49,18 @@ class FormDialogFragment : DialogFragment(), Injectable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(FormDialogViewModel::class.java)
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = viewModel
+        binding.viewModel = formViewModel
 
-        viewModel.addContactResultData.reObserve(this, resultObserver)
+        formViewModel.addContactResultData.reObserve(this, resultObserver)
 
         val contactId = arguments?.getLong(CONTACT_ID).takeUnless { it == -1L }
-        viewModel.initData(contactId)
+        formViewModel.initData(contactId)
         initListeners(contactId)
     }
 
     private fun initListeners(contactId: Long?) = with(binding) {
-        btnApply.setOnClickListener { this@FormDialogFragment.viewModel.tryToAddContact(contactId) }
+        btnApply.setOnClickListener { this@FormDialogFragment.formViewModel.tryToAddContact(contactId) }
         btnCancel.setOnClickListener { dismiss() }
     }
 }

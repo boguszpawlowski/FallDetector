@@ -6,78 +6,62 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProviders
 import com.example.bpawlowski.falldetector.BR
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
 import timber.log.Timber
-import javax.inject.Inject
 
-abstract class BaseActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActivity(), HasSupportFragmentInjector {
+abstract class BaseActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActivity() {
 
-    @Inject
-    lateinit var supportFragmentInjector: DispatchingAndroidInjector<Fragment>
+	abstract val viewModel: VM
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+	lateinit var binding: B
 
-    lateinit var viewModel: VM
+	override fun onCreate(savedInstanceState: Bundle?) {
+		Timber.tag(javaClass.simpleName).v("ON_CREATE")
+		super.onCreate(savedInstanceState)
 
-    lateinit var binding: B
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Timber.tag(javaClass.simpleName).v("ON_CREATE")
-        super.onCreate(savedInstanceState)
+		val viewBinding = DataBindingUtil.setContentView<B>(this, layoutId)
+		binding = viewBinding
+		binding.setVariable(BR.viewModel, viewModel)
+	}
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(getViewModelClass())
-        val viewBinding = DataBindingUtil.setContentView<B>(this, getLayoutID())
-        binding = viewBinding
-        binding.setVariable(BR.viewModel, viewModel)
-    }
+	override fun onStart() {
+		Timber.tag(javaClass.simpleName).v("ON_START")
+		super.onStart()
+	}
 
-    override fun onStart() {
-        Timber.tag(javaClass.simpleName).v("ON_START")
-        super.onStart()
-    }
+	override fun onResume() {
+		Timber.tag(javaClass.simpleName).v("ON_RESUME")
+		super.onResume()
+	}
 
-    override fun onResume() {
-        Timber.tag(javaClass.simpleName).v("ON_RESUME")
-        super.onResume()
-    }
+	override fun onPause() {
+		Timber.tag(javaClass.simpleName).v("ON_PAUSE")
+		super.onPause()
+	}
 
-    override fun onPause() {
-        Timber.tag(javaClass.simpleName).v("ON_PAUSE")
-        super.onPause()
-    }
+	override fun onStop() {
+		Timber.tag(javaClass.simpleName).v("ON_STOP")
+		super.onStop()
+	}
 
-    override fun onStop() {
-        Timber.tag(javaClass.simpleName).v("ON_STOP")
-        super.onStop()
-    }
+	override fun onDestroy() {
+		Timber.tag(javaClass.simpleName).v("ON_DESTROY")
+		super.onDestroy()
+	}
 
-    override fun onDestroy() {
-        Timber.tag(javaClass.simpleName).v("ON_DESTROY")
-        super.onDestroy()
-    }
+	fun navigateToActivity(activity: Activity) {
+		Intent(this, activity::class.java).run {
+			startActivity(intent)
+		}
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> = supportFragmentInjector
+		if (keepInBackStack.not()) {
+			finish()
+		}
+	}
 
-    fun navigateToActivity(activity: Activity) {
-        Intent(this, activity::class.java).run {
-            startActivity(intent)
-        }
+	open val keepInBackStack: Boolean = false
 
-        if (keepInBackStack.not()) {
-            finish()
-        }
-    }
-
-    open val keepInBackStack: Boolean = false
-
-    abstract fun getViewModelClass(): Class<VM>
-
-    abstract fun getLayoutID(): Int
+	abstract val layoutId: Int
 }

@@ -5,28 +5,28 @@ import androidx.room.Room
 import bogusz.com.service.database.FallDetectorDatabase
 import bogusz.com.service.database.dao.ContactDao
 import bogusz.com.service.database.dao.ServiceStateDao
-import javax.inject.Inject
 
-internal class DatabaseServiceImpl @Inject constructor(
-    context: Context
+internal class DatabaseServiceImpl(
+	context: Context
 ) : DatabaseService {
-    private var dbInstance: FallDetectorDatabase
 
-    init {
-        dbInstance = Room.databaseBuilder(
-            context,
-            FallDetectorDatabase::class.java,
-            name
-        ).build()
-    }
+	private var dbInstance: FallDetectorDatabase
 
-    override fun getDatabaseInstance(): FallDetectorDatabase = dbInstance
+	init {
+		dbInstance = Room.databaseBuilder(
+			context,
+			FallDetectorDatabase::class.java,
+			name
+		).build()
+	}
 
-    override fun getContactDao(): ContactDao = getDatabaseInstance().contactDao()
+	override fun getDatabaseInstance(): FallDetectorDatabase = dbInstance
 
-    override fun getServiceStateDao(): ServiceStateDao = getDatabaseInstance().serviceStateDao()
+	override fun getContactDao(): ContactDao = getDatabaseInstance().contactDao()
 
-    companion object {
-        private const val name = "FDDatabase"
-    }
+	override fun getServiceStateDao(): ServiceStateDao = getDatabaseInstance().serviceStateDao()
+
+	companion object {
+		private const val name = "FDDatabase"
+	}
 }

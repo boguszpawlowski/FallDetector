@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-class HomeViewModel @Inject constructor(
+class HomeViewModel(
     private val serviceStateRepository: ServiceStateRepository
 ) : BaseViewModel() {
 

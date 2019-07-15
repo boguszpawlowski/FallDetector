@@ -1,26 +1,42 @@
 package com.example.bpawlowski.falldetector
 
-import android.app.Activity
 import android.app.Application
-import com.example.bpawlowski.falldetector.di.AppInjector
+import bogusz.com.service.di.connectivityServiceModule
+import bogusz.com.service.di.databaseServiceModule
+import bogusz.com.service.di.locationProviderModule
+import bogusz.com.service.di.repositoryModule
+import bogusz.com.service.di.schedulersModule
+import bogusz.com.service.di.sharedPreferencesModule
+import com.example.bpawlowski.falldetector.di.viewModelModule
 import com.example.bpawlowski.falldetector.util.initializeDebugTools
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import javax.inject.Inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
-class FallDetectorApp : Application(), HasActivityInjector {
+class FallDetectorApp : Application() {
 
-    @Inject
-    lateinit var activityInjector: DispatchingAndroidInjector<Activity>
+	//    @Inject
+	//    lateinit var activityInjector: DispatchingAndroidInjector<Activity>
 
-    override fun onCreate() {
-        super.onCreate()
+	override fun onCreate() {
+		super.onCreate()
 
-        initializeDebugTools(this)
+		initializeDebugTools(this)
 
-        AppInjector.init(this)
-    }
-
-    override fun activityInjector(): AndroidInjector<Activity> = activityInjector
+		startKoin {
+			androidLogger()
+			androidContext(this@FallDetectorApp)
+			modules(
+				listOf(
+					viewModelModule,
+					connectivityServiceModule,
+					sharedPreferencesModule,
+					locationProviderModule,
+					repositoryModule,
+					databaseServiceModule,
+					schedulersModule
+				)
+			)
+		}
+	}
 }

@@ -13,11 +13,18 @@ import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.ui.base.recycler.DragToDismissCallback
 import com.example.bpawlowski.falldetector.ui.base.recycler.ItemsAdapter
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
+import com.example.bpawlowski.falldetector.ui.main.call.CallViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val CONTACT_ID = "contact_id"
 
 class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, FragmentContactsBinding>() {
+
+	override val viewModel: ContactsViewModel by viewModel()
+
+	override val sharedViewModel: MainViewModel by sharedViewModel()
 
     private var adapter by autoCleared<ItemsAdapter>()
 
@@ -54,9 +61,5 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
         )
     }
 
-    override fun getViewModelClass() = ContactsViewModel::class.java
-
     override fun getLayoutID() = R.layout.fragment_contacts
-
-    override fun getSharedViewModeClass() = MainViewModel::class.java
 }

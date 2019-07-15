@@ -10,9 +10,16 @@ import com.example.bpawlowski.falldetector.databinding.FragmentMessageBinding
 import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.ui.base.recycler.ItemsAdapter
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
+import com.example.bpawlowski.falldetector.ui.main.contacts.ContactsViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MessageFragment : BaseFragment<MessageViewModel, MainViewModel, FragmentMessageBinding>() {
+
+	override val viewModel: MessageViewModel by viewModel()
+
+	override val sharedViewModel: MainViewModel by sharedViewModel()
 
     private var adapter by autoCleared<ItemsAdapter>()
 
@@ -34,9 +41,5 @@ class MessageFragment : BaseFragment<MessageViewModel, MainViewModel, FragmentMe
         viewModel.contactsData.reObserve(this, contactsObserver)
     }
 
-    override fun getViewModelClass() = MessageViewModel::class.java
-
     override fun getLayoutID() = R.layout.fragment_message
-
-    override fun getSharedViewModeClass() = MainViewModel::class.java
 }

@@ -10,7 +10,7 @@ import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MessageViewModel @Inject constructor(
+class MessageViewModel(
     private val contactRepository: ContactRepository,
     private val locationProvider: LocationProvider,
     private val smsService: SmsService

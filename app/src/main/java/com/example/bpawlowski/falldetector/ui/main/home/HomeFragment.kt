@@ -7,8 +7,15 @@ import com.example.bpawlowski.falldetector.databinding.FragmentHomeBinding
 import com.example.bpawlowski.falldetector.monitoring.BackgroundService
 import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
+import com.example.bpawlowski.falldetector.ui.main.contacts.ContactsViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : BaseFragment<HomeViewModel, MainViewModel, FragmentHomeBinding>() {
+
+	override val viewModel: HomeViewModel by viewModel()
+
+	override val sharedViewModel: MainViewModel by sharedViewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -18,9 +25,5 @@ class HomeFragment : BaseFragment<HomeViewModel, MainViewModel, FragmentHomeBind
         }
     }
 
-    override fun getViewModelClass(): Class<HomeViewModel> = HomeViewModel::class.java
-
     override fun getLayoutID(): Int = R.layout.fragment_home
-
-    override fun getSharedViewModeClass(): Class<MainViewModel> = MainViewModel::class.java
 }

@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.example.bpawlowski.falldetector.ui.base.recycler
 
 import android.view.View

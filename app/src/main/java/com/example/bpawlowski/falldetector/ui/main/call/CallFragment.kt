@@ -11,10 +11,17 @@ import com.example.bpawlowski.falldetector.databinding.FragmentCallBinding
 import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.ui.base.recycler.ItemsAdapter
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
+import com.example.bpawlowski.falldetector.ui.main.alarm.AlarmViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
 import com.example.bpawlowski.falldetector.util.checkPermission
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CallFragment : BaseFragment<CallViewModel, MainViewModel, FragmentCallBinding>() {
+
+	override val viewModel: CallViewModel by viewModel()
+
+	override val sharedViewModel: MainViewModel by sharedViewModel()
 
     private var adapter by autoCleared<ItemsAdapter>()
 
@@ -44,9 +51,5 @@ class CallFragment : BaseFragment<CallViewModel, MainViewModel, FragmentCallBind
         )
     }
 
-    override fun getViewModelClass() = CallViewModel::class.java
-
     override fun getLayoutID() = R.layout.fragment_call
-
-    override fun getSharedViewModeClass() = MainViewModel::class.java
 }
