@@ -2,16 +2,14 @@ package bogusz.com.service.connectivity
 
 import android.location.Location
 import android.telephony.SmsManager
-import javax.inject.Inject
 
-internal class SmsServiceImpl : SmsService {
+internal class SmsServiceImpl(
+    private val smsManager: SmsManager
+) : SmsService {
 
-    override fun sendMessage(number: Int, location: Location) {
-        val smsManager = SmsManager.getDefault()
-        with(smsManager) {
-            val parts = divideMessage(location.smsBody)
+    override fun sendMessage(number: Int, location: Location) = with(smsManager) {
+        val parts = divideMessage(location.smsBody)
 //            sendMultipartTextMessage(number.toString(), null, parts, null, null) //todo
-        }
     }
 
     private val Location.smsBody: String

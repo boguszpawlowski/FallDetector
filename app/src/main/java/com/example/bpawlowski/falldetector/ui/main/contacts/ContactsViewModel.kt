@@ -7,7 +7,6 @@ import bogusz.com.service.model.Contact
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 class ContactsViewModel(
     private val contactsRepository: ContactRepository

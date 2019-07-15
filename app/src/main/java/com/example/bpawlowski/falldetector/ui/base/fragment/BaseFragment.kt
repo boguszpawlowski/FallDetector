@@ -12,7 +12,7 @@ import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
 import timber.log.Timber
 
-abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDataBinding> : Fragment(){
+abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDataBinding> : Fragment() {
 
 	abstract val viewModel: VM
 

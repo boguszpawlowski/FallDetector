@@ -8,7 +8,6 @@ import bogusz.com.service.location.LocationProvider
 import bogusz.com.service.model.Contact
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class MessageViewModel(
     private val contactRepository: ContactRepository,

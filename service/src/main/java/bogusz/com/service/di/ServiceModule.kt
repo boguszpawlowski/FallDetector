@@ -2,6 +2,7 @@ package bogusz.com.service.di
 
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import android.telephony.SmsManager
 import bogusz.com.service.alarm.AlarmService
 import bogusz.com.service.alarm.AlarmServiceImpl
 import bogusz.com.service.connectivity.CallService
@@ -18,32 +19,24 @@ import bogusz.com.service.location.LocationProvider
 import bogusz.com.service.location.LocationProviderImpl
 import bogusz.com.service.rx.SchedulerProvider
 import bogusz.com.service.rx.SchedulerProviderImpl
-import org.koin.dsl.bind
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-val connectivityServiceModule = module {
-	single<AlarmService> { AlarmServiceImpl(get(), get(), get()) }
-	single<SmsService> { SmsServiceImpl() }
-	single<CallService> { CallServiceImpl() }
-}
+val serviceModule = module {
 
-val sharedPreferencesModule = module {
-	single<SharedPreferences> { PreferenceManager.getDefaultSharedPreferences(get()) }
-}
+    single<AlarmService> { AlarmServiceImpl(get(), get(), get()) }
+    single<SmsManager> { SmsManager.getDefault() }
+    single<SmsService> { SmsServiceImpl(get()) }
+    single<CallService> { CallServiceImpl() }
 
-val locationProviderModule = module {
-	single<LocationProvider> { LocationProviderImpl(get()) }
-}
+    factory<SharedPreferences>(named("Default")) { PreferenceManager.getDefaultSharedPreferences(get()) }
 
-val databaseServiceModule = module {
-	single<DatabaseService> { DatabaseServiceImpl(get()) }
-}
+    single<LocationProvider> { LocationProviderImpl(get()) }
 
-val repositoryModule = module {
-	single<ContactRepository> { ContactRepositoryImpl(get()) }
-	single<ServiceStateRepository> { ServiceStateRepositoryImpl(get()) }
-}
+    single<DatabaseService> { DatabaseServiceImpl(get()) }
 
-val schedulersModule = module {
-	single<SchedulerProvider> { SchedulerProviderImpl() }
+    single<ContactRepository> { ContactRepositoryImpl(get()) }
+    single<ServiceStateRepository> { ServiceStateRepositoryImpl(get()) }
+
+    single<SchedulerProvider> { SchedulerProviderImpl() }
 }

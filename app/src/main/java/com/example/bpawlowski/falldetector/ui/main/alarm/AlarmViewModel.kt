@@ -8,7 +8,6 @@ import bogusz.com.service.location.LocationProvider
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 class AlarmViewModel(
     private val locationProvider: LocationProvider,

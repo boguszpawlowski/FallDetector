@@ -8,7 +8,6 @@ import com.example.bpawlowski.falldetector.monitoring.BackgroundService
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 class HomeViewModel(
     private val serviceStateRepository: ServiceStateRepository

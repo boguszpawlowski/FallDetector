@@ -12,9 +12,8 @@ import com.example.bpawlowski.falldetector.util.copyToForm
 import com.example.bpawlowski.falldetector.util.mapToContact
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
-class FormDialogViewModel @Inject constructor(
+class FormDialogViewModel(
     private val contactsRepository: ContactRepository
 ) : BaseViewModel() {
 
