@@ -115,14 +115,15 @@
                 app:layout_constraintStart_toStartOf="@id/guideline_start"/>
 
         <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:text="@string/btn_cancel_text"
-                app:layout_constraintTop_toBottomOf="@+id/cbx_ice"
-                app:layout_constraintEnd_toStartOf="@id/btn_apply"
-                app:layout_constraintStart_toStartOf="@id/guideline_start"/>
+			android:id="@+id/btn_cancel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+			android:text="@string/btn_cancel_text"
+			android:textColor="@color/iconBackground"
+			app:layout_constraintTop_toBottomOf="@+id/cbx_ice"
+			app:layout_constraintEnd_toStartOf="@id/btn_apply"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"/>
 
         <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_apply"

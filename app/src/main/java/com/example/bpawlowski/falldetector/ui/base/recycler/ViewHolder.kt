@@ -18,7 +18,7 @@ class ViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding
 
     fun <B : ViewDataBinding> bind(item: Item<*, B>) {
         this.item = item
-        item.onBind(binding as B)
+        item.bind(this)
         binding.executePendingBindings()
     }
 }

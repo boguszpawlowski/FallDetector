@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -24,7 +25,6 @@ import com.example.bpawlowski.falldetector.util.getPermissions
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     NavigationView.OnNavigationItemSelectedListener {
@@ -98,11 +98,10 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
             R.id.nav_sms -> navController?.navigate(R.id.messageFragment)
         }
         postDelayed {
-            item.isChecked = true
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         }
 
-        return true
+		return false
     }
 
     override fun onSupportNavigateUp() =
@@ -115,7 +114,9 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     private fun updateApp(appSettings: AppSettings) {
         //TODO change DARK mode, sensitivity etc.
         val (darkMode, sendingSms, sensingLocation, sensitivity) = appSettings
-
+        postDelayed(CHANGE_THEME_DELAY) {
+            AppCompatDelegate.setDefaultNightMode(if (darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+        }
         viewModel.changeSensitivity(sensitivity)
     }
 
@@ -135,6 +136,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
     override val keepInBackStack = true
 
     companion object {
+        private const val CHANGE_THEME_DELAY = 450L
 
         @JvmStatic
         fun getIntent(context: Context) = Intent(context, MainActivity::class.java)

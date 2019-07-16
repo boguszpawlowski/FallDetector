@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="iconBackground">@color/primaryLight</color>
+	<color name="dialogBackground">#313131</color>
+	<color name="swipeItem">@color/primary</color>
+    <color name="deleteIcon">@color/primaryDark</color>
+	<color name="accent">#A80808</color>
+	<color name="textColor">#D8D8D8</color>
+</resources>

@@ -20,9 +20,7 @@ abstract class Item<D, B : ViewDataBinding>(
 
     fun bind(holder: ViewHolder) {
 		this.itemView = holder.itemView
-        holder.bind(this)
         onBind(holder.binding as B)
-        holder.binding.executePendingBindings()
     }
 
     abstract fun onBind(viewBinding: B)

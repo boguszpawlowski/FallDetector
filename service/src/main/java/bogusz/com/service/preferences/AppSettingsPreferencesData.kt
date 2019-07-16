@@ -48,7 +48,7 @@ class AppSettingsPreferencesData(
     }
 
     companion object {
-        private const val DARK_MODE_KEY = "dark_mode"
+        private const val DARK_MODE_KEY = "dark_theme"
         private const val SEND_SMS_KEY = "send_sms"
         private const val SEND_LOCATION_KEY = "send_location"
         private const val SENSITIVITY_KEY = "sensitivity"

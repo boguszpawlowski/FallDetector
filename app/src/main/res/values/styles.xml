@@ -1,10 +1,12 @@
 <resources>
     <!--main theme-->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="android:windowContentTransitions">true</item>
+		<item name="android:itemBackground">@color/dialogBackground</item>
+		<item name="android:textColor">@color/textColor</item>
     </style>
 
     <!--no appbar-->
@@ -18,7 +20,7 @@
 
     <!--todo change this style-->
     <!--dialog-->
-    <style name="FormDialogStyle" parent="Theme.MaterialComponents.Light.Dialog">
+    <style name="FormDialogStyle" parent="Theme.MaterialComponents.DayNight.Dialog">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/accent</item>
