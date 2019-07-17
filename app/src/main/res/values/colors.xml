@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#424242</color>
-    <color name="primaryDark">#1b1b1b</color>
+    <color name="colorPrimary">#424242</color>
+    <color name="colorPrimaryDark">#1b1b1b</color>
     <color name="primaryLight">#6d6d6d</color>
     <color name="accent">#ff3400</color>
     <color name="white">#FFFFFF</color>
+	<color name="grey">#A3A3A3</color>
     <color name="blue">#2196F3</color>
     <color name="purple">#673AB7</color>
     <color name="yellow">#FFEB3B</color>
@@ -12,9 +13,14 @@
     <color name="transparent">#00FFFFFF</color>
 
     <!--day night values-->
-	<color name="iconBackground">@color/primaryDark</color>
+	<color name="iconBackground">@color/colorPrimary</color>
 	<color name="dialogBackground">@color/white</color>
 	<color name="swipeItem">@color/white</color>
     <color name="deleteIcon">@color/white</color>
 	<color name="textColor">#2B2B2B</color>
+
+	<!--nav bar-->
+	<color name="navBarBackground">@color/white</color>
+	<color name="iconSelected">@color/colorPrimary</color>
+	<color name="iconNotSelected">@color/grey</color>
 </resources>

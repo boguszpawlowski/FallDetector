@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:id="@+id/nav_home"
+		android:icon="@drawable/icon_home"
+		android:title="@string/title_nav_home"/>
+	<item
+		android:id="@+id/nav_contacts"
+		android:icon="@drawable/icon_contacts"
+		android:title="@string/title_nav_contacts"/>
+	<item
+		android:id="@+id/nav_alarm"
+		android:icon="@drawable/icon_alarm"
+		android:title="@string/title_nav_alarm"/>
+	<item
+		android:id="@+id/nav_more"
+		android:icon="@drawable/ic_more_horiz_black_24dp"
+		android:title="@string/title_nav_more"/>
+</menu>

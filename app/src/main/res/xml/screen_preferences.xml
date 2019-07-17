@@ -9,7 +9,7 @@
     <SwitchPreferenceCompat
             app:iconSpaceReserved="false"
             android:key="dark_theme"
-            android:summary="Use more"
+            android:summary="Use healthier color scheme"
             android:title="Dark Theme"
             android:defaultValue="false"/>
     <PreferenceCategory

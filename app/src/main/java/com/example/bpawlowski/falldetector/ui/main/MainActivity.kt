@@ -4,10 +4,9 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
+import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -22,120 +21,145 @@ import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseActivity
 import com.example.bpawlowski.falldetector.util.drawerItems
 import com.example.bpawlowski.falldetector.util.getPermissions
-import com.google.android.material.navigation.NavigationView
+import com.example.bpawlowski.falldetector.util.showPopupMenu
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
-    NavigationView.OnNavigationItemSelectedListener {
+					 BottomNavigationView.OnNavigationItemSelectedListener {
 
-    override val viewModel: MainViewModel by viewModel()
+	override val viewModel: MainViewModel by viewModel()
 
-    private var navController: NavController? = null
+	private var navController: NavController? = null
 
-    private val appBarConfiguration by lazy {
-        AppBarConfiguration(drawerItems, binding.drawerLayout)
-    }
+	private val appBarConfiguration by lazy {
+		AppBarConfiguration(drawerItems)
+	}
 
-    private val appSettingsObserver: Observer<AppSettings> by lazy {
-        Observer<AppSettings> { appSettings ->
-            appSettings?.let { updateApp(it) }
-        }
-    }
+	private val appSettingsObserver: Observer<AppSettings> by lazy {
+		Observer<AppSettings> { appSettings ->
+			appSettings?.let { updateApp(it) }
+		}
+	}
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setSupportActionBar(toolbar)
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setSupportActionBar(toolbar)
 
-        navController = findNavController(R.id.nav_host_fragment).also {
-            setupActionBarWithNavController(it, appBarConfiguration)
-            binding.navView.setupWithNavController(it)
-        }
+		navController = findNavController(R.id.nav_host_fragment).also {
+			setupActionBarWithNavController(it, appBarConfiguration)
+			binding.bottomNavigation.setupWithNavController(it)
+		}
 
-        binding.navView.setNavigationItemSelectedListener(this)
+		binding.bottomNavigation.setOnNavigationItemSelectedListener(this)
 
-        initObservers()
-        checkPermissions()
-    }
+		initObservers()
+		checkPermissions()
+	}
 
-    override fun onDestroy() {
-        super.onDestroy()
+	override fun onBackPressed() {
+		navController?.navigate(R.id.homeFragment) //todo fix going back from settings
+	}
 
-        navController = null
-    }
+	override fun onDestroy() {
+		super.onDestroy()
 
-    override fun onBackPressed() {
-        binding.navView.checkedItem?.isChecked = false
+		navController = null
+	}
 
-        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
-    }
+	override fun onOptionsItemSelected(item: MenuItem) =
+		when (item.itemId) {
+			R.id.action_settings -> {
+				navController?.navigate(R.id.settingsFragment)
+				true
+			}
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.navigation, menu)
-        return true
-    }
+			else -> super.onOptionsItemSelected(item)
+		}
 
-    override fun onOptionsItemSelected(item: MenuItem) =
-        when (item.itemId) {
-            R.id.action_settings -> {
-                navController?.navigate(R.id.settingsFragment)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+	override fun onNavigationItemSelected(item: MenuItem): Boolean =
+		when (item.itemId) {
+			R.id.nav_home -> {
+				navController?.navigate(R.id.homeFragment)
+				true
+			}
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.nav_home -> navController?.navigate(R.id.homeFragment)
-            R.id.nav_contacts -> navController?.navigate(R.id.contactsFragment)
-            R.id.nav_alarm -> navController?.navigate(R.id.alarmFragment)
-        }
-        postDelayed {
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-        }
+			R.id.nav_contacts -> {
+				navController?.navigate(R.id.contactsFragment)
+				true
+			}
 
-		return false
-    }
+			R.id.nav_alarm -> {
+				navController?.navigate(R.id.alarmFragment)
+				true
+			}
 
-    override fun onSupportNavigateUp() =
-        navigateUp(navController!!, appBarConfiguration)
+			R.id.nav_more -> {
+				showPopupMenu(findViewById(R.id.nav_more), R.menu.navigation, getOnPopupMenuItemClickListener())
+				false
+			}
 
-    private fun initObservers() {
-        viewModel.appSettingsPreferencesData.observe(this, appSettingsObserver)
-    }
+			else -> false
+		}
 
-    private fun updateApp(appSettings: AppSettings) {
-        //TODO change DARK mode, sensitivity etc.
-        val (darkMode, sendingSms, sensingLocation, sensitivity) = appSettings
-        postDelayed(CHANGE_THEME_DELAY) {
-            AppCompatDelegate.setDefaultNightMode(if (darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
-        }
-        viewModel.changeSensitivity(sensitivity)
-    }
+	override fun onSupportNavigateUp() =
+		navigateUp(navController!!, appBarConfiguration)
 
-    private fun checkPermissions() =
-        getPermissions(
-            this,
-            listOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.CALL_PHONE,
-                Manifest.permission.SEND_SMS,
-                Manifest.permission.READ_PHONE_STATE
-            )
-        )
+	private fun initObservers() {
+		viewModel.appSettingsPreferencesData.observe(this, appSettingsObserver)
+	}
 
-    override val layoutId = R.layout.activity_main
+	private fun clearSelection() {
+		val menu = binding.bottomNavigation.menu
+		for (i in 0 until menu.size()) {
+			menu.getItem(i).isCheckable = false
+		}
+		for (i in 0 until menu.size()) {
+			menu.getItem(i).isCheckable = true
+		}
+	}
 
-    override val keepInBackStack = true
+	private fun updateApp(appSettings: AppSettings) {
+		//TODO change DARK mode, sensitivity etc.
+		val (darkMode, sendingSms, sensingLocation, sensitivity) = appSettings
+		postDelayed(CHANGE_THEME_DELAY) {
+			AppCompatDelegate.setDefaultNightMode(if (darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+		}
+		viewModel.changeSensitivity(sensitivity)
+	}
 
-    companion object {
-        private const val CHANGE_THEME_DELAY = 450L
+	private fun getOnPopupMenuItemClickListener() = PopupMenu.OnMenuItemClickListener { item ->
+		when (item.itemId) {
+			R.id.action_settings -> {
+				navController?.navigate(R.id.settingsFragment)
+				clearSelection()
+				true
+			}
 
-        @JvmStatic
-        fun getIntent(context: Context) = Intent(context, MainActivity::class.java)
-    }
+			else -> super.onOptionsItemSelected(item)
+		}
+	}
+
+	private fun checkPermissions() =
+		getPermissions(
+			this,
+			listOf(
+				Manifest.permission.ACCESS_COARSE_LOCATION,
+				Manifest.permission.CALL_PHONE,
+				Manifest.permission.SEND_SMS,
+				Manifest.permission.READ_PHONE_STATE
+			)
+		)
+
+	override val layoutId = R.layout.activity_main
+
+	override val keepInBackStack = true
+
+	companion object {
+		private const val CHANGE_THEME_DELAY = 450L
+
+		@JvmStatic
+		fun getIntent(context: Context) = Intent(context, MainActivity::class.java)
+	}
 }

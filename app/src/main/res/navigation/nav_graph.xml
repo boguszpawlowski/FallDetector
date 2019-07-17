@@ -8,7 +8,10 @@
               android:name="com.example.bpawlowski.falldetector.ui.main.alarm.AlarmFragment"
               android:label="Alarm">
         <action android:id="@+id/action_alarmFragment_to_settingsFragment" app:destination="@id/settingsFragment"/>
-    </fragment>
+		<action
+			android:id="@+id/action_alarmFragment_to_homeFragment"
+			app:destination="@id/homeFragment"/>
+	</fragment>
 
     <fragment android:id="@+id/contactsFragment"
               android:name="com.example.bpawlowski.falldetector.ui.main.contacts.ContactsFragment"
@@ -16,7 +19,10 @@
         <action android:id="@+id/showDialog"
                 app:destination="@id/formDialogFragment"/>
         <action android:id="@+id/action_contactsFragment_to_settingsFragment" app:destination="@id/settingsFragment"/>
-    </fragment>
+		<action
+			android:id="@+id/action_contactsFragment_to_homeFragment"
+			app:destination="@id/homeFragment"/>
+	</fragment>
 
     <dialog android:id="@+id/formDialogFragment"
             android:name="com.example.bpawlowski.falldetector.ui.main.contacts.FormDialogFragment"
