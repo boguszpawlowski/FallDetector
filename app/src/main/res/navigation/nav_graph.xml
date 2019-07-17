@@ -10,12 +10,6 @@
         <action android:id="@+id/action_alarmFragment_to_settingsFragment" app:destination="@id/settingsFragment"/>
     </fragment>
 
-    <fragment android:id="@+id/callFragment"
-              android:name="com.example.bpawlowski.falldetector.ui.main.call.CallFragment"
-              android:label="Dial">
-        <action android:id="@+id/action_callFragment_to_settingsFragment" app:destination="@id/settingsFragment"/>
-    </fragment>
-
     <fragment android:id="@+id/contactsFragment"
               android:name="com.example.bpawlowski.falldetector.ui.main.contacts.ContactsFragment"
               android:label="Contacts">
@@ -41,11 +35,5 @@
               android:label="Home">
         <action android:id="@+id/showSettings"
                 app:destination="@id/settingsFragment"/>
-    </fragment>
-
-    <fragment android:id="@+id/messageFragment"
-              android:name="com.example.bpawlowski.falldetector.ui.main.sms.MessageFragment"
-              android:label="Message">
-        <action android:id="@+id/action_messageFragment_to_settingsFragment" app:destination="@id/settingsFragment"/>
     </fragment>
 </navigation>

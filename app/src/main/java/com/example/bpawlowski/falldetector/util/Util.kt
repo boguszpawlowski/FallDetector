@@ -12,7 +12,5 @@ fun Context.toast(message: String, length: Int = Toast.LENGTH_SHORT) =
 val drawerItems = setOf(
     R.id.homeFragment,
     R.id.contactsFragment,
-    R.id.alarmFragment,
-    R.id.callFragment,
-    R.id.messageFragment
+    R.id.alarmFragment
 )

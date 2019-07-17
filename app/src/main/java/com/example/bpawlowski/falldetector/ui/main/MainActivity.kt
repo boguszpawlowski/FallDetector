@@ -93,9 +93,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
             R.id.nav_home -> navController?.navigate(R.id.homeFragment)
             R.id.nav_contacts -> navController?.navigate(R.id.contactsFragment)
             R.id.nav_alarm -> navController?.navigate(R.id.alarmFragment)
-
-            R.id.nav_call -> navController?.navigate(R.id.callFragment)
-            R.id.nav_sms -> navController?.navigate(R.id.messageFragment)
         }
         postDelayed {
             binding.drawerLayout.closeDrawer(GravityCompat.START)

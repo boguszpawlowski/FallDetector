@@ -13,7 +13,6 @@ import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.ui.base.recycler.DragToDismissCallback
 import com.example.bpawlowski.falldetector.ui.base.recycler.ItemsAdapter
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
-import com.example.bpawlowski.falldetector.ui.main.call.CallViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,40 +25,42 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
 
 	override val sharedViewModel: MainViewModel by sharedViewModel()
 
-    private var adapter by autoCleared<ItemsAdapter>()
+	private var adapter by autoCleared<ItemsAdapter>()
 
-    private val contactsObserver: Observer<List<Contact>> by lazy {
-        Observer<List<Contact>> { contacts ->
-            contacts?.let {
-                adapter.update(it.map { contact ->
-                    ContactItem(
-                        data = contact,
-                        onDismissListener = { viewModel.removeContact(contact) },
-                        onSelectListener = { showDialog(contact.id) }
-                    )
-                })
-            }
-        }
-    }
+	private val contactsObserver: Observer<List<Contact>> by lazy {
+		Observer<List<Contact>> { contacts ->
+			contacts?.let {
+				adapter.update(it.map { contact ->
+					ContactItem(
+						data = contact,
+						onDismissListener = { viewModel.removeContact(contact) },
+						onSelectListener = { showDialog(contact.id) },
+						onCallClickListener = { viewModel.callContact(requireContext(), it) },
+						onSmsClickListener = { viewModel.sendMessage(it) }
+					)
+				})
+			}
+		}
+	}
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 
-        adapter = ItemsAdapter()
+		adapter = ItemsAdapter()
 
-        binding.recyclerContact.adapter = this@ContactsFragment.adapter
-        binding.fab.setOnClickListener { showDialog() }
+		binding.recyclerContact.adapter = this@ContactsFragment.adapter
+		binding.fab.setOnClickListener { showDialog() }
 
-        ItemTouchHelper(DragToDismissCallback(requireContext())).attachToRecyclerView(binding.recyclerContact)
+		ItemTouchHelper(DragToDismissCallback(requireContext())).attachToRecyclerView(binding.recyclerContact)
 
-        viewModel.contactsLiveData.reObserve(this, contactsObserver)
-    }
+		viewModel.contactsLiveData.reObserve(this, contactsObserver)
+	}
 
-    private fun showDialog(id: Long? = null) {
-        findNavController().navigate(
-            ContactsFragmentDirections.showDialog(id ?: -1L)
-        )
-    }
+	private fun showDialog(id: Long? = null) {
+		findNavController().navigate(
+			ContactsFragmentDirections.showDialog(id ?: -1L)
+		)
+	}
 
-    override fun getLayoutID() = R.layout.fragment_contacts
+	override fun getLayoutID() = R.layout.fragment_contacts
 }

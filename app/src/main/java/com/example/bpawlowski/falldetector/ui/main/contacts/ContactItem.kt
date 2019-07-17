@@ -15,7 +15,9 @@ typealias OnContactTouchedListener = (Contact) -> Unit
 class ContactItem(
     data: Contact,
     private val onDismissListener: ((Contact) -> Unit)? = null,
-    private val onSelectListener: OnContactTouchedListener? = null
+    private val onSelectListener: OnContactTouchedListener? = null,
+    private val onCallClickListener: OnContactTouchedListener? = null,
+    private val onSmsClickListener: OnContactTouchedListener? = null
 ) : Item<Contact, ContactItemBinding>(data), SwipeableItem {
 
     private lateinit var itemBackgroundDrawable: Drawable
@@ -32,6 +34,8 @@ class ContactItem(
             UserPriority.PRIORITY_ICE -> "ICE"
         }
         container.setOnClickListener { onSelectListener?.invoke(data) }
+		btnCall.setOnClickListener { onCallClickListener?.invoke(data) }
+		btnSms.setOnClickListener { onSmsClickListener?.invoke(data) }
     }
 
     override val swipeDirs = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
