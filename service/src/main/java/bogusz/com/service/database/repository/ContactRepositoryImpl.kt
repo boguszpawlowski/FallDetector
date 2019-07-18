@@ -44,16 +44,24 @@ internal class ContactRepositoryImpl(
 	override fun getAllContactsData(): LiveData<List<Contact>> =
 		contactDao.getAllData().sortedByDescending { it.priority }
 
-	override suspend fun updateContactEmail(contact: Contact): FallDetectorResult<Int> = withContext(Dispatchers.IO) {
-		val id = contact.id ?: throw IllegalArgumentException("No contact id")
-		val email = contact.email ?: throw IllegalArgumentException("No contact email")
-
+	override suspend fun updateContactEmail(contactId: Long, email: String): FallDetectorResult<Int> = withContext(Dispatchers.IO) {
 		catching {
-			val columnsAffected = contactDao.updateEmail(id, email)
+			val columnsAffected = contactDao.updateEmail(contactId, email)
 			if (columnsAffected != 0) {
 				success(columnsAffected)
 			} else {
-				failure(FallDetectorException.NoSuchRecordException(id))
+				failure(FallDetectorException.NoSuchRecordException(contactId))
+			}
+		}
+	}
+
+	override suspend fun updateContactPhotoPath(contactId: Long, photoPath: String): FallDetectorResult<Int> = withContext(Dispatchers.IO) {
+		catching {
+			val columnsAffected = contactDao.updatePhotoPath(contactId, photoPath)
+			if (columnsAffected != 0) {
+				success(columnsAffected)
+			} else {
+				failure(FallDetectorException.NoSuchRecordException(contactId))
 			}
 		}
 	}

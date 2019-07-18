@@ -1,7 +1,11 @@
 package bogusz.com.service.database.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import bogusz.com.service.model.Contact
 
 @Dao
@@ -27,6 +31,9 @@ internal interface ContactDao {
 
     @Query(value = "UPDATE contact SET email=:email WHERE id like :id")
     suspend fun updateEmail(id: Long, email: String): Int
+
+	@Query(value = "UPDATE contact SET photo_path=:photoPath WHERE id like :id")
+	suspend fun updatePhotoPath(id: Long, photoPath: String): Int
 
     @Query(value = "SELECT id FROM contact WHERE user_priority = 1")
     suspend fun findIceContact(): Long?

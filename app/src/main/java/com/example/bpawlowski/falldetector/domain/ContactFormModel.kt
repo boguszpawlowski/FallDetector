@@ -42,6 +42,13 @@ class ContactFormModel : BaseObservable() {
             notifyPropertyChanged(BR.priority)
         }
 
+	@Bindable
+	var filePath: String? = null
+		set(value) {
+			field = value
+			notifyPropertyChanged(BR.filePath)
+		}
+
     val nameError: String?
         @Bindable
         get() = if (nameIsValid().not()) "Name can't be empty" else null

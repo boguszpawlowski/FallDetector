@@ -2,7 +2,6 @@ package com.example.bpawlowski.falldetector.ui.main.contacts
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
 import bogusz.com.service.connectivity.CallService
 import bogusz.com.service.connectivity.SmsService
 import bogusz.com.service.database.repository.ContactRepository
@@ -19,19 +18,28 @@ class ContactsViewModel(
 	private val locationProvider: LocationProvider
 ) : BaseViewModel() {
 
+	var contactId: Long? = null
+
 	val contactsLiveData: LiveData<List<Contact>>
 		get() = contactsRepository.getAllContactsData()
 
-	fun removeContact(contact: Contact) = viewModelScope.launch {
+	fun removeContact(contact: Contact) = backgroundScope.launch {
 		contactsRepository.removeContact(contact)
 			.onFailure { Timber.e(it) }
 	}
 
 	fun callContact(context: Context, contact: Contact) = callService.call(context, contact)
 
-	fun sendMessage(contact: Contact) = viewModelScope.launch {
+	fun sendMessage(contact: Contact) = backgroundScope.launch {
 		locationProvider.getLastKnownLocation().onSuccess {
 			smsService.sendMessage(contact.mobile, it)
+		}
+	}
+
+	fun updatePhoto(data: String) = backgroundScope.launch {
+		contactId?.let {
+			contactsRepository.updateContactPhotoPath(it, data)
+				.onFailure { Timber.e(it, it.toString()) }
 		}
 	}
 }

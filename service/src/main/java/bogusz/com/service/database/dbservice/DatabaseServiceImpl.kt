@@ -17,7 +17,8 @@ internal class DatabaseServiceImpl(
 			context,
 			FallDetectorDatabase::class.java,
 			name
-		).build()
+		).fallbackToDestructiveMigration()
+			.build()
 	}
 
 	override fun getDatabaseInstance(): FallDetectorDatabase = dbInstance

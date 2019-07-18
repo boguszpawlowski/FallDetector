@@ -10,6 +10,7 @@ fun Contact.copyToForm(form: ContactFormModel) =
         mobile = this@copyToForm.mobile.toString()
         email = this@copyToForm.email ?: String.empty
         priority = this@copyToForm.priority == UserPriority.PRIORITY_ICE
+		filePath = this@copyToForm.photoPath
     }
 
 
@@ -18,5 +19,6 @@ fun ContactFormModel.mapToContact(): Contact =
         name = name,
         mobile = mobile.toInt(),
         email = email,
-        priority = if (priority) UserPriority.PRIORITY_ICE else UserPriority.PRIORITY_NORMAL
+		priority = if (priority) UserPriority.PRIORITY_ICE else UserPriority.PRIORITY_NORMAL,
+		photoPath = filePath
     )

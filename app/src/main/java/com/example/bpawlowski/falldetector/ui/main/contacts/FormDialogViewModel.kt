@@ -14,31 +14,31 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class FormDialogViewModel(
-    private val contactsRepository: ContactRepository
+	private val contactsRepository: ContactRepository
 ) : BaseViewModel() {
 
-    private val _addContactResultData = MutableLiveData<FallDetectorResult<Long>>()
-    val addContactResultData: LiveData<FallDetectorResult<Long>>
-        get() = _addContactResultData
+	private val _addContactResultData = MutableLiveData<FallDetectorResult<Long>>()
+	val addContactResultData: LiveData<FallDetectorResult<Long>>
+		get() = _addContactResultData
 
-    val contactForm = ContactFormModel()
+	val contactForm = ContactFormModel()
 
-    fun initData(id: Long?) = id?.let {
-        viewModelScope.launch {
-            contactsRepository.getContact(id)
-                .onSuccess { it.copyToForm(contactForm) }
-                .onFailure {
-                    if (it !is FallDetectorException.NoSuchRecordException) Timber.e(it)
-                }
-        }
-    }
+	fun initData(id: Long?) = id?.let {
+		viewModelScope.launch {
+			contactsRepository.getContact(id)
+				.onSuccess { it.copyToForm(contactForm) }
+				.onFailure {
+					if (it !is FallDetectorException.NoSuchRecordException) Timber.e(it)
+				}
+		}
+	}
 
-    fun tryToAddContact(contactId: Long? = null) = viewModelScope.launch {
-        val contact = contactForm.mapToContact().apply { id = contactId }
+	fun tryToAddContact(contactId: Long? = null) = viewModelScope.launch {
+		val contact = contactForm.mapToContact().copy(id = contactId)
 
-        _addContactResultData.postValue(
-            contactsRepository.addContact(contact)
-                .onFailure { Timber.e(it) }
-        )
-    }
+		_addContactResultData.postValue(
+			contactsRepository.addContact(contact)
+				.onFailure { Timber.e(it) }
+		)
+	}
 }

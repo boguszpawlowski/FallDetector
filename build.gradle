@@ -17,6 +17,7 @@ buildscript {
         timber_version = "4.7.1"
         leak_canary_version = "2.0-alpha-1"
         koin_version = '2.0.1'
+        glide_version = '4.9.0'
     }
 
     repositories {
