@@ -15,10 +15,15 @@ import bogusz.com.service.database.FallDetectorResult
 import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.DialogFormBinding
+import com.example.bpawlowski.falldetector.domain.ErrorNotification
+import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
 import com.example.bpawlowski.falldetector.util.checkPermission
-import com.example.bpawlowski.falldetector.util.toast
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
+private const val CODE_REQUEST_GALLERY = 9999
+private const val CONTACT_ID = "contact_id"
 
 class FormDialogFragment : DialogFragment() {
 
@@ -26,12 +31,14 @@ class FormDialogFragment : DialogFragment() {
 
 	private val viewModel: FormDialogViewModel by viewModel()
 
+	private val sharedViewModel: MainViewModel by sharedViewModel()
+
 	private val resultObserver: Observer<FallDetectorResult<Long>> by lazy {
 		Observer<FallDetectorResult<Long>> { result ->
 			result.onSuccess {
 				dismiss()
 			}.onKnownFailure {
-				requireContext().toast(it.rationale) //todo pass failure to mainViewModel, event bus??
+				sharedViewModel.handleKnownError(ErrorNotification(binding.root, it.rationale))
 			}
 		}
 	}
@@ -73,7 +80,7 @@ class FormDialogFragment : DialogFragment() {
 		activity = requireActivity(),
 		permission = Manifest.permission.READ_EXTERNAL_STORAGE,
 		onGranted = {
-			with(Intent(Intent.ACTION_GET_CONTENT)) {
+			with(Intent(Intent.ACTION_OPEN_DOCUMENT)) {
 				type = "image/*"
 				startActivityForResult(this, CODE_REQUEST_GALLERY)
 			}

@@ -30,9 +30,7 @@ class ContactItem(
 		viewBinding.contact = data
 
 		data.photoPath?.let {
-			val radius = itemView.resources.getDimensionPixelSize(R.dimen.corner_radius)
-
-			loadContactImage(itemView.context, Uri.parse(it), imgContact, radius)
+			loadContactImage(itemView.context.applicationContext, Uri.parse(it), imgContact)
 		}
 
 		txtName.text = data.name

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -18,6 +19,7 @@ import bogusz.com.service.model.AppSettings
 import bogusz.com.service.util.postDelayed
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
+import com.example.bpawlowski.falldetector.domain.ErrorNotification
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseActivity
 import com.example.bpawlowski.falldetector.util.drawerItems
 import com.example.bpawlowski.falldetector.util.getPermissions
@@ -40,6 +42,12 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 	private val appSettingsObserver: Observer<AppSettings> by lazy {
 		Observer<AppSettings> { appSettings ->
 			appSettings?.let { updateApp(it) }
+		}
+	}
+
+	private val errorObserver: Observer<ErrorNotification> by lazy {
+		Observer<ErrorNotification> { notification ->
+			Toast.makeText(this@MainActivity, notification.message, Toast.LENGTH_LONG).show() //todo snackbar
 		}
 	}
 
@@ -106,8 +114,9 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 	override fun onSupportNavigateUp() =
 		navigateUp(navController!!, appBarConfiguration)
 
-	private fun initObservers() {
-		viewModel.appSettingsPreferencesData.observe(this, appSettingsObserver)
+	private fun initObservers() = with(viewModel) {
+		appSettingsPreferencesData.observe(this@MainActivity, appSettingsObserver)
+		errorData.observe(this@MainActivity, errorObserver)
 	}
 
 	private fun clearSelection() {

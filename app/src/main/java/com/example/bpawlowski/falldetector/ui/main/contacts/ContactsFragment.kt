@@ -17,9 +17,6 @@ import com.example.bpawlowski.falldetector.util.autoCleared
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-const val CONTACT_ID = "contact_id"
-const val CODE_REQUEST_GALLERY = 9999
-
 class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, FragmentContactsBinding>() {
 
 	override val viewModel: ContactsViewModel by viewModel()

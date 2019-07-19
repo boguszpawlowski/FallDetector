@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bpawlowski.falldetector.R
 
+private const val ELEVATION_SWIPE = 8f
+private const val ELEVATION_FLAT = 0f
+
 class DragToDismissCallback(
 	context: Context
 ) : TouchCallback() {
@@ -64,11 +67,6 @@ class DragToDismissCallback(
 	}
 
 	override fun isItemViewSwipeEnabled() = true
-
-	companion object {
-		const val ELEVATION_SWIPE = 8f
-		const val ELEVATION_FLAT = 0f
-	}
 }
 
 fun Drawable.calculateBounds(itemView: View, dX: Float): Drawable { //fixme fixed bounds
