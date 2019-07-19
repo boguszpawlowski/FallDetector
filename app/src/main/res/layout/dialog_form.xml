@@ -39,8 +39,8 @@
 			android:layout_width="70dp"
 			android:layout_height="70dp"
 			android:layout_marginBottom="@dimen/margin_medium"
-			android:background="?android:attr/selectableItemBackground"
-			android:src="@drawable/icon_contact"
+			android:src="@drawable/add_photo_drawable"
+			android:contentDescription="@string/btn_add_photo_tooltip"
 			app:file_src="@{viewModel.contactForm.filePath}"
 			app:layout_constraintBottom_toBottomOf="@+id/txt_layout_name"
 			app:layout_constraintStart_toStartOf="@id/guideline_start"/>

@@ -1,8 +1,5 @@
 package com.example.bpawlowski.falldetector.ui.main.contacts
 
-import android.Manifest
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
@@ -17,7 +14,6 @@ import com.example.bpawlowski.falldetector.ui.base.recycler.DragToDismissCallbac
 import com.example.bpawlowski.falldetector.ui.base.recycler.ItemsAdapter
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
-import com.example.bpawlowski.falldetector.util.checkPermission
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -41,8 +37,7 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
 						onDismissListener = { viewModel.removeContact(contact) },
 						onSelectListener = { showDialog(contact.id) },
 						onCallClickListener = { viewModel.callContact(requireContext(), it) },
-						onSmsClickListener = { viewModel.sendMessage(it) },
-						onAvatarClickListener = { openGallery(it.id) }
+						onSmsClickListener = { viewModel.sendMessage(it) }
 					)
 				})
 			}
@@ -68,32 +63,5 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
 		)
 	}
 
-	private fun openGallery(contactId: Long?) {
-		contactId ?: throw UnsupportedOperationException(EXCEPTION_RATIONALE)
-
-		checkPermission(
-			activity = requireActivity(),
-			permission = Manifest.permission.READ_EXTERNAL_STORAGE,
-			onGranted = {
-				viewModel.contactId = contactId
-				with(Intent(Intent.ACTION_GET_CONTENT)) {
-					type = "image/*"
-					startActivityForResult(this, CODE_REQUEST_GALLERY)
-				}
-			})
-	}
-
-	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-		super.onActivityResult(requestCode, resultCode, data)
-
-		if (requestCode == CODE_REQUEST_GALLERY && resultCode == Activity.RESULT_OK) {
-			data?.data?.let { viewModel.updatePhoto(it.toString()) }
-		}
-	}
-
 	override fun getLayoutID() = R.layout.fragment_contacts
-
-	companion object {
-		private const val EXCEPTION_RATIONALE = "Contact id can't be null"
-	}
 }

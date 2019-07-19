@@ -18,8 +18,6 @@ class ContactsViewModel(
 	private val locationProvider: LocationProvider
 ) : BaseViewModel() {
 
-	var contactId: Long? = null
-
 	val contactsLiveData: LiveData<List<Contact>>
 		get() = contactsRepository.getAllContactsData()
 
@@ -33,13 +31,6 @@ class ContactsViewModel(
 	fun sendMessage(contact: Contact) = backgroundScope.launch {
 		locationProvider.getLastKnownLocation().onSuccess {
 			smsService.sendMessage(contact.mobile, it)
-		}
-	}
-
-	fun updatePhoto(data: String) = backgroundScope.launch {
-		contactId?.let {
-			contactsRepository.updateContactPhotoPath(it, data)
-				.onFailure { Timber.e(it, it.toString()) }
 		}
 	}
 }

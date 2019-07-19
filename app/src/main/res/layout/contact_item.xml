@@ -23,7 +23,6 @@
 			android:layout_marginStart="@dimen/margin_small"
 			android:layout_marginTop="@dimen/margin_small"
 			android:layout_marginBottom="@dimen/margin_small"
-			android:background="?android:attr/selectableItemBackground"
 			android:scaleType="centerCrop"
 			android:src="@drawable/icon_contact"
 			app:layout_constraintBottom_toBottomOf="parent"

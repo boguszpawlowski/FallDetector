@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item>
+		<shape
+			android:innerRadius="0dp"
+			android:shape="ring"
+			android:thicknessRatio="2.2"
+			android:useLevel="false">
+			<solid android:color="@android:color/transparent"/>
+
+			<stroke
+				android:width="1.5dp"
+				android:color="@color/iconBackground"/>
+		</shape>
+	</item>
+
+	<item android:drawable="@drawable/icon_plus"/>
+
+	<item>
+		<ripple android:color="@color/grey"/>
+	</item>
+
+</layer-list>
