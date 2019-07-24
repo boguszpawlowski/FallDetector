@@ -15,7 +15,7 @@ import bogusz.com.service.database.FallDetectorResult
 import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.DialogFormBinding
-import com.example.bpawlowski.falldetector.domain.ErrorNotification
+import com.example.bpawlowski.falldetector.domain.Notification
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
 import com.example.bpawlowski.falldetector.util.checkPermission
@@ -38,7 +38,7 @@ class FormDialogFragment : DialogFragment() {
 			result.onSuccess {
 				dismiss()
 			}.onKnownFailure {
-				sharedViewModel.handleKnownError(ErrorNotification(binding.root, it.rationale))
+				sharedViewModel.notify(Notification.ErrorNotification(binding.root, it.rationale))
 			}
 		}
 	}

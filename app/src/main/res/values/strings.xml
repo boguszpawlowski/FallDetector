@@ -34,4 +34,7 @@
     <string name="tv_send_sms_to_all_contacts">Send SMS to all contacts</string>
     <string name="tv_sensitivity">Chosen Sensitivity</string>
 	<string name="btn_add_photo_tooltip">Click To Add Avatar</string>
+
+	<string name="snackbar_deleted">Deleted contact</string>
+	<string name="snackbar_undo">Undo</string>
 </resources>

@@ -2,7 +2,7 @@ package bogusz.com.service.database.repository
 
 import androidx.lifecycle.LiveData
 import bogusz.com.service.database.FallDetectorResult
-import bogusz.com.service.database.catching
+import bogusz.com.service.database.catchIO
 import bogusz.com.service.database.dbservice.DatabaseService
 import bogusz.com.service.database.exceptions.FallDetectorException
 import bogusz.com.service.database.failure
@@ -20,7 +20,7 @@ internal class ContactRepositoryImpl(
 	private val contactDao by lazy { databaseService.getContactDao() }
 
 	override suspend fun addContact(contact: Contact): FallDetectorResult<Long> = withContext(Dispatchers.IO) {
-		catching {
+		catchIO {
 			val iceContactId = contactDao.findIceContact()
 			if (contact.priority == UserPriority.PRIORITY_ICE && iceContactId != null && contact.id != iceContactId) {
 				failure(FallDetectorException.IceAlreadyExistsException)
@@ -31,7 +31,7 @@ internal class ContactRepositoryImpl(
 	}
 
 	override suspend fun getContact(id: Long): FallDetectorResult<Contact> = withContext(Dispatchers.IO) {
-		catching {
+		catchIO {
 			val contact = contactDao.getContactById(id)
 			if (contact != null) {
 				success(contact)
@@ -45,7 +45,7 @@ internal class ContactRepositoryImpl(
 		contactDao.getAllData().sortedByDescending { it.priority }
 
 	override suspend fun updateContactEmail(contactId: Long, email: String): FallDetectorResult<Int> = withContext(Dispatchers.IO) {
-		catching {
+		catchIO {
 			val columnsAffected = contactDao.updateEmail(contactId, email)
 			if (columnsAffected != 0) {
 				success(columnsAffected)
@@ -56,7 +56,7 @@ internal class ContactRepositoryImpl(
 	}
 
 	override suspend fun updateContactPhotoPath(contactId: Long, photoPath: String): FallDetectorResult<Int> = withContext(Dispatchers.IO) {
-		catching {
+		catchIO {
 			val columnsAffected = contactDao.updatePhotoPath(contactId, photoPath)
 			if (columnsAffected != 0) {
 				success(columnsAffected)
@@ -67,7 +67,7 @@ internal class ContactRepositoryImpl(
 	}
 
 	override suspend fun getContactByMobile(mobile: Int): FallDetectorResult<Contact> = withContext(Dispatchers.IO) {
-		catching {
+		catchIO {
 			val contact = contactDao.getContactByMobile(mobile)
 			if (contact != null) {
 				success(contact)
@@ -78,7 +78,7 @@ internal class ContactRepositoryImpl(
 	}
 
 	override suspend fun getAllContacts(): FallDetectorResult<List<Contact>> = withContext(Dispatchers.IO) {
-		catching {
+		catchIO {
 			val contacts = contactDao.getAll()
 			if (contacts.isNotEmpty()) {
 				success(contacts)
@@ -89,7 +89,7 @@ internal class ContactRepositoryImpl(
 	}
 
 	override suspend fun removeContact(contact: Contact): FallDetectorResult<Int> = withContext(Dispatchers.IO) {
-		catching {
+		catchIO {
 			val columnsAffected = contactDao.delete(contact)
 			if (columnsAffected != 0) {
 				success(columnsAffected)

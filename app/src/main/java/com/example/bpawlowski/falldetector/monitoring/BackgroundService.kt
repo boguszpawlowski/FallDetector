@@ -1,6 +1,10 @@
 package com.example.bpawlowski.falldetector.monitoring
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -15,14 +19,18 @@ import bogusz.com.service.database.zip
 import bogusz.com.service.location.LocationProvider
 import bogusz.com.service.model.Sensitivity
 import bogusz.com.service.rx.SchedulerProvider
+import bogusz.com.service.util.doNothing
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.START_SERVICE
 import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.STOP_SERVICE
 import com.example.bpawlowski.falldetector.ui.main.MainActivity
-import com.example.bpawlowski.falldetector.util.doNothing
 import com.example.bpawlowski.falldetector.util.notificationManager
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 

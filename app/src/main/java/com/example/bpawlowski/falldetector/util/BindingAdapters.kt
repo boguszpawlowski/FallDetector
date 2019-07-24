@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
+import bogusz.com.service.util.doNothing
 import com.google.android.material.textfield.TextInputLayout
 
 @BindingAdapter(value = ["visible"])

@@ -2,7 +2,7 @@ package bogusz.com.service.database.repository
 
 import androidx.lifecycle.LiveData
 import bogusz.com.service.database.FallDetectorResult
-import bogusz.com.service.database.catching
+import bogusz.com.service.database.catchIO
 import bogusz.com.service.database.dbservice.DatabaseService
 import bogusz.com.service.database.exceptions.FallDetectorException
 import bogusz.com.service.database.failure
@@ -38,7 +38,7 @@ internal class ServiceStateRepositoryImpl(
 	}
 
 	override suspend fun getIsRunningFlag(): FallDetectorResult<Boolean> =
-		catching {
+		catchIO {
 			val isRunning = serviceStateDao.getIsRunningFlag()
 			if (isRunning != null) {
 				success(isRunning)
@@ -48,7 +48,7 @@ internal class ServiceStateRepositoryImpl(
 		}
 
 	override suspend fun updateSensitivity(sensitivity: Sensitivity): FallDetectorResult<Unit> =
-		catching {
+		catchIO {
 			val updated = serviceStateDao.updateSensitivity(sensitivity)
 			if (updated != 0) {
 				success(Unit)
@@ -58,7 +58,7 @@ internal class ServiceStateRepositoryImpl(
 		}
 
 	override suspend fun updateIsRunning(isRunning: Boolean): FallDetectorResult<Unit> =
-		catching {
+		catchIO {
 			val updated = serviceStateDao.updateIsRunningFlag(isRunning)
 			if (updated != 0) {
 				success(Unit)

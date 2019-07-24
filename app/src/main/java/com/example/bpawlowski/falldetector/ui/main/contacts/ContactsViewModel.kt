@@ -26,6 +26,11 @@ class ContactsViewModel(
 			.onFailure { Timber.e(it) }
 	}
 
+	fun addContact(contact: Contact) = backgroundScope.launch {
+		contactsRepository.addContact(contact.copy(id = null))
+				.onFailure { Timber.e(it) }
+	}
+
 	fun callContact(context: Context, contact: Contact) = callService.call(context, contact)
 
 	fun sendMessage(contact: Contact) = backgroundScope.launch {

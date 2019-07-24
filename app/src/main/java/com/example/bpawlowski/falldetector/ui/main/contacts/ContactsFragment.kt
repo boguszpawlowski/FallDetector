@@ -9,6 +9,7 @@ import bogusz.com.service.model.Contact
 import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentContactsBinding
+import com.example.bpawlowski.falldetector.domain.Notification
 import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.ui.base.recycler.DragToDismissCallback
 import com.example.bpawlowski.falldetector.ui.base.recycler.ItemsAdapter
@@ -31,7 +32,17 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
 				adapter.update(it.map { contact ->
 					ContactItem(
 						data = contact,
-						onDismissListener = { viewModel.removeContact(contact) },
+						onDismissListener = {
+							viewModel.removeContact(contact)
+							sharedViewModel.notify( //todo should be done after successful deletion
+								Notification.InfoNotification(
+									source = binding.root,
+									message = getString(R.string.snackbar_deleted),
+									actionResId = R.string.snackbar_undo,
+									listener = View.OnClickListener { viewModel.addContact(contact) }
+								)
+							)
+						},
 						onSelectListener = { showDialog(contact.id) },
 						onCallClickListener = { viewModel.callContact(requireContext(), it) },
 						onSmsClickListener = { viewModel.sendMessage(it) }

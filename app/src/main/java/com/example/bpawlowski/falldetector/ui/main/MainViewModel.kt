@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import bogusz.com.service.database.repository.ServiceStateRepository
 import bogusz.com.service.model.Sensitivity
 import bogusz.com.service.preferences.AppSettingsPreferencesData
-import com.example.bpawlowski.falldetector.domain.ErrorNotification
+import com.example.bpawlowski.falldetector.domain.Notification
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -19,13 +19,14 @@ class MainViewModel(
 	val appSettingsPreferencesData: AppSettingsPreferencesData
 		get() = AppSettingsPreferencesData(sharedPreferences)
 
-	private val _errorData = MutableLiveData<ErrorNotification>()
-	val errorData: LiveData<ErrorNotification>
-		get() = _errorData
+	private val _notificationsData = MutableLiveData<Notification>()
+	val notificationsData: LiveData<Notification>
+		get() = _notificationsData
 
 	fun changeSensitivity(sensitivity: Sensitivity) = viewModelScope.launch {
 		serviceStateRepository.updateSensitivity(sensitivity)
 	}
 
-	fun handleKnownError(notification: ErrorNotification) = _errorData.postValue(notification)
+	fun notify(notification: Notification) =
+		_notificationsData.postValue(notification)
 }
