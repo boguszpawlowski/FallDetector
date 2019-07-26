@@ -9,12 +9,13 @@ import bogusz.com.service.model.Contact
 import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentContactsBinding
-import com.example.bpawlowski.falldetector.domain.Notification
+import com.example.bpawlowski.falldetector.domain.ScreenState
 import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.ui.base.recycler.DragToDismissCallback
 import com.example.bpawlowski.falldetector.ui.base.recycler.ItemsAdapter
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
+import com.example.bpawlowski.falldetector.util.snackbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -32,22 +33,25 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
 				adapter.update(it.map { contact ->
 					ContactItem(
 						data = contact,
-						onDismissListener = {
-							viewModel.removeContact(contact)
-							sharedViewModel.notify( //todo should be done after successful deletion
-								Notification.InfoNotification(
-									source = binding.root,
-									message = getString(R.string.snackbar_deleted),
-									actionResId = R.string.snackbar_undo,
-									listener = View.OnClickListener { viewModel.addContact(contact) }
-								)
-							)
-						},
+						onDismissListener = { viewModel.removeContact(contact) },
 						onSelectListener = { showDialog(contact.id) },
 						onCallClickListener = { viewModel.callContact(requireContext(), it) },
 						onSmsClickListener = { viewModel.sendMessage(it) }
 					)
 				})
+			}
+		}
+	}
+
+	private val screenStateObserver: Observer<ScreenState<Contact>> by lazy {
+		Observer<ScreenState<Contact>> { screenState ->
+			screenState.onSuccess { contact ->
+				snackbar(
+					source = binding.root,
+					message = getString(R.string.snackbar_deleted),
+					actionListener = R.string.snackbar_undo,
+					listener = { viewModel.addContact(contact) }
+				)
 			}
 		}
 	}
@@ -63,6 +67,7 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
 		ItemTouchHelper(DragToDismissCallback(requireContext())).attachToRecyclerView(binding.recyclerContact)
 
 		viewModel.contactsLiveData.reObserve(this, contactsObserver)
+		viewModel.screenStateData.reObserve(this, screenStateObserver)
 	}
 
 	private fun showDialog(id: Long? = null) {

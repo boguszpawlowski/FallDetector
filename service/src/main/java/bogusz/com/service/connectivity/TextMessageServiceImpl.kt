@@ -3,9 +3,9 @@ package bogusz.com.service.connectivity
 import android.location.Location
 import android.telephony.SmsManager
 
-internal class SmsServiceImpl(
+internal class TextMessageServiceImpl(
     private val smsManager: SmsManager
-) : SmsService {
+) : TextMessageService {
 
     override fun sendMessage(number: Int, location: Location) = with(smsManager) {
         val parts = divideMessage(location.smsBody)

@@ -19,5 +19,5 @@ interface ContactRepository {
 
 	suspend fun updateContactPhotoPath(contactId: Long, photoPath: String): FallDetectorResult<Int>
 
-    suspend fun removeContact(contact: Contact): FallDetectorResult<Int>
+	suspend fun removeContact(contact: Contact): FallDetectorResult<Contact>
 }

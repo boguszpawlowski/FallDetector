@@ -11,11 +11,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import bogusz.com.service.database.FallDetectorResult
 import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.DialogFormBinding
-import com.example.bpawlowski.falldetector.domain.Notification
+import com.example.bpawlowski.falldetector.domain.ScreenState
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
 import com.example.bpawlowski.falldetector.util.checkPermission
@@ -31,14 +30,10 @@ class FormDialogFragment : DialogFragment() {
 
 	private val viewModel: FormDialogViewModel by viewModel()
 
-	private val sharedViewModel: MainViewModel by sharedViewModel()
-
-	private val resultObserver: Observer<FallDetectorResult<Long>> by lazy {
-		Observer<FallDetectorResult<Long>> { result ->
-			result.onSuccess {
+	private val screenStateObserver: Observer<ScreenState<Long>> by lazy {
+		Observer<ScreenState<Long>> { state ->
+			state.onSuccess {
 				dismiss()
-			}.onKnownFailure {
-				sharedViewModel.notify(Notification.ErrorNotification(binding.root, it.rationale))
 			}
 		}
 	}
@@ -63,7 +58,7 @@ class FormDialogFragment : DialogFragment() {
 		binding.lifecycleOwner = viewLifecycleOwner
 		binding.viewModel = viewModel
 
-		viewModel.addContactResultData.reObserve(this, resultObserver)
+		viewModel.screenStateData.reObserve(this, screenStateObserver)
 
 		val contactId = arguments?.getLong(CONTACT_ID).takeUnless { it == -1L }
 		viewModel.initData(contactId)

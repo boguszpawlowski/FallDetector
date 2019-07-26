@@ -88,11 +88,11 @@ internal class ContactRepositoryImpl(
 		}
 	}
 
-	override suspend fun removeContact(contact: Contact): FallDetectorResult<Int> = withContext(Dispatchers.IO) {
+	override suspend fun removeContact(contact: Contact): FallDetectorResult<Contact> = withContext(Dispatchers.IO) {
 		catchIO {
 			val columnsAffected = contactDao.delete(contact)
 			if (columnsAffected != 0) {
-				success(columnsAffected)
+				success(contact)
 			} else {
 				failure(FallDetectorException.NoSuchRecordException())
 			}

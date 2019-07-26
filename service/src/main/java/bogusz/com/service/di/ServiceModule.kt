@@ -7,8 +7,8 @@ import bogusz.com.service.alarm.AlarmService
 import bogusz.com.service.alarm.AlarmServiceImpl
 import bogusz.com.service.connectivity.CallService
 import bogusz.com.service.connectivity.CallServiceImpl
-import bogusz.com.service.connectivity.SmsService
-import bogusz.com.service.connectivity.SmsServiceImpl
+import bogusz.com.service.connectivity.TextMessageService
+import bogusz.com.service.connectivity.TextMessageServiceImpl
 import bogusz.com.service.database.dbservice.DatabaseService
 import bogusz.com.service.database.dbservice.DatabaseServiceImpl
 import bogusz.com.service.database.repository.ContactRepository
@@ -26,7 +26,7 @@ val serviceModule = module {
 
     single<AlarmService> { AlarmServiceImpl(get(), get(), get()) }
     single<SmsManager> { SmsManager.getDefault() }
-    single<SmsService> { SmsServiceImpl(get()) }
+    single<TextMessageService> { TextMessageServiceImpl(get()) }
     single<CallService> { CallServiceImpl() }
 
     factory<SharedPreferences>(named("Default")) { PreferenceManager.getDefaultSharedPreferences(get()) }

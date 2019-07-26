@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -19,13 +18,10 @@ import bogusz.com.service.model.AppSettings
 import bogusz.com.service.util.postDelayed
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
-import com.example.bpawlowski.falldetector.domain.Notification
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseActivity
 import com.example.bpawlowski.falldetector.util.drawerItems
 import com.example.bpawlowski.falldetector.util.getPermissions
 import com.example.bpawlowski.falldetector.util.showPopupMenu
-import com.example.bpawlowski.falldetector.util.snackbar
-import com.example.bpawlowski.falldetector.util.toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -44,15 +40,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 	private val appSettingsObserver: Observer<AppSettings> by lazy {
 		Observer<AppSettings> { appSettings ->
 			appSettings?.let { updateApp(it) }
-		}
-	}
-
-	private val errorObserver: Observer<Notification> by lazy {
-		Observer<Notification> { notification ->
-			when (notification) {
-				is Notification.ErrorNotification -> toast(notification.message, Toast.LENGTH_LONG)
-				is Notification.InfoNotification -> snackbar(notification)
-			}
 		}
 	}
 
@@ -121,7 +108,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 
 	private fun initObservers() = with(viewModel) {
 		appSettingsPreferencesData.observe(this@MainActivity, appSettingsObserver)
-		notificationsData.observe(this@MainActivity, errorObserver)
 	}
 
 	private fun clearSelection() {
