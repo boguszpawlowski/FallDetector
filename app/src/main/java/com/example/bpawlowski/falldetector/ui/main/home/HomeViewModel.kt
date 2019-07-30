@@ -13,7 +13,7 @@ class HomeViewModel(
     private val serviceStateRepository: ServiceStateRepository
 ) : BaseViewModel() {
 
-    fun toggleService(context: Context) = viewModelScope.launch {
+    fun toggleService(context: Context) = backgroundScope.launch {
         serviceStateRepository.getIsRunningFlag().fold(
             onSuccess = { isRunning ->
                 if (isRunning) {

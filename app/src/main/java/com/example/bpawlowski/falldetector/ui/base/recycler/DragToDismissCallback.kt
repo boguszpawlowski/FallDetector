@@ -17,7 +17,7 @@ class DragToDismissCallback(
 	context: Context
 ) : TouchCallback() {
 
-	private val background = ColorDrawable(ContextCompat.getColor(context, R.color.accent))
+	private val background = ColorDrawable(ContextCompat.getColor(context, R.color.secondary))
 	private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.icon_delete)
 
 	override fun onChildDraw(

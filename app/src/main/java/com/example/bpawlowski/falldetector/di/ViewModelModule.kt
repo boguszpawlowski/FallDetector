@@ -4,6 +4,7 @@ import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.ui.main.alarm.AlarmViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.ContactsViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.FormDialogViewModel
+import com.example.bpawlowski.falldetector.ui.main.details.ContactDetailsViewModel
 import com.example.bpawlowski.falldetector.ui.main.home.HomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
@@ -15,4 +16,5 @@ val viewModelModule = module {
 	viewModel { FormDialogViewModel(get()) }
 	viewModel { MainViewModel(get(named("Default")), get()) }
 	viewModel { AlarmViewModel(get(), get(), get()) }
+	viewModel { ContactDetailsViewModel(get()) }
 }

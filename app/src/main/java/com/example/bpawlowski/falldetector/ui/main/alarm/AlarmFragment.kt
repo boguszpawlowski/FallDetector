@@ -9,7 +9,9 @@ import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AlarmFragment : BaseFragment<AlarmViewModel, MainViewModel, FragmentAlarmBinding>() {
+class AlarmFragment : BaseFragment<FragmentAlarmBinding>() {
+
+	override val layoutID = R.layout.fragment_alarm
 
 	override val viewModel: AlarmViewModel by viewModel()
 
@@ -22,7 +24,4 @@ class AlarmFragment : BaseFragment<AlarmViewModel, MainViewModel, FragmentAlarmB
             viewModel.raiseAlarm()
         }
     }
-
-
-    override fun getLayoutID() = R.layout.fragment_alarm
 }

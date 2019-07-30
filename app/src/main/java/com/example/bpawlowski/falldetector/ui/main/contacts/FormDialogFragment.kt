@@ -15,14 +15,12 @@ import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.DialogFormBinding
 import com.example.bpawlowski.falldetector.domain.ScreenState
-import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
 import com.example.bpawlowski.falldetector.util.checkPermission
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import com.example.bpawlowski.falldetector.util.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private const val CODE_REQUEST_GALLERY = 9999
-private const val CONTACT_ID = "contact_id"
+const val CODE_REQUEST_GALLERY = 9999
 
 class FormDialogFragment : DialogFragment() {
 
@@ -34,6 +32,8 @@ class FormDialogFragment : DialogFragment() {
 		Observer<ScreenState<Long>> { state ->
 			state.onSuccess {
 				dismiss()
+			}.onFailure {
+				requireContext().toast(it.rationale)
 			}
 		}
 	}
@@ -60,13 +60,11 @@ class FormDialogFragment : DialogFragment() {
 
 		viewModel.screenStateData.reObserve(this, screenStateObserver)
 
-		val contactId = arguments?.getLong(CONTACT_ID).takeUnless { it == -1L }
-		viewModel.initData(contactId)
-		initListeners(contactId)
+		initListeners()
 	}
 
-	private fun initListeners(contactId: Long?) = with(binding) {
-		btnApply.setOnClickListener { this@FormDialogFragment.viewModel.tryToAddContact(contactId) }
+	private fun initListeners() = with(binding) {
+		btnApply.setOnClickListener { this@FormDialogFragment.viewModel.tryToAddContact() }
 		btnCancel.setOnClickListener { dismiss() }
 		imgProfile.setOnClickListener { openGallery() }
 	}

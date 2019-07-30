@@ -2,13 +2,15 @@
 <resources>
 	<color name="iconBackground">@color/primaryLight</color>
 	<color name="dialogBackground">#313131</color>
-	<color name="swipeItem">@color/colorPrimary</color>
-    <color name="deleteIcon">@color/colorPrimaryDark</color>
-	<color name="accent">#A80808</color>
-	<color name="textColor">#D8D8D8</color>
+	<color name="swipeItem">@color/primary</color>
+	<color name="deleteIcon">@color/primaryDark</color>
+	<color name="background">@color/primaryDark</color>
+	<color name="surface">@color/primary</color>
+	<color name="onBackground">@color/white</color>
+	<color name="onSurface">@color/white</color>
 
 	<!--nav bar-->
-	<color name="navBarBackground">@color/colorPrimary</color>
+	<color name="navBarBackground">@color/primary</color>
 	<color name="iconSelected">@color/white</color>
 	<color name="iconNotSelected">@color/grey</color>
 </resources>

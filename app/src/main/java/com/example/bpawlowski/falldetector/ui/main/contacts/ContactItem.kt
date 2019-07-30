@@ -2,6 +2,7 @@ package com.example.bpawlowski.falldetector.ui.main.contacts
 
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import bogusz.com.service.model.Contact
@@ -13,6 +14,7 @@ import com.example.bpawlowski.falldetector.ui.base.recycler.SwipeableItem
 import com.example.bpawlowski.falldetector.util.loadContactImage
 
 typealias OnContactTouchedListener = (Contact) -> Unit
+typealias OnDetailsClickedListener = (Contact, ImageView) -> Unit
 
 class ContactItem(
 	data: Contact,
@@ -32,6 +34,8 @@ class ContactItem(
 		data.photoPath?.let {
 			loadContactImage(itemView.context.applicationContext, Uri.parse(it), imgContact)
 		}
+
+		imgContact.transitionName = "tr${data.id}"
 
 		txtName.text = data.name
 		txtNumber.text = data.mobile.toString()

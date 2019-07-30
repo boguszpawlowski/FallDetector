@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+	<data>
+
+		<variable
+			name="viewModel"
+			type="com.example.bpawlowski.falldetector.ui.main.details.ContactDetailsViewModel"/>
+	</data>
+
+	<ScrollView
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<androidx.appcompat.widget.AppCompatEditText
+				android:id="@+id/tv_name"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_medium"
+				android:background="@color/transparent"
+				android:text="@={viewModel.contactForm.name}"
+				android:textColor="@color/onBackground"
+				android:textSize="30sp"
+				android:textStyle="bold"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintHorizontal_weight="1"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				tools:text="John Doe"/>
+
+			<androidx.appcompat.widget.AppCompatImageView
+				android:id="@+id/img_profile"
+				android:layout_width="200dp"
+				android:layout_height="200dp"
+				android:layout_marginTop="@dimen/margin_medium"
+				android:background="@drawable/contact_placeholder"
+				android:padding="2dp"
+				android:src="@drawable/icon_contact"
+				android:transitionName="imageView"
+				app:file_src="@{viewModel.contactForm.filePath}"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/tv_name"/>
+
+			<androidx.appcompat.widget.AppCompatImageButton
+				android:id="@+id/btn_sms"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_medium"
+				android:background="?android:attr/selectableItemBackground"
+				android:padding="@dimen/margin_small"
+				android:src="@drawable/ic_chat_black_32dp"
+				app:layout_constraintEnd_toStartOf="@id/btn_call"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/img_profile"/>
+
+			<androidx.appcompat.widget.AppCompatImageButton
+				android:id="@+id/btn_call"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_medium"
+				android:background="?android:attr/selectableItemBackground"
+				android:padding="@dimen/margin_small"
+				android:src="@drawable/ic_call_black_32dp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toEndOf="@id/btn_sms"
+				app:layout_constraintTop_toBottomOf="@+id/img_profile"/>
+
+			<com.google.android.material.textfield.TextInputLayout
+				android:id="@+id/tv_phone"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/margin_small"
+				android:layout_marginStart="@dimen/margin_small"
+				android:background="@color/transparent"
+				app:error="@{viewModel.contactForm.mobileError}"
+				app:errorEnabled="true"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintHorizontal_weight="1"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/btn_sms">
+
+				<androidx.appcompat.widget.AppCompatEditText
+					android:id="@+id/txt_contact_phone"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:background="@color/transparent"
+					android:drawablePadding="@dimen/margin_extra_small"
+					android:drawableStart="@drawable/ic_call_black_24dp"
+					android:inputType="phone|textNoSuggestions"
+					android:maxLength="9"
+					android:text="@={viewModel.contactForm.mobile}"
+					android:textColor="@color/onBackground"
+					tools:text="312321321"/>
+			</com.google.android.material.textfield.TextInputLayout>
+
+			<com.google.android.material.textfield.TextInputLayout
+				android:id="@+id/tv_email"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/margin_small"
+				android:layout_marginStart="@dimen/margin_small"
+				android:background="@color/transparent"
+				app:error="@{viewModel.contactForm.emailError}"
+				app:errorEnabled="true"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/tv_phone">
+
+				<androidx.appcompat.widget.AppCompatEditText
+					android:id="@+id/txt_contact_email"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="@dimen/margin_extra_small"
+					android:background="@color/transparent"
+					android:drawablePadding="@dimen/margin_extra_small"
+					android:drawableStart="@drawable/ic_email_black_24dp"
+					android:inputType="textPersonName"
+					android:text="@={viewModel.contactForm.email}"
+					android:textColor="@color/onBackground"
+					tools:text="john.doe@gmail.com"/>
+			</com.google.android.material.textfield.TextInputLayout>
+
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/btn_save"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/margin_large"
+				android:layout_marginEnd="@dimen/margin_medium"
+				android:layout_marginStart="@dimen/margin_medium"
+				android:layout_marginTop="@dimen/margin_medium"
+				android:enabled="@{viewModel.contactForm.valid}"
+				android:text="@string/btn_save"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/tv_email"/>
+
+		</androidx.constraintlayout.widget.ConstraintLayout>
+	</ScrollView>
+</layout>

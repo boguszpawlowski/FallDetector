@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.navigateUp
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import bogusz.com.service.model.AppSettings
@@ -25,6 +26,7 @@ import com.example.bpawlowski.falldetector.util.showPopupMenu
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 					 BottomNavigationView.OnNavigationItemSelectedListener {
@@ -32,6 +34,8 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 	override val viewModel: MainViewModel by viewModel()
 
 	private var navController: NavController? = null
+
+	private val navStack = ArrayDeque<Int>()
 
 	private val appBarConfiguration by lazy {
 		AppBarConfiguration(drawerItems)
@@ -59,7 +63,12 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 	}
 
 	override fun onBackPressed() {
-		navController?.navigate(R.id.homeFragment) //todo fix going back from settings
+		val selectedItem = binding.bottomNavigation.selectedItemId
+		if (selectedItem != R.id.home) {
+			navController?.navigateUp(appBarConfiguration)
+		} else {
+			finish()
+		}
 	}
 
 	override fun onDestroy() {
@@ -82,16 +91,19 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 		when (item.itemId) {
 			R.id.nav_home -> {
 				navController?.navigate(R.id.homeFragment)
+				navStack.pushIfAbsent(R.id.homeFragment)
 				true
 			}
 
 			R.id.nav_contacts -> {
 				navController?.navigate(R.id.contactsFragment)
+				navStack.pushIfAbsent(R.id.contactsFragment)
 				true
 			}
 
 			R.id.nav_alarm -> {
 				navController?.navigate(R.id.alarmFragment)
+				navStack.pushIfAbsent(R.id.contactsFragment)
 				true
 			}
 
@@ -108,6 +120,11 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>(),
 
 	private fun initObservers() = with(viewModel) {
 		appSettingsPreferencesData.observe(this@MainActivity, appSettingsObserver)
+	}
+
+	private fun Deque<Int>.pushIfAbsent(value: Int){
+		removeFirstOccurrence(value)
+		push(value)
 	}
 
 	private fun clearSelection() {

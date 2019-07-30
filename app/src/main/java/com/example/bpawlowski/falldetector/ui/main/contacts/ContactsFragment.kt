@@ -5,6 +5,7 @@ import android.view.View
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import bogusz.com.service.model.Contact
 import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
@@ -15,11 +16,16 @@ import com.example.bpawlowski.falldetector.ui.base.recycler.DragToDismissCallbac
 import com.example.bpawlowski.falldetector.ui.base.recycler.ItemsAdapter
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
+import com.example.bpawlowski.falldetector.util.setVisible
 import com.example.bpawlowski.falldetector.util.snackbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, FragmentContactsBinding>() {
+const val scrollThreshold = 20
+
+class ContactsFragment : BaseFragment<FragmentContactsBinding>() {
+
+	override val layoutID = R.layout.fragment_contacts
 
 	override val viewModel: ContactsViewModel by viewModel()
 
@@ -34,7 +40,7 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
 					ContactItem(
 						data = contact,
 						onDismissListener = { viewModel.removeContact(contact) },
-						onSelectListener = { showDialog(contact.id) },
+						onSelectListener = { showDetails(contact.id) },
 						onCallClickListener = { viewModel.callContact(requireContext(), it) },
 						onSmsClickListener = { viewModel.sendMessage(it) }
 					)
@@ -60,21 +66,42 @@ class ContactsFragment : BaseFragment<ContactsViewModel, MainViewModel, Fragment
 		super.onViewCreated(view, savedInstanceState)
 
 		adapter = ItemsAdapter()
-
 		binding.recyclerContact.adapter = this@ContactsFragment.adapter
-		binding.fab.setOnClickListener { showDialog() }
-
 		ItemTouchHelper(DragToDismissCallback(requireContext())).attachToRecyclerView(binding.recyclerContact)
 
+		initListeners()
+		initObservers()
+	}
+
+	private fun initListeners() = with(binding) {
+		fab.setOnClickListener { showDialog() }
+		recyclerContact.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+			override fun onScrolled(recyclerView: RecyclerView, dx: Int, verticalScroll: Int) {
+				if (verticalScroll < -scrollThreshold) {
+					fab.setVisible(true)
+				} else if (verticalScroll > scrollThreshold) {
+					fab.setVisible(false)
+				}
+			}
+		})
+	}
+
+	private fun initObservers() {
 		viewModel.contactsLiveData.reObserve(this, contactsObserver)
 		viewModel.screenStateData.reObserve(this, screenStateObserver)
 	}
 
-	private fun showDialog(id: Long? = null) {
+	private fun showDialog() {
 		findNavController().navigate(
-			ContactsFragmentDirections.showDialog(id ?: -1L)
+			ContactsFragmentDirections.showDialog()
 		)
 	}
 
-	override fun getLayoutID() = R.layout.fragment_contacts
+	private fun showDetails(id: Long? = null) {
+		id?.let {
+			findNavController().navigate(
+				ContactsFragmentDirections.showDetails(id)
+			)
+		}
+	}
 }

@@ -25,7 +25,11 @@ internal class ContactRepositoryImpl(
 			if (contact.priority == UserPriority.PRIORITY_ICE && iceContactId != null && contact.id != iceContactId) {
 				failure(FallDetectorException.IceAlreadyExistsException)
 			} else {
-				success(contactDao.insert(contact))
+				if (contactDao.getContactByMobile(contact.mobile) != null) {
+					failure(FallDetectorException.MobileAlreadyExisting(contact.mobile))
+				} else {
+					success(contactDao.insert(contact))
+				}
 			}
 		}
 	}
@@ -43,6 +47,17 @@ internal class ContactRepositoryImpl(
 
 	override fun getAllContactsData(): LiveData<List<Contact>> =
 		contactDao.getAllData().sortedByDescending { it.priority }
+
+	override suspend fun updateContact(contact: Contact): FallDetectorResult<Int> = withContext(Dispatchers.IO) {
+		catchIO {
+			val updatedLines = contactDao.update(contact)
+			if (updatedLines != 0) {
+				success(updatedLines)
+			} else {
+				failure(FallDetectorException.NoSuchRecordException())
+			}
+		}
+	}
 
 	override suspend fun updateContactEmail(contactId: Long, email: String): FallDetectorResult<Int> = withContext(Dispatchers.IO) {
 		catchIO {

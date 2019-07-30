@@ -8,7 +8,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.example.bpawlowski.falldetector.R
 
 fun loadContactImage(
 	activity: Context,
@@ -19,7 +18,6 @@ fun loadContactImage(
 	val circularProgressDrawable = CircularProgressDrawable(activity).apply {
 		strokeWidth = 5f
 		centerRadius = 30f
-		setColorSchemeColors(R.color.accent, R.color.accent, R.color.accent)
 		start()
 	}
 

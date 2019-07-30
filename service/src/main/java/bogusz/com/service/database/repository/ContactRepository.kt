@@ -15,6 +15,8 @@ interface ContactRepository {
 
     suspend fun getContactByMobile(mobile: Int): FallDetectorResult<Contact>
 
+	suspend fun updateContact(contact: Contact): FallDetectorResult<Int>
+
 	suspend fun updateContactEmail(contactId: Long, email: String): FallDetectorResult<Int>
 
 	suspend fun updateContactPhotoPath(contactId: Long, photoPath: String): FallDetectorResult<Int>

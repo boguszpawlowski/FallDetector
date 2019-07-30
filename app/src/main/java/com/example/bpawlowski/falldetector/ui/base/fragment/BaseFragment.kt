@@ -12,11 +12,13 @@ import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
 import timber.log.Timber
 
-abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDataBinding> : Fragment() {
+abstract class BaseFragment<B : ViewDataBinding> : Fragment() {
 
-	abstract val viewModel: VM
+	abstract val layoutID: Int
 
-	abstract val sharedViewModel: SVM
+	abstract val viewModel: BaseViewModel
+
+	abstract val sharedViewModel: BaseViewModel
 
 	protected var binding by autoCleared<B>()
 
@@ -28,7 +30,7 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		Timber.tag(javaClass.simpleName).v("ON_CREATE_VIEW")
 
-		val dataBinding = DataBindingUtil.inflate<B>(inflater, getLayoutID(), container, false)
+		val dataBinding = DataBindingUtil.inflate<B>(inflater, layoutID, container, false)
 
 		binding = dataBinding
 		return dataBinding.root
@@ -73,6 +75,4 @@ abstract class BaseFragment<VM : BaseViewModel, SVM : BaseViewModel, B : ViewDat
 		Timber.tag(javaClass.simpleName).v("ON_DESTROY")
 		super.onDestroy()
 	}
-
-	abstract fun getLayoutID(): Int
 }

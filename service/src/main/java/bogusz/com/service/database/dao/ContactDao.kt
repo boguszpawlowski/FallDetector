@@ -6,6 +6,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import bogusz.com.service.model.Contact
 
 @Dao
@@ -23,11 +24,14 @@ internal interface ContactDao {
     @Query("SELECT * FROM contact WHERE mobile LIKE :mobile")
     suspend fun getContactByMobile(mobile: Int): Contact?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(contact: Contact): Long
 
     @Delete
     suspend fun delete(contact: Contact): Int
+
+	@Update
+	suspend fun update(contact: Contact): Int
 
     @Query(value = "UPDATE contact SET email=:email WHERE id like :id")
     suspend fun updateEmail(id: Long, email: String): Int
