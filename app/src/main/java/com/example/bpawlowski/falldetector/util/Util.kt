@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import android.widget.Toast
 import bogusz.com.service.util.doNothing
-import com.example.bpawlowski.falldetector.R
 import com.google.android.material.snackbar.Snackbar
 
 fun Context.toast(message: String, length: Int = Toast.LENGTH_SHORT) =
@@ -23,11 +22,5 @@ fun snackbar(
 		show()
 	}
 
-fun snackbar(source: View, message: String, length: Int = Snackbar.LENGTH_LONG) = Snackbar.make(source, message, length).show()
-
-
-val drawerItems = setOf(
-	R.id.homeFragment,
-	R.id.contactsFragment,
-	R.id.alarmFragment
-)
+fun snackbar(source: View, message: String, length: Int = Snackbar.LENGTH_LONG) =
+	Snackbar.make(source, message, length).show() //todo snackbar above navigation

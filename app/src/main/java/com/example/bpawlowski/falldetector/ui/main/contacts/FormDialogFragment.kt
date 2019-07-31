@@ -84,6 +84,7 @@ class FormDialogFragment : DialogFragment() {
 
 		if (requestCode == CODE_REQUEST_GALLERY && resultCode == Activity.RESULT_OK) {
 			data?.data?.let {
+				//todo copy file to internal memory
 				viewModel.contactForm.filePath = it.toString()
 			}
 		}

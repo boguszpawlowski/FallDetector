@@ -10,6 +10,8 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 
+private const val DARK_MODE_KEY = "dark_theme"
+
 class FallDetectorApp : Application() {
 
     private val sharedPreferences by lazy {
@@ -32,9 +34,5 @@ class FallDetectorApp : Application() {
                 listOf(viewModelModule, serviceModule)
             )
         }
-    }
-
-    companion object {
-        private const val DARK_MODE_KEY = "dark_theme"
     }
 }

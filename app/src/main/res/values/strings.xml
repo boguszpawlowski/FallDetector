@@ -39,4 +39,5 @@
 	<string name="snackbar_undo">Undo</string>
 	<string name="btn_save">save</string>
 	<string name="fab_label">add contact</string>
+	<string name="snb_updated">Contact updated.</string>
 </resources>

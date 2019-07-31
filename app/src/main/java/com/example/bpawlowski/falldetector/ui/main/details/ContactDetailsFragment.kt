@@ -15,6 +15,8 @@ import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.CODE_REQUEST_GALLERY
 import com.example.bpawlowski.falldetector.util.checkPermission
+import com.example.bpawlowski.falldetector.util.setVisible
+import com.example.bpawlowski.falldetector.util.snackbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -31,7 +33,7 @@ class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 	private val screenStateObserver: Observer<ScreenState<Int>> by lazy {
 		Observer<ScreenState<Int>> { state ->
 			state.onSuccess {
-				findNavController().navigateUp()
+				snackbar(binding.root, getString(R.string.snb_updated))
 			}
 		}
 	}

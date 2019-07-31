@@ -1,6 +1,5 @@
 package com.example.bpawlowski.falldetector.ui.main.details
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import bogusz.com.service.database.exceptions.FallDetectorException
@@ -10,6 +9,7 @@ import com.example.bpawlowski.falldetector.domain.ScreenState
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.util.copyToForm
 import com.example.bpawlowski.falldetector.util.mapToContact
+import com.example.bpawlowski.falldetector.util.toSingleEvent
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -20,20 +20,17 @@ class ContactDetailsViewModel(
 	val contactForm = ContactFormModel()
 
 	private val _screenStateData = MutableLiveData<ScreenState<Int>>()
-	val screenStateData: LiveData<ScreenState<Int>>
-		get() = _screenStateData
+	val screenStateData = _screenStateData.toSingleEvent()
 
-	fun initData(id: Long?) = id?.let {
-		viewModelScope.launch {
-			contactsRepository.getContact(id)
-				.onSuccess { it.copyToForm(contactForm) }
-				.onFailure {
-					if (it !is FallDetectorException.NoSuchRecordException) Timber.e(it)
-				}
-		}
+	fun initData(id: Long) = viewModelScope.launch {
+		contactsRepository.getContact(id)
+			.onSuccess { it.copyToForm(contactForm) }
+			.onFailure {
+				if (it !is FallDetectorException.NoSuchRecordException) Timber.e(it)
+			}
 	}
 
-	fun updateContact(contactId: Long) = viewModelScope.launch {
+	fun updateContact(contactId: Long) = backgroundScope.launch {
 		val contact = contactForm.mapToContact().copy(id = contactId)
 
 		_screenStateData.postValue(ScreenState.Loading)

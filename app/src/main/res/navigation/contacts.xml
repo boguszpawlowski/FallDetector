@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation android:id="@+id/contacts"
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			xmlns:app="http://schemas.android.com/apk/res-auto"
+			app:startDestination="@id/contactsFragment">
+
+	<fragment
+		android:id="@+id/contactsFragment"
+		android:name="com.example.bpawlowski.falldetector.ui.main.contacts.ContactsFragment"
+		android:label="Contacts">
+		<action
+			android:id="@+id/showDialog"
+			app:destination="@id/formDialogFragment"/>
+		<action
+			android:id="@+id/showDetails"
+			app:destination="@id/contactDetailsFragment"/>
+	</fragment>
+	<dialog
+		android:id="@+id/formDialogFragment"
+		android:name="com.example.bpawlowski.falldetector.ui.main.contacts.FormDialogFragment"
+		android:label="FormDialogFragment"/>
+	<fragment
+		android:id="@+id/contactDetailsFragment"
+		android:name="com.example.bpawlowski.falldetector.ui.main.details.ContactDetailsFragment"
+		android:label="Contact Details">
+		<argument
+			android:name="contact_id"
+			app:argType="long"/>
+	</fragment>
+</navigation>

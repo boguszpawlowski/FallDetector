@@ -6,6 +6,8 @@ import bogusz.com.service.database.FallDetectorDatabase
 import bogusz.com.service.database.dao.ContactDao
 import bogusz.com.service.database.dao.ServiceStateDao
 
+private const val name = "FDDatabase"
+
 internal class DatabaseServiceImpl(
 	context: Context
 ) : DatabaseService {
@@ -26,8 +28,4 @@ internal class DatabaseServiceImpl(
 	override fun getContactDao(): ContactDao = getDatabaseInstance().contactDao()
 
 	override fun getServiceStateDao(): ServiceStateDao = getDatabaseInstance().serviceStateDao()
-
-	companion object {
-		private const val name = "FDDatabase"
-	}
 }

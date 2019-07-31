@@ -16,9 +16,9 @@
             tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 		<activity android:name="com.example.bpawlowski.falldetector.ui.login.LoginActivity"/>
         <activity
-                android:windowSoftInputMode="adjustPan"
-                android:name="com.example.bpawlowski.falldetector.ui.main.MainActivity"
-                android:theme="@style/AppTheme.NoActionBar">
+			android:windowSoftInputMode="adjustPan"
+			android:name="com.example.bpawlowski.falldetector.ui.main.MainActivity"
+			android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

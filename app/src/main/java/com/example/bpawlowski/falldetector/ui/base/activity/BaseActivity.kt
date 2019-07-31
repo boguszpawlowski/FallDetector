@@ -10,16 +10,15 @@ import androidx.lifecycle.ViewModel
 import com.example.bpawlowski.falldetector.BR
 import timber.log.Timber
 
-abstract class BaseActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActivity() {
+abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity() {
 
-	abstract val viewModel: VM
+	abstract val viewModel: BaseViewModel
 
 	lateinit var binding: B
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		Timber.tag(javaClass.simpleName).v("ON_CREATE")
 		super.onCreate(savedInstanceState)
-
 
 		val viewBinding = DataBindingUtil.setContentView<B>(this, layoutId)
 		binding = viewBinding
@@ -55,13 +54,7 @@ abstract class BaseActivity<VM : ViewModel, B : ViewDataBinding> : AppCompatActi
 		Intent(this, activity::class.java).run {
 			startActivity(intent)
 		}
-
-		if (keepInBackStack.not()) {
-			finish()
-		}
 	}
-
-	open val keepInBackStack: Boolean = false
 
 	abstract val layoutId: Int
 }
