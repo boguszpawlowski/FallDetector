@@ -40,4 +40,5 @@
 	<string name="btn_save">save</string>
 	<string name="fab_label">add contact</string>
 	<string name="snb_updated">Contact updated.</string>
+	<string name="snb_email_warning">You have to set email first</string>
 </resources>

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentContactDetailsBinding
@@ -15,7 +14,6 @@ import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.CODE_REQUEST_GALLERY
 import com.example.bpawlowski.falldetector.util.checkPermission
-import com.example.bpawlowski.falldetector.util.setVisible
 import com.example.bpawlowski.falldetector.util.snackbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -33,7 +31,7 @@ class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 	private val screenStateObserver: Observer<ScreenState<Int>> by lazy {
 		Observer<ScreenState<Int>> { state ->
 			state.onSuccess {
-				snackbar(binding.root, getString(R.string.snb_updated))
+				snackbar(message = getString(R.string.snb_updated))
 			}
 		}
 	}
@@ -50,6 +48,21 @@ class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 	private fun initListeners(contactId: Long) = with(binding) {
 		btnSave.setOnClickListener { this@ContactDetailsFragment.viewModel.updateContact(contactId) }
 		imgProfile.setOnClickListener { openGallery() }
+		btnCall.setOnClickListener { viewModel?.callContact(contactId, requireContext()) }
+		btnSms.setOnClickListener { viewModel?.sendSms(contactId) }
+		btnEmail.setOnClickListener { sendEmail() }
+	}
+
+	private fun sendEmail() {
+		if (viewModel.contactForm.email.isNotBlank()) { //todo intent helper?
+			with(Intent(Intent.ACTION_SEND)) {
+				putExtra(Intent.EXTRA_EMAIL, arrayOf(viewModel.contactForm.email))
+				type = "message/rfc822"
+				startActivity(Intent.createChooser(this, "Send email..."))
+			}
+		} else {
+			snackbar(message = getString(R.string.snb_email_warning))
+		}
 	}
 
 	private fun openGallery() = checkPermission(

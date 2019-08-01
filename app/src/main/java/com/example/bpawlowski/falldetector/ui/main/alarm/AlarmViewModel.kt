@@ -20,9 +20,8 @@ class AlarmViewModel(
         val contacts = async { contactRepository.getAllContacts() }
         val location = async { locationProvider.getLastKnownLocation() }
 
-        zip(contacts.await(), location.await()) { first, second ->
-            first to second
-        }.onSuccess { alarmService.raiseAlarm(it.first, it.second) }
-            .onFailure { Timber.e(it) }
+		zip(contacts.await(), location.await())
+			.onSuccess { alarmService.raiseAlarm(it.first, it.second) }
+			.onFailure { Timber.e(it) }
     }
 }

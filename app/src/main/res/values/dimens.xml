@@ -10,5 +10,7 @@
     <dimen name="margin_large">32dp</dimen>
     <dimen name="margin_extra_small">4dp</dimen>
 
+    <dimen name="outline_button_padding">10dp</dimen>
+
 	<dimen name="corner_radius">5dp</dimen>
 </resources>

@@ -16,5 +16,5 @@ val viewModelModule = module {
 	viewModel { FormDialogViewModel(get()) }
 	viewModel { MainViewModel(get(named("Default")), get()) }
 	viewModel { AlarmViewModel(get(), get(), get()) }
-	viewModel { ContactDetailsViewModel(get()) }
+	viewModel { ContactDetailsViewModel(get(), get(), get(), get()) }
 }

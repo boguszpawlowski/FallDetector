@@ -18,17 +18,27 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
 
+			<androidx.appcompat.widget.AppCompatImageView
+				android:layout_width="match_parent"
+				android:layout_height="173dp"
+				android:src="@drawable/background_profile"
+				android:layout_marginStart="@dimen/margin_small"
+				android:layout_marginEnd="@dimen/margin_small"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"/>
+
 			<androidx.appcompat.widget.AppCompatEditText
 				android:id="@+id/tv_name"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="@dimen/margin_medium"
 				android:background="@color/transparent"
+				android:singleLine="true"
 				android:text="@={viewModel.contactForm.name}"
-				android:textColor="@color/onBackground"
+				android:textColor="@color/onPrimary"
 				android:textSize="30sp"
 				android:textStyle="bold"
-				android:singleLine="true"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintHorizontal_weight="1"
 				app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +53,7 @@
 				android:background="@drawable/contact_placeholder"
 				android:padding="2dp"
 				android:src="@drawable/icon_contact"
-				android:transitionName="imageView"
+				android:elevation="8dp"
 				app:file_src="@{viewModel.contactForm.filePath}"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
@@ -54,11 +64,23 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="@dimen/margin_medium"
-				android:background="?android:attr/selectableItemBackground"
-				android:padding="@dimen/margin_small"
+				android:background="@drawable/background_outline"
+				android:padding="@dimen/outline_button_padding"
 				android:src="@drawable/ic_chat_black_32dp"
-				app:layout_constraintEnd_toStartOf="@id/btn_call"
+				app:layout_constraintEnd_toStartOf="@id/btn_email"
 				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/img_profile"/>
+
+			<androidx.appcompat.widget.AppCompatImageButton
+				android:id="@+id/btn_email"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_medium"
+				android:background="@drawable/background_outline"
+				android:padding="@dimen/outline_button_padding"
+				android:src="@drawable/ic_email_black_32dp"
+				app:layout_constraintEnd_toStartOf="@id/btn_call"
+				app:layout_constraintStart_toEndOf="@id/btn_sms"
 				app:layout_constraintTop_toBottomOf="@+id/img_profile"/>
 
 			<androidx.appcompat.widget.AppCompatImageButton
@@ -66,11 +88,11 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="@dimen/margin_medium"
-				android:background="?android:attr/selectableItemBackground"
-				android:padding="@dimen/margin_small"
+				android:background="@drawable/background_outline"
+				android:padding="@dimen/outline_button_padding"
 				android:src="@drawable/ic_call_black_32dp"
 				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toEndOf="@id/btn_sms"
+				app:layout_constraintStart_toEndOf="@id/btn_email"
 				app:layout_constraintTop_toBottomOf="@+id/img_profile"/>
 
 			<com.google.android.material.textfield.TextInputLayout
@@ -93,7 +115,7 @@
 					android:layout_height="wrap_content"
 					android:background="@color/transparent"
 					android:drawablePadding="@dimen/margin_extra_small"
-					android:drawableStart="@drawable/ic_call_black_24dp"
+					android:drawableStart="@drawable/ic_phone_android_black_24dp"
 					android:inputType="phone|textNoSuggestions"
 					android:maxLength="9"
 					android:text="@={viewModel.contactForm.mobile}"
@@ -122,7 +144,7 @@
 					android:background="@color/transparent"
 					android:drawablePadding="@dimen/margin_extra_small"
 					android:drawableStart="@drawable/ic_email_black_24dp"
-					android:inputType="textPersonName"
+					android:inputType="textEmailAddress"
 					android:text="@={viewModel.contactForm.email}"
 					android:textColor="@color/onBackground"
 					tools:text="john.doe@gmail.com"/>
@@ -138,10 +160,12 @@
 				android:layout_marginTop="@dimen/margin_medium"
 				android:enabled="@{viewModel.contactForm.valid}"
 				android:text="@string/btn_save"
-				app:layout_constraintEnd_toEndOf="parent"
+				android:visibility="gone"
 				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/tv_email"/>
+				app:layout_constraintTop_toBottomOf="@id/tv_email"
+				app:visible="@{viewModel.contactForm.hasChanged}"/>
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>

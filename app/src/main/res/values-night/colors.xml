@@ -8,6 +8,8 @@
 	<color name="surface">@color/primary</color>
 	<color name="onBackground">@color/white</color>
 	<color name="onSurface">@color/white</color>
+	<color name="secondary">#8F0000</color>
+	<color name="profileCard">#383838</color>
 
 	<!--nav bar-->
 	<color name="navBarBackground">@color/primary</color>

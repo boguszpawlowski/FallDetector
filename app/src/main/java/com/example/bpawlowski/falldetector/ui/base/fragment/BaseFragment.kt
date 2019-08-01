@@ -20,7 +20,7 @@ abstract class BaseFragment<B : ViewDataBinding> : Fragment() {
 
 	abstract val sharedViewModel: BaseViewModel
 
-	protected var binding by autoCleared<B>()
+	var binding by autoCleared<B>()
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		Timber.tag(javaClass.simpleName).v("ON_CREATE")

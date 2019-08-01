@@ -78,7 +78,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 	}
 
 	private fun updateApp(appSettings: AppSettings) {
-		//TODO change DARK mode, sensitivity etc.
 		val (darkMode, sendingSms, sensingLocation, sensitivity) = appSettings
 		postDelayed(CHANGE_THEME_DELAY) {
 			AppCompatDelegate.setDefaultNightMode(if (darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)

@@ -14,7 +14,6 @@ import com.example.bpawlowski.falldetector.ui.base.recycler.SwipeableItem
 import com.example.bpawlowski.falldetector.util.loadContactImage
 
 typealias OnContactTouchedListener = (Contact) -> Unit
-typealias OnDetailsClickedListener = (Contact, ImageView) -> Unit
 
 class ContactItem(
 	data: Contact,
@@ -29,10 +28,12 @@ class ContactItem(
 	override val layoutResId = R.layout.contact_item
 
 	override fun onBind(viewBinding: ContactItemBinding) = with(viewBinding) {
-		viewBinding.contact = data
+		contact = data
 
-		data.photoPath?.let {
-			loadContactImage(itemView.context.applicationContext, Uri.parse(it), imgContact)
+		if (data.photoPath != null) {
+			loadContactImage(itemView.context.applicationContext, Uri.parse(data.photoPath), imgContact)
+		} else {
+			imgContact.setImageDrawable(itemView.context.getDrawable(R.drawable.icon_contact))
 		}
 
 		imgContact.transitionName = "tr${data.id}"
