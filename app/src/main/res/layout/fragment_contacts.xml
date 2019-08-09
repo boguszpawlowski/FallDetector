@@ -25,6 +25,22 @@
 			app:layout_constraintTop_toTopOf="parent"
 			tools:listitem="@layout/contact_item"/>
 
+		<!--todo test this-->
+		<TextView
+			android:id="@+id/tv_no_contacts"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/tv_no_contacts_yet"
+			android:textSize="25sp"
+			android:textStyle="bold"
+			android:visibility="gone"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:visible="@{viewModel.contactsLiveData.isEmpty()}"
+			tools:visibility="visible"/>
+
 		<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 			android:id="@+id/fab"
 			android:layout_width="wrap_content"

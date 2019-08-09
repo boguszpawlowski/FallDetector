@@ -164,7 +164,7 @@ class BackgroundService : Service(), CoroutineScope {
 
 			zip(contacts.await(), location.await())
 				.onSuccess { alarmService.raiseAlarm(it.first, it.second) }
-				.onFailure { Timber.e(it) }
+				.onException { Timber.e(it) }
 		}
 	}
 

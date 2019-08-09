@@ -5,6 +5,10 @@
 
 	<data>
 
+		<import type="android.text.TextUtils"/>
+
+		<import type="android.view.View"/>
+
 		<variable
 			name="contact"
 			type="bogusz.com.service.model.Contact"/>
@@ -34,7 +38,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginStart="72dp"
-			android:textSize="16sp"
+			android:textSize="@dimen/text_highlight"
 			android:textStyle="bold"
 			app:layout_constraintBottom_toTopOf="@+id/txt_number"
 			app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +52,7 @@
 			android:layout_marginStart="@dimen/margin_extra_small"
 			android:textAllCaps="true"
 			android:textColor="?attr/colorAccent"
-			android:textSize="16sp"
+			android:textSize="@dimen/text_highlight"
 			app:layout_constraintStart_toEndOf="@id/txt_name"
 			app:layout_constraintTop_toTopOf="@id/txt_name"
 			tools:text="ICE"/>
@@ -77,6 +81,7 @@
 			android:layout_width="15dp"
 			android:layout_height="15dp"
 			android:src="@drawable/ic_email_black_24dp"
+			android:visibility="@{TextUtils.isEmpty(contact.email) ? View.GONE : View.VISIBLE}"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintStart_toStartOf="@id/txt_name"
 			app:layout_constraintTop_toBottomOf="@id/txt_number"/>

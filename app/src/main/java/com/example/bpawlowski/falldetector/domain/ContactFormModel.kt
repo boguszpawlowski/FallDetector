@@ -47,6 +47,7 @@ class ContactFormModel : BaseObservable() {
 		set(value) {
 			field = value
 			notifyPropertyChanged(BR.priority)
+			notifyPropertyChanged(BR.hasChanged)
 		}
 
 	@Bindable
@@ -81,7 +82,8 @@ class ContactFormModel : BaseObservable() {
 			email != initialData?.email ||
 					mobile != initialData?.mobile.toString() ||
 					filePath != initialData?.photoPath ||
-					name != initialData?.name
+					name != initialData?.name ||
+					priority != (initialData?.priority == UserPriority.PRIORITY_ICE)
 		}
 
 	fun initData(contact: Contact) {
@@ -91,6 +93,16 @@ class ContactFormModel : BaseObservable() {
 		email = contact.email ?: String.empty
 		priority = contact.priority == UserPriority.PRIORITY_ICE
 		filePath = contact.photoPath
+	}
+
+	fun resetData(){
+		initialData?.let {
+			name = it.name
+			mobile = it.mobile.toString()
+			email = it.email ?: String.empty
+			priority = it.priority == UserPriority.PRIORITY_ICE
+			filePath = it.photoPath
+		}
 	}
 
 	private fun nameIsValid() = name.isNotBlank()

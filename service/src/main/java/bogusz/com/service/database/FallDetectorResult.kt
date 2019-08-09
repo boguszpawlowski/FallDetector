@@ -38,12 +38,12 @@ sealed class FallDetectorResult<out T> {
 	/**
 	 * Failure operators
 	 */
-	inline fun onFailure(block: (Exception) -> Unit): FallDetectorResult<T> {
+	inline fun onException(block: (Exception) -> Unit): FallDetectorResult<T> {
 		if (this is Failure) block(error)
 		return this
 	}
 
-	inline fun onKnownFailure(block: (FallDetectorException) -> Unit): FallDetectorResult<T> {
+	inline fun onFailure(block: (FallDetectorException) -> Unit): FallDetectorResult<T> {
 		if (this is Failure && error is FallDetectorException) block(error)
 		return this
 	}

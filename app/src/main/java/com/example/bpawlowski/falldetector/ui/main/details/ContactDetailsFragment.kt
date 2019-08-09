@@ -18,7 +18,9 @@ import com.example.bpawlowski.falldetector.util.snackbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+const val IMAGE_TYPE = "image/*"
 private const val CONTACT_ID = "contact_id"
+private const val EMAIL_TYPE = "message/rfc822"
 
 class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 
@@ -32,6 +34,8 @@ class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 		Observer<ScreenState<Int>> { state ->
 			state.onSuccess {
 				snackbar(message = getString(R.string.snb_updated))
+			}.onFailure {
+				snackbar(message = it.rationale)
 			}
 		}
 	}
@@ -46,19 +50,30 @@ class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 	}
 
 	private fun initListeners(contactId: Long) = with(binding) {
-		btnSave.setOnClickListener { this@ContactDetailsFragment.viewModel.updateContact(contactId) }
+		btnSave.setOnClickListener {
+			this@ContactDetailsFragment.viewModel.updateContact(contactId)
+			clearRootFocus()
+		}
+		btnReset.setOnClickListener {
+			viewModel?.resetData()
+			clearRootFocus()
+		}
 		imgProfile.setOnClickListener { openGallery() }
 		btnCall.setOnClickListener { viewModel?.callContact(contactId, requireContext()) }
 		btnSms.setOnClickListener { viewModel?.sendSms(contactId) }
 		btnEmail.setOnClickListener { sendEmail() }
+		fab.setOnClickListener {
+			viewModel?.togglePriority()
+			clearRootFocus()
+		}
 	}
 
 	private fun sendEmail() {
-		if (viewModel.contactForm.email.isNotBlank()) { //todo intent helper?
+		if (viewModel.contactForm.email.isNotBlank()) {
 			with(Intent(Intent.ACTION_SEND)) {
 				putExtra(Intent.EXTRA_EMAIL, arrayOf(viewModel.contactForm.email))
-				type = "message/rfc822"
-				startActivity(Intent.createChooser(this, "Send email..."))
+				type = EMAIL_TYPE
+				startActivity(Intent.createChooser(this, getString(R.string.txt_email_chooser)))
 			}
 		} else {
 			snackbar(message = getString(R.string.snb_email_warning))
@@ -70,13 +85,15 @@ class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 		permission = Manifest.permission.READ_EXTERNAL_STORAGE,
 		onGranted = {
 			with(Intent(Intent.ACTION_OPEN_DOCUMENT)) {
-				type = "image/*"
+				type = IMAGE_TYPE
 				startActivityForResult(this, CODE_REQUEST_GALLERY)
 			}
 		})
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
+
+		clearRootFocus()
 
 		if (requestCode == CODE_REQUEST_GALLERY && resultCode == Activity.RESULT_OK) {
 			data?.data?.let {

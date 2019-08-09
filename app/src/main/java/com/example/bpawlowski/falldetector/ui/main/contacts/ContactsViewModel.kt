@@ -30,12 +30,12 @@ class ContactsViewModel(
 	fun removeContact(contact: Contact) = backgroundScope.launch {
 		contactsRepository.removeContact(contact)
 			.onSuccess { _screenStateData.postValue(ScreenState.Success(it)) }
-			.onFailure { Timber.e(it) }
+			.onException { Timber.e(it) }
 	}
 
 	fun addContact(contact: Contact) = backgroundScope.launch {
 		contactsRepository.addContact(contact.copy(id = null))
-				.onFailure { Timber.e(it) }
+				.onException { Timber.e(it) }
 	}
 
 	fun callContact(context: Context, contact: Contact) = callService.call(context, contact)

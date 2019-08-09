@@ -9,6 +9,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
 import bogusz.com.service.util.doNothing
+import com.example.bpawlowski.falldetector.R
 import com.google.android.material.textfield.TextInputLayout
 
 @BindingAdapter(value = ["visible"])
@@ -38,4 +39,14 @@ fun EditText.mobile(mobile: MutableLiveData<Int>) {
 @BindingAdapter("file_src")
 fun ImageView.fileSrc(filepath: String?) {
 	filepath?.let { loadContactImage(context, Uri.parse(it), this) }
+}
+
+@BindingAdapter("ice_icon")
+fun ImageView.iceIcon(isIce: Boolean) {
+	val icon = if(isIce){
+		R.drawable.ic_star_black_24dp
+	} else {
+		R.drawable.ic_star_border_black_24dp
+	}
+	setImageResource(icon)
 }

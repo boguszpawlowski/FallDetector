@@ -34,7 +34,7 @@ class ContactDetailsViewModel(
 		contactsRepository.getContact(id)
 			.onSuccess {
 				contactForm.initData(it)
-			}.onFailure {
+			}.onException {
 				if (it !is FallDetectorException.NoSuchRecordException) Timber.e(it)
 			}
 	}
@@ -44,8 +44,17 @@ class ContactDetailsViewModel(
 
 		_screenStateData.postValue(ScreenState.Loading)
 		contactsRepository.updateContact(contact)
-			.onSuccess { _screenStateData.postValue(ScreenState.Success(it)) }
-			.onKnownFailure { _screenStateData.postValue(ScreenState.Failure(it)) }
+			.onSuccess {
+				_screenStateData.postValue(ScreenState.Success(it))
+				initData(contactId)
+			}
+			.onFailure { _screenStateData.postValue(ScreenState.Failure(it)) }
+	}
+
+	fun resetData() = contactForm.resetData()
+
+	fun togglePriority(){
+		contactForm.priority = !contactForm.priority
 	}
 
 	fun sendSms(contactId: Long) = backgroundScope.launch {

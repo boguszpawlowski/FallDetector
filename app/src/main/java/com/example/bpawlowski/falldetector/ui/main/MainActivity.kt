@@ -58,7 +58,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
 	override fun onSupportNavigateUp() = currentNavController?.value?.navigateUp() ?: false
 
-	private fun setupBottomNavigation() { //todo clicking on more brings up options menu - for now not needed
+	private fun setupBottomNavigation() {
 		val bottomNavigation = binding.bottomNavigation
 
 		val navGraphIds = listOf(R.navigation.home, R.navigation.contacts, R.navigation.alarm, R.navigation.settings)

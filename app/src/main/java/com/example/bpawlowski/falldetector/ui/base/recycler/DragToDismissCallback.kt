@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bpawlowski.falldetector.R
 
+private const val DIRECTION_RIGHT = 1
+private const val DIRECTION_LEFT = -1
 private const val ELEVATION_SWIPE = 8f
 private const val ELEVATION_FLAT = 0f
 
@@ -18,7 +20,8 @@ class DragToDismissCallback(
 ) : TouchCallback() {
 
 	private val background = ColorDrawable(ContextCompat.getColor(context, R.color.secondary))
-	private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.icon_delete)
+	private val deleteIconRight = ContextCompat.getDrawable(context, R.drawable.icon_delete)
+	private val deleteIconLeft = ContextCompat.getDrawable(context, R.drawable.icon_delete)
 
 	override fun onChildDraw(
 		canvas: Canvas,
@@ -32,12 +35,14 @@ class DragToDismissCallback(
 		if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
 			val itemView = viewHolder.itemView
 			if (dX == 0f) {
-				background.clear(canvas)
-				deleteIcon?.clear(canvas)
+				canvas.clear(background)
+				canvas.clear(deleteIconLeft)
+				canvas.clear(deleteIconRight)
 			} else {
 				background.setBounds(itemView.left, itemView.top, itemView.right, itemView.bottom)
 				background.draw(canvas)
-				deleteIcon?.calculateBounds(itemView, dX)?.draw(canvas)
+				deleteIconRight?.calculateBounds(itemView, DIRECTION_RIGHT)?.draw(canvas)
+				deleteIconLeft?.calculateBounds(itemView, DIRECTION_LEFT)?.draw(canvas)
 
 				itemView.apply {
 					elevation = ELEVATION_SWIPE
@@ -69,25 +74,28 @@ class DragToDismissCallback(
 	override fun isItemViewSwipeEnabled() = true
 }
 
-fun Drawable.calculateBounds(itemView: View, dX: Float): Drawable { //fixme fixed bounds
+fun Drawable.calculateBounds(itemView: View, direction: Int): Drawable {
 	val itemHeight = itemView.bottom - itemView.top
+
 	val deleteIconTop = itemView.top + (itemHeight - intrinsicHeight) / 2
-	val deleteIconMargin = (itemHeight - intrinsicHeight) / 2
 	val deleteIconBottom = deleteIconTop + intrinsicHeight
+
+	val deleteIconMargin = intrinsicWidth / 4
+
 	val deleteIconLeft: Int
 	val deleteIconRight: Int
-	if (dX > 0) {
-		deleteIconLeft = itemView.left + deleteIconMargin - intrinsicWidth //fixme something is wrong here
-		deleteIconRight = itemView.left + deleteIconMargin
+	if (direction > 0) {
+		deleteIconLeft = itemView.left + deleteIconMargin
+		deleteIconRight = itemView.left + deleteIconMargin + intrinsicWidth
 	} else {
-		deleteIconLeft = itemView.right - intrinsicWidth
-		deleteIconRight = itemView.right
+		deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
+		deleteIconRight = itemView.right - deleteIconMargin
 	}
 	setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
 	return this
 }
 
-fun Drawable.clear(c: Canvas) {
-	setBounds(0, 0, 0, 0)
-	draw(c)
+fun Canvas.clear(drawable: Drawable?) {
+	drawable?.setBounds(0, 0, 0, 0)
+	drawable?.draw(this)
 }

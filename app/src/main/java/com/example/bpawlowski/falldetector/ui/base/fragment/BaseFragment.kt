@@ -75,4 +75,10 @@ abstract class BaseFragment<B : ViewDataBinding> : Fragment() {
 		Timber.tag(javaClass.simpleName).v("ON_DESTROY")
 		super.onDestroy()
 	}
+
+	protected fun clearRootFocus() {
+		binding.root.findFocus()?.let { view ->
+			view.clearFocus()
+		}
+	}
 }

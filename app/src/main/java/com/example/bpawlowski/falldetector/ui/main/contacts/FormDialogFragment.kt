@@ -15,6 +15,7 @@ import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.DialogFormBinding
 import com.example.bpawlowski.falldetector.domain.ScreenState
+import com.example.bpawlowski.falldetector.ui.main.details.IMAGE_TYPE
 import com.example.bpawlowski.falldetector.util.autoCleared
 import com.example.bpawlowski.falldetector.util.checkPermission
 import com.example.bpawlowski.falldetector.util.toast
@@ -74,7 +75,7 @@ class FormDialogFragment : DialogFragment() {
 		permission = Manifest.permission.READ_EXTERNAL_STORAGE,
 		onGranted = {
 			with(Intent(Intent.ACTION_OPEN_DOCUMENT)) {
-				type = "image/*"
+				type = IMAGE_TYPE
 				startActivityForResult(this, CODE_REQUEST_GALLERY)
 			}
 		})

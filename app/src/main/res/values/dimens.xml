@@ -13,4 +13,5 @@
     <dimen name="outline_button_padding">10dp</dimen>
 
 	<dimen name="corner_radius">5dp</dimen>
+	<dimen name="text_highlight">16sp</dimen>
 </resources>

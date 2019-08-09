@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:tools="http://schemas.android.com/tools"
+		tools:context=".ui.main.MainActivity">
 
 	<data>
 
@@ -9,10 +10,13 @@
 	</data>
 
 	<ScrollView
+		android:id="@+id/scroll_view"
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:app="http://schemas.android.com/apk/res-auto"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:focusable="true"
+		android:focusableInTouchMode="true">
 
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:layout_width="match_parent"
@@ -21,12 +25,12 @@
 			<androidx.appcompat.widget.AppCompatImageView
 				android:layout_width="match_parent"
 				android:layout_height="173dp"
-				android:src="@drawable/background_profile"
-				android:layout_marginStart="@dimen/margin_small"
 				android:layout_marginEnd="@dimen/margin_small"
-				app:layout_constraintTop_toTopOf="parent"
+				android:layout_marginStart="@dimen/margin_small"
+				android:src="@drawable/background_profile"
+				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"/>
+				app:layout_constraintTop_toTopOf="parent"/>
 
 			<androidx.appcompat.widget.AppCompatEditText
 				android:id="@+id/tv_name"
@@ -40,10 +44,22 @@
 				android:textSize="30sp"
 				android:textStyle="bold"
 				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintHorizontal_weight="1"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
 				tools:text="John Doe"/>
+
+			<com.google.android.material.floatingactionbutton.FloatingActionButton
+				android:id="@+id/fab"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:elevation="10dp"
+				android:tint="@null"
+				app:ice_icon="@{viewModel.contactForm.priority}"
+				app:layout_constraintBottom_toBottomOf="@id/img_profile"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintHorizontal_bias="0.7"
+				app:layout_constraintStart_toStartOf="parent"
+				tools:src="@drawable/ic_star_border_black_24dp"/>
 
 			<androidx.appcompat.widget.AppCompatImageView
 				android:id="@+id/img_profile"
@@ -51,9 +67,9 @@
 				android:layout_height="200dp"
 				android:layout_marginTop="@dimen/margin_medium"
 				android:background="@drawable/contact_placeholder"
+				android:elevation="5dp"
 				android:padding="2dp"
 				android:src="@drawable/icon_contact"
-				android:elevation="8dp"
 				app:file_src="@{viewModel.contactForm.filePath}"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
@@ -154,17 +170,32 @@
 				android:id="@+id/btn_save"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginBottom="@dimen/margin_large"
 				android:layout_marginEnd="@dimen/margin_medium"
 				android:layout_marginStart="@dimen/margin_medium"
 				android:layout_marginTop="@dimen/margin_medium"
 				android:enabled="@{viewModel.contactForm.valid}"
 				android:text="@string/btn_save"
 				android:visibility="gone"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/tv_email"
+				app:visible="@{viewModel.contactForm.hasChanged}"/>
+
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/btn_reset"
+				style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/margin_large"
+				android:layout_marginEnd="@dimen/margin_medium"
+				android:layout_marginStart="@dimen/margin_medium"
+				android:layout_marginTop="@dimen/margin_medium"
+				android:text="@string/btn_reset"
+				android:visibility="gone"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/tv_email"
+				app:layout_constraintTop_toBottomOf="@id/btn_save"
 				app:visible="@{viewModel.contactForm.hasChanged}"/>
 
 		</androidx.constraintlayout.widget.ConstraintLayout>

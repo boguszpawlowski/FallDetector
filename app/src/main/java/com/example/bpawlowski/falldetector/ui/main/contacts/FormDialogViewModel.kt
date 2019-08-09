@@ -26,6 +26,6 @@ class FormDialogViewModel(
 		_screenStateData.postValue(ScreenState.Loading)
 		contactsRepository.addContact(contact)
 			.onSuccess { _screenStateData.postValue(ScreenState.Success(it)) }
-			.onKnownFailure { _screenStateData.postValue(ScreenState.Failure(it)) }
+			.onFailure { _screenStateData.postValue(ScreenState.Failure(it)) }
 	}
 }

@@ -41,4 +41,8 @@
 	<string name="fab_label">add contact</string>
 	<string name="snb_updated">Contact updated.</string>
 	<string name="snb_email_warning">You have to set email first</string>
+	<string name="tv_no_contacts_yet">No Contacts Yet!</string>
+	<string name="btn_reset">reset</string>
+	<string name="tv_priority">ICE</string>
+	<string name="txt_email_chooser">Send email via</string>
 </resources>

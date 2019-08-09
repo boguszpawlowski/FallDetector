@@ -2,7 +2,6 @@ package bogusz.com.service.database.repository
 
 import androidx.lifecycle.LiveData
 import bogusz.com.service.database.FallDetectorResult
-import bogusz.com.service.database.catchIO
 import bogusz.com.service.database.dbservice.DatabaseService
 import bogusz.com.service.database.exceptions.FallDetectorException
 import bogusz.com.service.database.failure
@@ -27,7 +26,7 @@ internal class ServiceStateRepositoryImpl(
 
 	override suspend fun initiateState() {
 		if (serviceStateDao.getServiceState() == null) {
-			withContext(Dispatchers.IO) {
+		 	withContext(Dispatchers.IO) {
 				try {
 					serviceStateDao.initiateState(ServiceState())
 				} catch (e: Exception) {
@@ -37,33 +36,30 @@ internal class ServiceStateRepositoryImpl(
 		}
 	}
 
-	override suspend fun getIsRunningFlag(): FallDetectorResult<Boolean> =
-		catchIO {
-			val isRunning = serviceStateDao.getIsRunningFlag()
-			if (isRunning != null) {
-				success(isRunning)
-			} else {
-				failure(FallDetectorException.NoRecordsException)
-			}
+	override suspend fun getIsRunningFlag(): FallDetectorResult<Boolean> {
+		val isRunning = serviceStateDao.getIsRunningFlag()
+		return if (isRunning != null) {
+			success(isRunning)
+		} else {
+			failure(FallDetectorException.NoRecordsException)
 		}
+	}
 
-	override suspend fun updateSensitivity(sensitivity: Sensitivity): FallDetectorResult<Unit> =
-		catchIO {
-			val updated = serviceStateDao.updateSensitivity(sensitivity)
-			if (updated != 0) {
-				success(Unit)
-			} else {
-				failure(FallDetectorException.RecordNotUpdatedException())
-			}
+	override suspend fun updateSensitivity(sensitivity: Sensitivity): FallDetectorResult<Unit> {
+		val updated = serviceStateDao.updateSensitivity(sensitivity)
+		return if (updated != 0) {
+			success(Unit)
+		} else {
+			failure(FallDetectorException.RecordNotUpdatedException())
 		}
+	}
 
-	override suspend fun updateIsRunning(isRunning: Boolean): FallDetectorResult<Unit> =
-		catchIO {
-			val updated = serviceStateDao.updateIsRunningFlag(isRunning)
-			if (updated != 0) {
-				success(Unit)
-			} else {
-				failure(FallDetectorException.RecordNotUpdatedException())
-			}
+	override suspend fun updateIsRunning(isRunning: Boolean): FallDetectorResult<Unit> {
+		val updated = serviceStateDao.updateIsRunningFlag(isRunning)
+		return if (updated != 0) {
+			success(Unit)
+		} else {
+			failure(FallDetectorException.RecordNotUpdatedException())
 		}
+	}
 }
