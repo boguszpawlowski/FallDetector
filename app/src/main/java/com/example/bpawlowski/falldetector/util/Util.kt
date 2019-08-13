@@ -1,18 +1,18 @@
 package com.example.bpawlowski.falldetector.util
 
-import android.content.Context
 import android.view.View
 import android.widget.Toast
 import androidx.databinding.ViewDataBinding
-import bogusz.com.service.util.doNothing
+import androidx.fragment.app.Fragment
+import com.bpawlowski.service.util.doNothing
 import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
 import com.google.android.material.snackbar.Snackbar
 
-fun Context.toast(message: String, length: Int = Toast.LENGTH_SHORT) =
-	Toast.makeText(this, message, length).show()
+fun Fragment.toast(message: String, length: Int = Toast.LENGTH_SHORT) =
+	Toast.makeText(requireContext(), message, length).show()
 
-fun snackbar(
-	source: View,
+fun <T : ViewDataBinding> BaseFragment<T>.snackbar(
+	source: View = binding.root,
 	message: String,
 	length: Int = Snackbar.LENGTH_LONG,
 	actionListener: Int,
@@ -23,5 +23,5 @@ fun snackbar(
 		show()
 	}
 
-fun <T: ViewDataBinding> BaseFragment<T>.snackbar(source: View = binding.root, message: String, length: Int = Snackbar.LENGTH_LONG) =
+fun <T : ViewDataBinding> BaseFragment<T>.snackbar(source: View = binding.root, message: String, length: Int = Snackbar.LENGTH_LONG) =
 	Snackbar.make(source, message, length).show() //todo snackbar above navigation

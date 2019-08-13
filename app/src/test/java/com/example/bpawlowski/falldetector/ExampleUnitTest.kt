@@ -9,17 +9,5 @@ import org.junit.Test
  */
 class ExampleUnitTest {
     @Test
-    fun addition_isCorrect() {
-        val string = "GAGTTGAAAATATTGCGGCCGCTGGTAATGATAACATTGCGGCATTTGCTACACCGAGGCGTCGGA"
-
-        val result = string.map { map[it.toString()] }
-        println(result)
-    }
-
-    val map = mapOf(
-        "G" to "01",
-        "A" to "00",
-        "C" to "10",
-        "T" to "11"
-    )
+    fun addition_isCorrect() {}
 }

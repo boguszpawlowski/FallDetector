@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.DialogFormBinding
 import com.example.bpawlowski.falldetector.domain.ScreenState
@@ -34,7 +33,7 @@ class FormDialogFragment : DialogFragment() {
 			state.onSuccess {
 				dismiss()
 			}.onFailure {
-				requireContext().toast(it.rationale)
+				toast(it.rationale)
 			}
 		}
 	}
@@ -59,7 +58,7 @@ class FormDialogFragment : DialogFragment() {
 		binding.lifecycleOwner = viewLifecycleOwner
 		binding.viewModel = viewModel
 
-		viewModel.screenStateData.reObserve(this, screenStateObserver)
+		viewModel.screenStateData.observe(viewLifecycleOwner, screenStateObserver)
 
 		initListeners()
 	}

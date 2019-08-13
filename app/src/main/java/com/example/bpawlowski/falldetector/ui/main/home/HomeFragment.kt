@@ -11,7 +11,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
-	override val layoutID = R.layout.fragment_home
+	override val layoutResID = R.layout.fragment_home
 
 	override val viewModel: HomeViewModel by viewModel()
 

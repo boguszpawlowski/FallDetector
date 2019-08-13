@@ -8,7 +8,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
-import bogusz.com.service.util.doNothing
+import com.bpawlowski.service.util.doNothing
 import com.example.bpawlowski.falldetector.R
 import com.google.android.material.textfield.TextInputLayout
 

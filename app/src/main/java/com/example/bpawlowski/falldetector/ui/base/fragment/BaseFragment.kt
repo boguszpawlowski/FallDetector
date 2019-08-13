@@ -14,7 +14,7 @@ import timber.log.Timber
 
 abstract class BaseFragment<B : ViewDataBinding> : Fragment() {
 
-	abstract val layoutID: Int
+	abstract val layoutResID: Int
 
 	abstract val viewModel: BaseViewModel
 
@@ -30,7 +30,7 @@ abstract class BaseFragment<B : ViewDataBinding> : Fragment() {
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		Timber.tag(javaClass.simpleName).v("ON_CREATE_VIEW")
 
-		val dataBinding = DataBindingUtil.inflate<B>(inflater, layoutID, container, false)
+		val dataBinding = DataBindingUtil.inflate<B>(inflater, layoutResID, container, false)
 
 		binding = dataBinding
 		return dataBinding.root

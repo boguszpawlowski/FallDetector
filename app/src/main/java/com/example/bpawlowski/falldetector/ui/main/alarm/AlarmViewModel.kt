@@ -1,10 +1,10 @@
 package com.example.bpawlowski.falldetector.ui.main.alarm
 
 import androidx.lifecycle.viewModelScope
-import bogusz.com.service.alarm.AlarmService
-import bogusz.com.service.database.repository.ContactRepository
-import bogusz.com.service.database.zip
-import bogusz.com.service.location.LocationProvider
+import com.bpawlowski.service.alarm.AlarmService
+import com.bpawlowski.service.database.repository.ContactRepository
+import com.bpawlowski.service.database.zip
+import com.bpawlowski.service.location.LocationProvider
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch

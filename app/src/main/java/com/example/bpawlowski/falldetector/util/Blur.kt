@@ -7,6 +7,8 @@ import android.os.Build
 import android.renderscript.*
 import android.view.View
 
+private val IS_BLUR_SUPPORTED = Build.VERSION.SDK_INT >= 17
+private const val MAX_RADIUS = 25
 
 fun getBitmapFromView(view: View?): Bitmap? {
     view?.let {
@@ -73,9 +75,4 @@ class RSBlurProcessor(private val rs: RenderScript) {
         blurScript.destroy()
         return bitmap
     }
-
-
-    @SuppressLint("ObsoleteSdkInt")
-    private val IS_BLUR_SUPPORTED = Build.VERSION.SDK_INT >= 17
-    private val MAX_RADIUS = 25
 }

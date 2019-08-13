@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
-import bogusz.com.service.util.reObserve
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentContactDetailsBinding
 import com.example.bpawlowski.falldetector.domain.ScreenState
@@ -24,14 +23,14 @@ private const val EMAIL_TYPE = "message/rfc822"
 
 class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 
-	override val layoutID = R.layout.fragment_contact_details
+	override val layoutResID = R.layout.fragment_contact_details
 
 	override val viewModel: ContactDetailsViewModel by viewModel()
 
 	override val sharedViewModel: MainViewModel by sharedViewModel()
 
-	private val screenStateObserver: Observer<ScreenState<Int>> by lazy {
-		Observer<ScreenState<Int>> { state ->
+	private val screenStateObserver: Observer<ScreenState<Unit>> by lazy {
+		Observer<ScreenState<Unit>> { state ->
 			state.onSuccess {
 				snackbar(message = getString(R.string.snb_updated))
 			}.onFailure {
@@ -46,7 +45,7 @@ class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 		val contactId = arguments?.getLong(CONTACT_ID) ?: throw UnsupportedOperationException()
 		viewModel.initData(contactId)
 		initListeners(contactId)
-		viewModel.screenStateData.reObserve(this, screenStateObserver)
+		viewModel.screenStateData.observe(viewLifecycleOwner, screenStateObserver)
 	}
 
 	private fun initListeners(contactId: Long) = with(binding) {

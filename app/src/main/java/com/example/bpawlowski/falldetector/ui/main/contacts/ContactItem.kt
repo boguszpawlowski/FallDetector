@@ -2,11 +2,10 @@ package com.example.bpawlowski.falldetector.ui.main.contacts
 
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
-import bogusz.com.service.model.Contact
-import bogusz.com.service.model.UserPriority
+import com.bpawlowski.service.model.Contact
+import com.bpawlowski.service.model.UserPriority
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.ContactItemBinding
 import com.example.bpawlowski.falldetector.ui.base.recycler.Item

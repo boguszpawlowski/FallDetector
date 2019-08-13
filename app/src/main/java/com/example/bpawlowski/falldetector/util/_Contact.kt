@@ -1,7 +1,7 @@
 package com.example.bpawlowski.falldetector.util
 
-import bogusz.com.service.model.Contact
-import bogusz.com.service.model.UserPriority
+import com.bpawlowski.service.model.Contact
+import com.bpawlowski.service.model.UserPriority
 import com.example.bpawlowski.falldetector.domain.ContactFormModel
 
 fun ContactFormModel.mapToContact(): Contact =

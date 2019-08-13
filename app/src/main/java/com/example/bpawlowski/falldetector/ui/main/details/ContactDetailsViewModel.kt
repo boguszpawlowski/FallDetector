@@ -3,12 +3,12 @@ package com.example.bpawlowski.falldetector.ui.main.details
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import bogusz.com.service.connectivity.CallService
-import bogusz.com.service.connectivity.TextMessageService
-import bogusz.com.service.database.exceptions.FallDetectorException
-import bogusz.com.service.database.repository.ContactRepository
-import bogusz.com.service.database.zip
-import bogusz.com.service.location.LocationProvider
+import com.bpawlowski.service.connectivity.CallService
+import com.bpawlowski.service.connectivity.TextMessageService
+import com.bpawlowski.service.database.exceptions.FallDetectorException
+import com.bpawlowski.service.database.repository.ContactRepository
+import com.bpawlowski.service.database.zip
+import com.bpawlowski.service.location.LocationProvider
 import com.example.bpawlowski.falldetector.domain.ContactFormModel
 import com.example.bpawlowski.falldetector.domain.ScreenState
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
@@ -27,7 +27,7 @@ class ContactDetailsViewModel(
 
 	val contactForm = ContactFormModel()
 
-	private val _screenStateData = MutableLiveData<ScreenState<Int>>()
+	private val _screenStateData = MutableLiveData<ScreenState<Unit>>()
 	val screenStateData = _screenStateData.toSingleEvent()
 
 	fun initData(id: Long) = viewModelScope.launch {
@@ -45,10 +45,11 @@ class ContactDetailsViewModel(
 		_screenStateData.postValue(ScreenState.Loading)
 		contactsRepository.updateContact(contact)
 			.onSuccess {
-				_screenStateData.postValue(ScreenState.Success(it))
+				_screenStateData.postValue(ScreenState.Success(Unit))
 				initData(contactId)
+			}.onFailure {
+				_screenStateData.postValue(ScreenState.Failure(it))
 			}
-			.onFailure { _screenStateData.postValue(ScreenState.Failure(it)) }
 	}
 
 	fun resetData() = contactForm.resetData()

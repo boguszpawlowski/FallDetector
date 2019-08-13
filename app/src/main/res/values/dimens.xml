@@ -1,17 +1,31 @@
 <resources>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+	<!--paddings-->
+	<dimen name="appbar_padding_top">8dp</dimen>
+	<dimen name="padding_extra_small">2dp</dimen>
 
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="appbar_padding_top">8dp</dimen>
-
+	<!--margins-->
+	<dimen name="activity_horizontal_margin">16dp</dimen>
+	<dimen name="activity_vertical_margin">16dp</dimen>
 	<dimen name="margin_small">8dp</dimen>
-    <dimen name="margin_medium">16dp</dimen>
-    <dimen name="margin_large">32dp</dimen>
-    <dimen name="margin_extra_small">4dp</dimen>
+	<dimen name="margin_medium">16dp</dimen>
+	<dimen name="margin_large">32dp</dimen>
+	<dimen name="margin_extra_small">4dp</dimen>
+	<dimen name="margin_card_start">72dp</dimen>
 
-    <dimen name="outline_button_padding">10dp</dimen>
-
+	<!--btns-->
+	<dimen name="outline_button_padding">10dp</dimen>
 	<dimen name="corner_radius">5dp</dimen>
+	<dimen name="btn_add_photo_size">70dp</dimen>
+
+	<!--text-->
 	<dimen name="text_highlight">16sp</dimen>
+	<dimen name="text_name">30sp</dimen>
+	<dimen name="text_no_contacts">25sp</dimen>
+
+	<dimen name="profile_background_height">173dp</dimen>
+	<dimen name="img_profile_size">200dp</dimen>
+	<dimen name="img_profile_elevation">5dp</dimen>
+
+	<dimen name="fab_margin">16dp</dimen>
+	<dimen name="elevation_fab">10dp</dimen>
 </resources>

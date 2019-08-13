@@ -24,7 +24,7 @@
 
 			<androidx.appcompat.widget.AppCompatImageView
 				android:layout_width="match_parent"
-				android:layout_height="173dp"
+				android:layout_height="@dimen/profile_background_height"
 				android:layout_marginEnd="@dimen/margin_small"
 				android:layout_marginStart="@dimen/margin_small"
 				android:src="@drawable/background_profile"
@@ -41,7 +41,7 @@
 				android:singleLine="true"
 				android:text="@={viewModel.contactForm.name}"
 				android:textColor="@color/onPrimary"
-				android:textSize="30sp"
+				android:textSize="@dimen/text_name"
 				android:textStyle="bold"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +52,7 @@
 				android:id="@+id/fab"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:elevation="10dp"
+				android:elevation="@dimen/elevation_fab"
 				android:tint="@null"
 				app:ice_icon="@{viewModel.contactForm.priority}"
 				app:layout_constraintBottom_toBottomOf="@id/img_profile"
@@ -63,12 +63,12 @@
 
 			<androidx.appcompat.widget.AppCompatImageView
 				android:id="@+id/img_profile"
-				android:layout_width="200dp"
-				android:layout_height="200dp"
+				android:layout_width="@dimen/img_profile_size"
+				android:layout_height="@dimen/img_profile_size"
 				android:layout_marginTop="@dimen/margin_medium"
 				android:background="@drawable/contact_placeholder"
-				android:elevation="5dp"
-				android:padding="2dp"
+				android:elevation="@dimen/img_profile_elevation"
+				android:padding="@dimen/padding_extra_small"
 				android:src="@drawable/icon_contact"
 				app:file_src="@{viewModel.contactForm.filePath}"
 				app:layout_constraintEnd_toEndOf="parent"
@@ -179,7 +179,8 @@
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/tv_email"
-				app:visible="@{viewModel.contactForm.hasChanged}"/>
+				app:visible="@{viewModel.contactForm.hasChanged}"
+				tools:visibility="visible"/>
 
 			<com.google.android.material.button.MaterialButton
 				android:id="@+id/btn_reset"
@@ -196,7 +197,8 @@
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/btn_save"
-				app:visible="@{viewModel.contactForm.hasChanged}"/>
+				app:visible="@{viewModel.contactForm.hasChanged}"
+				tools:visibility="visible"/>
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>

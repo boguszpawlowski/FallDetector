@@ -17,27 +17,27 @@
 		android:focusableInTouchMode="true"
 		android:isScrollContainer="true"
 		android:minWidth="300dp"
-		android:paddingBottom="16dp"
-		android:paddingTop="16dp">
+		android:paddingBottom="@dimen/margin_medium"
+		android:paddingTop="@dimen/margin_medium">
 
 		<androidx.constraintlayout.widget.Guideline
 			android:id="@+id/guideline_start"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:orientation="vertical"
-			app:layout_constraintGuide_begin="16dp"/>
+			app:layout_constraintGuide_begin="@dimen/margin_medium"/>
 
 		<androidx.constraintlayout.widget.Guideline
 			android:id="@+id/guideline_end"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:orientation="vertical"
-			app:layout_constraintGuide_end="16dp"/>
+			app:layout_constraintGuide_end="@dimen/margin_medium"/>
 
 		<androidx.appcompat.widget.AppCompatImageView
 			android:id="@+id/img_profile"
-			android:layout_width="70dp"
-			android:layout_height="70dp"
+			android:layout_width="@dimen/btn_add_photo_size"
+			android:layout_height="@dimen/btn_add_photo_size"
 			android:layout_marginBottom="@dimen/margin_medium"
 			android:src="@drawable/add_photo_drawable"
 			android:contentDescription="@string/btn_add_photo_tooltip"
@@ -71,7 +71,7 @@
 			android:id="@+id/txt_layout_mobile"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="16dp"
+			android:layout_marginBottom="@dimen/margin_medium"
 			app:error="@{viewModel.contactForm.mobileError}"
 			app:errorEnabled="true"
 			app:layout_constraintEnd_toEndOf="@id/guideline_end"

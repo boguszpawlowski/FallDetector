@@ -3,11 +3,11 @@ package com.example.bpawlowski.falldetector.ui.main.contacts
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import bogusz.com.service.connectivity.CallService
-import bogusz.com.service.connectivity.TextMessageService
-import bogusz.com.service.database.repository.ContactRepository
-import bogusz.com.service.location.LocationProvider
-import bogusz.com.service.model.Contact
+import com.bpawlowski.service.connectivity.CallService
+import com.bpawlowski.service.connectivity.TextMessageService
+import com.bpawlowski.service.database.repository.ContactRepository
+import com.bpawlowski.service.location.LocationProvider
+import com.bpawlowski.service.model.Contact
 import com.example.bpawlowski.falldetector.domain.ScreenState
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.util.toSingleEvent

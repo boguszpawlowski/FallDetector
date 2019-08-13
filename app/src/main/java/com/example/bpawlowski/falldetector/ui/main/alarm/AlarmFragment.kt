@@ -11,7 +11,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AlarmFragment : BaseFragment<FragmentAlarmBinding>() {
 
-	override val layoutID = R.layout.fragment_alarm
+	override val layoutResID = R.layout.fragment_alarm
 
 	override val viewModel: AlarmViewModel by viewModel()
 

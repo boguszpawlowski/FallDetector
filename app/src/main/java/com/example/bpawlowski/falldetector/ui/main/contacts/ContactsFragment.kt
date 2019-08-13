@@ -6,8 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import bogusz.com.service.model.Contact
-import bogusz.com.service.util.reObserve
+import com.bpawlowski.service.model.Contact
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentContactsBinding
 import com.example.bpawlowski.falldetector.domain.ScreenState
@@ -21,11 +20,11 @@ import com.example.bpawlowski.falldetector.util.snackbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-const val scrollThreshold = 20
+private const val SCROLL_THRESHOLD = 20
 
 class ContactsFragment : BaseFragment<FragmentContactsBinding>() {
 
-	override val layoutID = R.layout.fragment_contacts
+	override val layoutResID = R.layout.fragment_contacts
 
 	override val viewModel: ContactsViewModel by viewModel()
 
@@ -41,8 +40,8 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding>() {
 						data = contact,
 						onDismissListener = { viewModel.removeContact(contact) },
 						onSelectListener = { showDetails(contact.id) },
-						onCallClickListener = { viewModel.callContact(requireContext(), it) },
-						onSmsClickListener = { viewModel.sendMessage(it) }
+						onCallClickListener = { viewModel.callContact(requireContext(), contact) },
+						onSmsClickListener = { viewModel.sendMessage(contact) }
 					)
 				})
 			}
@@ -52,12 +51,11 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding>() {
 	private val screenStateObserver: Observer<ScreenState<Contact>> by lazy {
 		Observer<ScreenState<Contact>> { screenState ->
 			screenState.onSuccess { contact ->
-				snackbar(
-					source = binding.root,
-					message = getString(R.string.snackbar_deleted),
-					actionListener = R.string.snackbar_undo,
-					listener = { viewModel.addContact(contact) }
-				)
+				snackbar(message = getString(R.string.snackbar_deleted), actionListener = R.string.snackbar_undo) {
+					viewModel.addContact(
+						contact
+					)
+				}
 			}
 		}
 	}
@@ -77,9 +75,9 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding>() {
 		fab.setOnClickListener { showDialog() }
 		recyclerContact.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 			override fun onScrolled(recyclerView: RecyclerView, dx: Int, verticalScroll: Int) {
-				if (verticalScroll < -scrollThreshold) {
+				if (verticalScroll < -SCROLL_THRESHOLD) {
 					fab.setVisible(true)
-				} else if (verticalScroll > scrollThreshold) {
+				} else if (verticalScroll > SCROLL_THRESHOLD) {
 					fab.setVisible(false)
 				}
 			}
@@ -87,8 +85,8 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding>() {
 	}
 
 	private fun initObservers() {
-		viewModel.contactsLiveData.reObserve(this, contactsObserver)
-		viewModel.screenStateData.reObserve(this, screenStateObserver)
+		viewModel.contactsLiveData.observe(viewLifecycleOwner, contactsObserver)
+		viewModel.screenStateData.observe(viewLifecycleOwner, screenStateObserver)
 	}
 
 	private fun showDialog() {

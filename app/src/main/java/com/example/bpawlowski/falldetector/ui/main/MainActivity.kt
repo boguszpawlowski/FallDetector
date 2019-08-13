@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
-import bogusz.com.service.model.AppSettings
-import bogusz.com.service.util.postDelayed
+import com.bpawlowski.service.model.AppSettings
+import com.bpawlowski.service.util.postDelayed
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
 import com.example.bpawlowski.falldetector.ui.base.activity.BaseActivity

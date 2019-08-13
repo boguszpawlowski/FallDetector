@@ -11,7 +11,7 @@
 
 		<variable
 			name="contact"
-			type="bogusz.com.service.model.Contact"/>
+			type="com.bpawlowski.service.model.Contact"/>
 	</data>
 
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +37,7 @@
 			android:id="@+id/txt_name"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="72dp"
+			android:layout_marginStart="@dimen/margin_card_start"
 			android:textSize="@dimen/text_highlight"
 			android:textStyle="bold"
 			app:layout_constraintBottom_toTopOf="@+id/txt_number"
@@ -105,7 +105,7 @@
 			android:id="@+id/btn_sms"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="8dp"
+			android:layout_marginEnd="@dimen/margin_extra_small"
 			android:background="?android:attr/selectableItemBackground"
 			android:padding="@dimen/margin_extra_small"
 			android:src="@drawable/ic_chat_black_32dp"
@@ -117,7 +117,7 @@
 			android:id="@+id/btn_call"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="8dp"
+			android:layout_marginEnd="@dimen/margin_small"
 			android:background="?android:attr/selectableItemBackground"
 			android:padding="@dimen/margin_extra_small"
 			android:src="@drawable/ic_call_black_32dp"
