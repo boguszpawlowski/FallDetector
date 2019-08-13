@@ -23,20 +23,14 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val serviceModule = module {
-
     single<AlarmService> { AlarmServiceImpl(get(), get(), get()) }
     single<SmsManager> { SmsManager.getDefault() }
-    single<TextMessageService> { TextMessageServiceImpl(get()) }
+    single<TextMessageService> { TextMessageServiceImpl(get(), get()) }
     single<CallService> { CallServiceImpl() }
-
     factory<SharedPreferences>(named("Default")) { PreferenceManager.getDefaultSharedPreferences(get()) }
-
     single<LocationProvider> { LocationProviderImpl(get()) }
-
     single<DatabaseService> { DatabaseServiceImpl(get()) }
-
     single<ContactRepository> { ContactRepositoryImpl(get()) }
     single<ServiceStateRepository> { ServiceStateRepositoryImpl(get()) }
-
     single<SchedulerProvider> { SchedulerProviderImpl() }
 }

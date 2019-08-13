@@ -13,7 +13,7 @@ internal class AlarmServiceImpl(
 	private val context: Context
 ) : AlarmService {
 
-	override fun raiseAlarm(contacts: List<Contact>?, location: Location) {
+	override suspend fun raiseAlarm(contacts: List<Contact>?, location: Location) {
 		contacts
 			?.onEach { textMessageService.sendMessage(it.mobile, location) }
 			?.firstOrNull { it.priority == UserPriority.PRIORITY_ICE }

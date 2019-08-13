@@ -62,4 +62,22 @@ internal class ServiceStateRepositoryImpl(
 			failure(FallDetectorException.RecordNotUpdatedException())
 		}
 	}
+
+	override suspend fun updateState(serviceState: ServiceState): FallDetectorResult<Unit> {
+		val updated = serviceStateDao.updateServiceState(serviceState)
+		return if (updated != 0) {
+			success(Unit)
+		} else {
+			failure(FallDetectorException.RecordNotUpdatedException())
+		}
+	}
+
+	override suspend fun getServiceState(): FallDetectorResult<ServiceState> {
+		val state = serviceStateDao.getServiceState()
+		return if(state !=null){
+			success(state)
+		} else {
+			failure(FallDetectorException.NoSuchRecordException())
+		}
+	}
 }

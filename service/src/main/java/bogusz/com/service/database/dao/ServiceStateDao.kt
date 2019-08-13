@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import bogusz.com.service.model.Sensitivity
 import bogusz.com.service.model.ServiceState
 
@@ -31,4 +32,7 @@ internal interface ServiceStateDao {
 
     @Query("UPDATE service_state SET sensitivity=:sensitivity")
     suspend fun updateSensitivity(sensitivity: Sensitivity): Int
+
+	@Update
+	suspend fun updateServiceState(serviceState: ServiceState): Int
 }

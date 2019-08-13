@@ -54,7 +54,7 @@ sealed class FallDetectorResult<out T> {
 	fun getOrNull(): T? =
 		(this as? Success)?.data
 
-	fun getOrThrow(): T? =
+	fun getOrThrow(): T =
 		when (this) {
 			is Success -> data
 			is Failure -> throw error

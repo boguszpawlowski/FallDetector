@@ -40,7 +40,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 		if (savedInstanceState == null) {
 			setupBottomNavigation()
 		}
-
+		viewModel.initiateServiceState()
 		viewModel.appSettingsPreferencesData.observe(this, appSettingsObserver)
 	}
 
@@ -78,11 +78,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 	}
 
 	private fun updateApp(appSettings: AppSettings) {
-		val (darkMode, sendingSms, sensingLocation, sensitivity) = appSettings
 		postDelayed(CHANGE_THEME_DELAY) {
-			AppCompatDelegate.setDefaultNightMode(if (darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+			AppCompatDelegate.setDefaultNightMode(if (appSettings.darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
 		}
-		viewModel.changeSensitivity(sensitivity)
+		viewModel.changeServiceState(appSettings)
 	}
 
 	private fun checkPermissions() =

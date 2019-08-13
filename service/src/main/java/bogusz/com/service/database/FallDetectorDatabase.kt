@@ -15,7 +15,7 @@ import bogusz.com.service.model.UserPriorityConverter
         Contact::class,
         ServiceState::class
     ),
-	version = 3
+	version = 4
 )
 @TypeConverters(UserPriorityConverter::class, SensitivityConverter::class)
 internal abstract class FallDetectorDatabase : RoomDatabase() {
