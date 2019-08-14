@@ -1,10 +1,13 @@
 package com.example.bpawlowski.falldetector.screens.main
 
 import android.Manifest
+import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.bpawlowski.database.util.postDelayed
@@ -12,6 +15,8 @@ import com.bpawlowski.system.model.AppSettings
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.base.activity.BaseActivity
 import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
+import com.example.bpawlowski.falldetector.screens.main.camera.KEY_EVENT_ACTION
+import com.example.bpawlowski.falldetector.screens.main.camera.KEY_EVENT_EXTRA
 import com.example.bpawlowski.falldetector.util.getPermissions
 import com.example.bpawlowski.falldetector.util.setupWithNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -57,6 +62,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 	}
 
 	override fun onSupportNavigateUp() = currentNavController?.value?.navigateUp() ?: false
+
+	override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+		return when (keyCode) {
+			KeyEvent.KEYCODE_VOLUME_DOWN -> {
+				val intent = Intent(KEY_EVENT_ACTION).apply { putExtra(KEY_EVENT_EXTRA, keyCode) }
+				LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+				true
+			}
+			else -> super.onKeyDown(keyCode, event)
+		}
+	}
 
 	private fun setupBottomNavigation() {
 		val bottomNavigation = binding.bottomNavigation

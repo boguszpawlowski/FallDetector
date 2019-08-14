@@ -22,7 +22,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val CODE_REQUEST_GALLERY = 9999
 
-class FormDialogFragment : DialogFragment() {
+class FormDialogFragment : DialogFragment() { //todo add camera fragment
 
 	private var binding by autoCleared<DialogFormBinding>()
 
@@ -84,7 +84,6 @@ class FormDialogFragment : DialogFragment() {
 
 		if (requestCode == CODE_REQUEST_GALLERY && resultCode == Activity.RESULT_OK) {
 			data?.data?.let {
-				//todo copy file to internal memory
 				viewModel.contactForm.filePath = it.toString()
 			}
 		}

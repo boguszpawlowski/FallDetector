@@ -1,11 +1,14 @@
-package com.example.bpawlowski.falldetector.ui.camera
+package com.example.bpawlowski.falldetector.screens.main.camera
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.util.Rational
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -17,11 +20,12 @@ import androidx.camera.core.Preview
 import androidx.camera.core.PreviewConfig
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
+import com.bpawlowski.database.util.postDelayed
 import com.example.bpawlowski.falldetector.R
+import com.example.bpawlowski.falldetector.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.databinding.FragmentCameraBinding
-import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
-import com.example.bpawlowski.falldetector.ui.main.MainActivity
-import com.example.bpawlowski.falldetector.ui.main.MainViewModel
+import com.example.bpawlowski.falldetector.screens.main.MainActivity
+import com.example.bpawlowski.falldetector.screens.main.MainViewModel
 import com.example.bpawlowski.falldetector.util.setVisible
 import com.example.bpawlowski.falldetector.util.simulateClick
 import com.example.bpawlowski.falldetector.util.toast
@@ -32,10 +36,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.io.File
 
-private const val KEY_EVENT_ACTION = "key_event_action"
-private const val KEY_EVENT_EXTRA = "key_event_extra"
+const val KEY_EVENT_ACTION = "key_event_action"
+const val KEY_EVENT_EXTRA = "key_event_extra"
 
-class CameraFragment : BaseFragment<FragmentCameraBinding>() {
+class CameraFragment : BaseFragment<FragmentCameraBinding>() {  //todo review this fragment
 
 	override val layoutResID = R.layout.fragment_camera
 
@@ -43,9 +47,11 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>() {
 
 	override val viewModel: CameraViewModel by viewModel()
 
+	private var lensFacing = CameraX.LensFacing.BACK
+
 	private lateinit var broadcastManager: LocalBroadcastManager
 
-	private val volumeDownReceiver = object : BroadcastReceiver() { //fixme no events
+	private val volumeDownReceiver = object : BroadcastReceiver() {
 		override fun onReceive(context: Context, intent: Intent) {
 			val keyCode = intent.getIntExtra(KEY_EVENT_EXTRA, KeyEvent.KEYCODE_UNKNOWN)
 			if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
@@ -61,12 +67,12 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>() {
 				message: String,
 				exc: Throwable?
 			) {
-				toast("Photo capture failed")
+				toast(getString(R.string.toast_photo_failed))
 				Timber.e(exc, "Photo capture failed: $message")
 			}
 
 			override fun onImageSaved(file: File) {
-				toast("Photo capture succeeded")
+				toast(getString(R.string.toast_photo_success))
 				Timber.d(file.absolutePath)
 				handlePhotoCaptured(file)
 			}
@@ -79,7 +85,6 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>() {
 			it.bottom_navigation.setVisible(false)
 		}
 
-
 		return super.onCreateView(inflater, container, savedInstanceState)
 	}
 
@@ -91,7 +96,10 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>() {
 		val filter = IntentFilter().apply { addAction(KEY_EVENT_ACTION) }
 		broadcastManager.registerReceiver(volumeDownReceiver, filter)
 
-		binding.viewFinder.post { startCamera() } //todo orientation change
+		binding.viewFinder.post { bindCameraUseCases() } //todo orientation change
+		binding.btnRotate.setOnClickListener {
+			rotateCamera()
+		}
 	}
 
 	override fun onResume() {
@@ -113,8 +121,17 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>() {
 		broadcastManager.unregisterReceiver(volumeDownReceiver)
 	}
 
-	private fun startCamera() {
-		val previewConfig = PreviewConfig.Builder().build()
+	private fun bindCameraUseCases() {
+		CameraX.unbindAll()
+
+		val metrics = DisplayMetrics().also { view_finder.display.getRealMetrics(it) }
+		val screenAspectRatio = Rational(metrics.widthPixels, metrics.heightPixels)
+
+		val previewConfig = PreviewConfig.Builder().apply {
+			setLensFacing(lensFacing)
+			setTargetAspectRatio(screenAspectRatio)
+			setTargetRotation(view_finder.display.rotation)
+		}.build()
 
 		val preview = Preview(previewConfig)
 
@@ -125,11 +142,8 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>() {
 			view_finder.surfaceTexture = it.surfaceTexture
 		}
 
-		bindCapture(preview)
-	}
-
-	private fun bindCapture(preview: Preview) {
 		val imageCaptureConfig = ImageCaptureConfig.Builder().apply {
+			setLensFacing(lensFacing)
 			setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
 		}.build()
 
@@ -145,8 +159,27 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>() {
 		CameraX.bindToLifecycle(this, preview, imageCapture)
 	}
 
-	private fun handlePhotoCaptured(file: File) {
-		sharedViewModel.capturedPhotoFile = file
-		findNavController().navigateUp()
+	@SuppressLint("RestrictedApi")
+	private fun rotateCamera() {
+		lensFacing = if (lensFacing == CameraX.LensFacing.FRONT) {
+			binding.btnRotate.setImageResource(R.drawable.ic_camera_front_black_24dp)
+			CameraX.LensFacing.BACK
+		} else {
+			binding.btnRotate.setImageResource(R.drawable.ic_camera_rear_black_24dp)
+			CameraX.LensFacing.FRONT
+		}
+		try {
+			CameraX.getCameraWithLensFacing(lensFacing)
+			bindCameraUseCases()
+		} catch (e: Exception) {
+			Timber.e(e)
+		}
+	}
+
+	private fun handlePhotoCaptured(file: File) { //fixme - weird glitch with animation - bright square
+		sharedViewModel.onPhotoAdded(file)
+		postDelayed {
+			findNavController().navigateUp()
+		}
 	}
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:tools="http://schemas.android.com/tools"
-			android:id="@+id/contacts"
+<navigation android:id="@+id/contacts"
 			xmlns:android="http://schemas.android.com/apk/res/android"
 			xmlns:app="http://schemas.android.com/apk/res-auto"
 			app:startDestination="@id/contactsFragment">
@@ -19,7 +18,11 @@
 	<dialog
 		android:id="@+id/formDialogFragment"
 		android:name="com.example.bpawlowski.falldetector.screens.main.contacts.FormDialogFragment"
-		android:label="FormDialogFragment"/>
+		android:label="FormDialogFragment">
+		<action
+			android:id="@+id/openCamera"
+			app:destination="@id/cameraFragment"/>
+	</dialog>
 	<fragment
 		android:id="@+id/contactDetailsFragment"
 		android:name="com.example.bpawlowski.falldetector.screens.main.details.ContactDetailsFragment"
@@ -33,6 +36,6 @@
 	</fragment>
 	<fragment
 		android:id="@+id/cameraFragment"
-		android:name="com.example.bpawlowski.falldetector.ui.camera.CameraFragment"
+		android:name="com.example.bpawlowski.falldetector.screens.main.camera.CameraFragment"
 		android:label="CameraFragment"/>
 </navigation>

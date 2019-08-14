@@ -78,6 +78,11 @@ dependencies {
     implementation "androidx.camera:camera-view:$camerax_ext_version"
     implementation "androidx.camera:camera-extensions:$camerax_ext_version"
 
+    // dialogs
+    implementation "com.afollestad.material-dialogs:core:$dialogs_version"
+    implementation "com.afollestad.material-dialogs:bottomsheets:$dialogs_version"
+
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

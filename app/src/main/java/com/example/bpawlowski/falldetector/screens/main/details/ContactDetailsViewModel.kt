@@ -54,9 +54,13 @@ class ContactDetailsViewModel(
 			}
 	}
 
+	fun updatePhotoPath(file: File){
+		contactForm.filePath = file.toURI().toString()
+	}
+
 	fun resetData() = contactForm.resetData()
 
-	fun togglePriority(){
+	fun togglePriority() {
 		contactForm.priority = !contactForm.priority
 	}
 

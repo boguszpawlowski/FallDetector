@@ -26,6 +26,7 @@
 	<color name="purple">#673AB7</color>
     <color name="black">#000000</color>
     <color name="transparent">#00FFFFFF</color>
+	<color name="semiTransparent">#4F000000</color>
 
     <!--day night values-->
 	<color name="iconBackground">@color/primary</color>

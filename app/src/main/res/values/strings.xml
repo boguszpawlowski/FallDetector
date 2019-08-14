@@ -45,4 +45,7 @@
 	<string name="btn_reset">reset</string>
 	<string name="tv_priority">ICE</string>
 	<string name="txt_email_chooser">Send email via</string>
+	<string name="bottom_dialog_title">Choose action</string>
+	<string name="toast_photo_failed">Photo capture failed</string>
+	<string name="toast_photo_success">Photo capture succeeded</string>
 </resources>

@@ -1,11 +1,15 @@
 package com.example.bpawlowski.falldetector.screens.main
 
 import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.bpawlowski.core.domain.Event
 import com.bpawlowski.database.repository.ServiceStateRepository
 import com.bpawlowski.system.model.AppSettings
 import com.bpawlowski.system.preferences.AppSettingsPreferencesData
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
+import com.example.bpawlowski.falldetector.util.toSingleEvent
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -17,12 +21,11 @@ class MainViewModel(
 	val appSettingsPreferencesData: AppSettingsPreferencesData
 		get() = AppSettingsPreferencesData(sharedPreferences)
 
-	var capturedPhotoFile: File? = null
-		get() {
-			val temp = field
-			capturedPhotoFile = null
-			return temp
-		}
+	private val _capturedPhotoData = MutableLiveData<Event<File>>()
+	val capturedPhotoData: LiveData<Event<File>>
+		get() = _capturedPhotoData.toSingleEvent()
+
+	fun onPhotoAdded(file: File) = _capturedPhotoData.postValue(Event(file))
 
 	fun initiateServiceState() = viewModelScope.launch {
 		serviceStateRepository.initiateState()
