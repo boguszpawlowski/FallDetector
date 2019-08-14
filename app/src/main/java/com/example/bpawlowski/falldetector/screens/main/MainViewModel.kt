@@ -7,6 +7,7 @@ import com.bpawlowski.system.model.AppSettings
 import com.bpawlowski.system.preferences.AppSettingsPreferencesData
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
 import kotlinx.coroutines.launch
+import java.io.File
 
 class MainViewModel(
 	private val sharedPreferences: SharedPreferences,
@@ -15,6 +16,13 @@ class MainViewModel(
 
 	val appSettingsPreferencesData: AppSettingsPreferencesData
 		get() = AppSettingsPreferencesData(sharedPreferences)
+
+	var capturedPhotoFile: File? = null
+		get() {
+			val temp = field
+			capturedPhotoFile = null
+			return temp
+		}
 
 	fun initiateServiceState() = viewModelScope.launch {
 		serviceStateRepository.initiateState()

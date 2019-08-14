@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentContactDetailsBinding
 import com.example.bpawlowski.falldetector.domain.ScreenState
@@ -43,7 +44,7 @@ class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 		super.onViewCreated(view, savedInstanceState)
 
 		val contactId = arguments?.getLong(CONTACT_ID) ?: throw UnsupportedOperationException()
-		viewModel.initData(contactId)
+		viewModel.initData(contactId,sharedViewModel.capturedPhotoFile )
 		initListeners(contactId)
 		viewModel.screenStateData.observe(viewLifecycleOwner, screenStateObserver)
 	}
@@ -57,7 +58,7 @@ class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 			viewModel?.resetData()
 			clearRootFocus()
 		}
-		imgProfile.setOnClickListener { openGallery() }
+		imgProfile.setOnClickListener { openCamera() }
 		btnCall.setOnClickListener { viewModel?.callContact(contactId, requireContext()) }
 		btnSms.setOnClickListener { viewModel?.sendSms(contactId) }
 		btnEmail.setOnClickListener { sendEmail() }
@@ -79,15 +80,25 @@ class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 		}
 	}
 
-	private fun openGallery() = checkPermission(
+	private fun openCamera() = checkPermission(
 		activity = requireActivity(),
-		permission = Manifest.permission.READ_EXTERNAL_STORAGE,
+		permission = Manifest.permission.CAMERA,
 		onGranted = {
-			with(Intent(Intent.ACTION_OPEN_DOCUMENT)) {
-				type = IMAGE_TYPE
-				startActivityForResult(this, CODE_REQUEST_GALLERY)
-			}
-		})
+			findNavController().navigate(
+				ContactDetailsFragmentDirections.openCamera()
+			)
+		}
+	)
+
+	/*	private fun openGallery() = checkPermission(
+			activity = requireActivity(),
+			permission = Manifest.permission.READ_EXTERNAL_STORAGE,
+			onGranted = {
+				with(Intent(Intent.ACTION_OPEN_DOCUMENT)) {
+					type = IMAGE_TYPE
+					startActivityForResult(this, CODE_REQUEST_GALLERY)
+				}
+			})*/
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)

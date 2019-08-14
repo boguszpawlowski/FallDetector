@@ -28,6 +28,8 @@ buildscript {
         glide_version = '4.9.0'
         dexter_version = '5.0.0'
         mockito_version = '2.1.0'
+        camerax_version = '1.0.0-alpha04'
+        camerax_ext_version = '1.0.0-alpha01'
     }
 
     repositories {

@@ -17,6 +17,7 @@ import com.example.bpawlowski.falldetector.util.toSingleEvent
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.io.File
 
 class ContactDetailsViewModel(
 	private val contactsRepository: ContactRepository,
@@ -30,10 +31,11 @@ class ContactDetailsViewModel(
 	private val _screenStateData = MutableLiveData<ScreenState<Unit>>()
 	val screenStateData = _screenStateData.toSingleEvent()
 
-	fun initData(id: Long) = viewModelScope.launch {
+	fun initData(id: Long, photoFile: File? = null) = viewModelScope.launch {
 		contactsRepository.getContact(id)
 			.onSuccess {
 				contactForm.initData(it)
+				photoFile?.let { contactForm.filePath = it.toURI().toString() }
 			}.onException {
 				if (it !is FallDetectorException.NoSuchRecordException) Timber.e(it)
 			}
