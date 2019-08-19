@@ -4,8 +4,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import com.bpawlowski.service.util.doNothing
-import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
+import com.bpawlowski.database.util.doNothing
+import com.example.bpawlowski.falldetector.base.fragment.BaseFragment
 import com.google.android.material.snackbar.Snackbar
 
 fun Fragment.toast(message: String, length: Int = Toast.LENGTH_SHORT) =

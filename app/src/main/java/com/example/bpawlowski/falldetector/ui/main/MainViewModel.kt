@@ -2,10 +2,10 @@ package com.example.bpawlowski.falldetector.ui.main
 
 import android.content.SharedPreferences
 import androidx.lifecycle.viewModelScope
-import com.bpawlowski.service.database.repository.ServiceStateRepository
-import com.bpawlowski.service.model.AppSettings
-import com.bpawlowski.service.preferences.AppSettingsPreferencesData
-import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
+import com.bpawlowski.database.repository.ServiceStateRepository
+import com.bpawlowski.system.model.AppSettings
+import com.bpawlowski.system.preferences.AppSettingsPreferencesData
+import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
 import kotlinx.coroutines.launch
 
 class MainViewModel(

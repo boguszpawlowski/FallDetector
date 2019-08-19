@@ -4,8 +4,8 @@ import android.util.Patterns
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
-import com.bpawlowski.service.model.Contact
-import com.bpawlowski.service.model.UserPriority
+import com.bpawlowski.database.entity.Contact
+import com.bpawlowski.database.entity.UserPriority
 import com.example.bpawlowski.falldetector.util.empty
 
 class ContactFormModel : BaseObservable() {

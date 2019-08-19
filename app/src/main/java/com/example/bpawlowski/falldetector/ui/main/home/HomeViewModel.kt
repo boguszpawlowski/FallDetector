@@ -1,10 +1,10 @@
 package com.example.bpawlowski.falldetector.ui.main.home
 
 import android.content.Context
-import com.bpawlowski.service.database.exceptions.FallDetectorException
-import com.bpawlowski.service.database.repository.ServiceStateRepository
+import com.bpawlowski.database.exceptions.FallDetectorException
+import com.bpawlowski.database.repository.ServiceStateRepository
 import com.example.bpawlowski.falldetector.monitoring.BackgroundService
-import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
+import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 

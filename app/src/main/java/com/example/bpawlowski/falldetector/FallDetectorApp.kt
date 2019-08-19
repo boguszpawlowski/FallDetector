@@ -3,8 +3,9 @@ package com.example.bpawlowski.falldetector
 import android.app.Application
 import android.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatDelegate
-import com.bpawlowski.service.di.serviceModule
-import com.bpawlowski.service.preferences.DARK_THEME_KEY
+import com.bpawlowski.database.di.serviceModule
+import com.bpawlowski.system.preferences.DARK_THEME_KEY
+import com.bpawlowski.system.di.systemModule
 import com.example.bpawlowski.falldetector.di.viewModelModule
 import com.example.bpawlowski.falldetector.util.initializeDebugTools
 import org.koin.android.ext.koin.androidContext
@@ -30,7 +31,7 @@ class FallDetectorApp : Application() {
             androidLogger()
             androidContext(this@FallDetectorApp)
             modules(
-                listOf(viewModelModule, serviceModule)
+                listOf(viewModelModule, serviceModule, systemModule)
             )
         }
     }

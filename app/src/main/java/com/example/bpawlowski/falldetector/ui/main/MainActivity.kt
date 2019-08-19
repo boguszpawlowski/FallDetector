@@ -7,11 +7,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.bpawlowski.service.model.AppSettings
-import com.bpawlowski.service.util.postDelayed
+import com.bpawlowski.database.util.postDelayed
+import com.bpawlowski.system.model.AppSettings
 import com.example.bpawlowski.falldetector.R
+import com.example.bpawlowski.falldetector.base.activity.BaseActivity
 import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
-import com.example.bpawlowski.falldetector.ui.base.activity.BaseActivity
 import com.example.bpawlowski.falldetector.util.getPermissions
 import com.example.bpawlowski.falldetector.util.setupWithNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel

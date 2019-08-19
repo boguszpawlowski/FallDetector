@@ -6,13 +6,13 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.bpawlowski.service.model.Contact
+import com.bpawlowski.database.entity.Contact
 import com.example.bpawlowski.falldetector.R
+import com.example.bpawlowski.falldetector.base.fragment.BaseFragment
+import com.example.bpawlowski.falldetector.base.recycler.DragToDismissCallback
+import com.example.bpawlowski.falldetector.base.recycler.ItemsAdapter
 import com.example.bpawlowski.falldetector.databinding.FragmentContactsBinding
 import com.example.bpawlowski.falldetector.domain.ScreenState
-import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
-import com.example.bpawlowski.falldetector.ui.base.recycler.DragToDismissCallback
-import com.example.bpawlowski.falldetector.ui.base.recycler.ItemsAdapter
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.util.autoCleared
 import com.example.bpawlowski.falldetector.util.setVisible

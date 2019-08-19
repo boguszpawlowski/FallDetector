@@ -3,10 +3,10 @@ package com.example.bpawlowski.falldetector.ui.main.contacts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.bpawlowski.service.database.repository.ContactRepository
+import com.bpawlowski.database.repository.ContactRepository
 import com.example.bpawlowski.falldetector.domain.ContactFormModel
 import com.example.bpawlowski.falldetector.domain.ScreenState
-import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
+import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.util.mapToContact
 import kotlinx.coroutines.launch
 

@@ -4,12 +4,12 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.bpawlowski.service.model.Contact
-import com.bpawlowski.service.model.UserPriority
+import com.bpawlowski.database.entity.Contact
+import com.bpawlowski.database.entity.UserPriority
 import com.example.bpawlowski.falldetector.R
+import com.example.bpawlowski.falldetector.base.recycler.Item
+import com.example.bpawlowski.falldetector.base.recycler.SwipeableItem
 import com.example.bpawlowski.falldetector.databinding.ContactItemBinding
-import com.example.bpawlowski.falldetector.ui.base.recycler.Item
-import com.example.bpawlowski.falldetector.ui.base.recycler.SwipeableItem
 import com.example.bpawlowski.falldetector.util.loadContactImage
 
 typealias OnContactTouchedListener = (Contact) -> Unit

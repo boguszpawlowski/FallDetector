@@ -1,19 +1,19 @@
 package com.example.bpawlowski.falldetector.ui.main.alarm
 
 import androidx.lifecycle.viewModelScope
-import com.bpawlowski.service.alarm.AlarmService
-import com.bpawlowski.service.database.repository.ContactRepository
-import com.bpawlowski.service.database.zip
-import com.bpawlowski.service.location.LocationProvider
-import com.example.bpawlowski.falldetector.ui.base.activity.BaseViewModel
+import com.bpawlowski.system.alarm.AlarmService
+import com.bpawlowski.database.repository.ContactRepository
+import com.bpawlowski.database.domain.zip
+import com.bpawlowski.system.location.LocationProvider
+import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class AlarmViewModel(
-    private val locationProvider: LocationProvider,
-    private val contactRepository: ContactRepository,
-    private val alarmService: AlarmService
+	private val locationProvider: LocationProvider,
+	private val contactRepository: ContactRepository,
+	private val alarmService: AlarmService
 ) : BaseViewModel() {
 
     fun raiseAlarm() = viewModelScope.launch {

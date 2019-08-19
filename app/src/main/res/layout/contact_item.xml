@@ -11,7 +11,7 @@
 
 		<variable
 			name="contact"
-			type="com.bpawlowski.service.model.Contact"/>
+			type="com.bpawlowski.database.entity.Contact"/>
 	</data>
 
 	<androidx.constraintlayout.widget.ConstraintLayout

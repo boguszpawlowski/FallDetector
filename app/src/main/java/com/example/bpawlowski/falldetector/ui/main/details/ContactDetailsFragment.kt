@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.databinding.FragmentContactDetailsBinding
 import com.example.bpawlowski.falldetector.domain.ScreenState
-import com.example.bpawlowski.falldetector.ui.base.fragment.BaseFragment
+import com.example.bpawlowski.falldetector.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.ui.main.MainViewModel
 import com.example.bpawlowski.falldetector.ui.main.contacts.CODE_REQUEST_GALLERY
 import com.example.bpawlowski.falldetector.util.checkPermission

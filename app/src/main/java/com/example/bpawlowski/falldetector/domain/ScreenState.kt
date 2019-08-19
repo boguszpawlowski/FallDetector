@@ -1,6 +1,6 @@
 package com.example.bpawlowski.falldetector.domain
 
-import com.bpawlowski.service.database.exceptions.FallDetectorException
+import com.bpawlowski.database.exceptions.FallDetectorException
 
 sealed class ScreenState<out T> {
 	object Loading : ScreenState<Nothing>()
