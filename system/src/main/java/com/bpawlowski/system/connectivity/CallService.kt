@@ -1,7 +1,7 @@
 package com.bpawlowski.system.connectivity
 
 import android.content.Context
-import com.bpawlowski.database.entity.Contact
+import com.bpawlowski.core.model.Contact
 
 interface CallService {
 	fun call(context: Context, contact: Contact)

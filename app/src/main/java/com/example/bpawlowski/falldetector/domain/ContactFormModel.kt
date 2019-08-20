@@ -3,9 +3,8 @@ package com.example.bpawlowski.falldetector.domain
 import android.util.Patterns
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-import androidx.databinding.library.baseAdapters.BR
-import com.bpawlowski.database.entity.Contact
-import com.bpawlowski.database.entity.UserPriority
+import com.bpawlowski.core.model.Contact
+import com.example.bpawlowski.falldetector.BR
 import com.example.bpawlowski.falldetector.util.empty
 
 class ContactFormModel : BaseObservable() {
@@ -83,7 +82,7 @@ class ContactFormModel : BaseObservable() {
 					mobile != initialData?.mobile.toString() ||
 					filePath != initialData?.photoPath ||
 					name != initialData?.name ||
-					priority != (initialData?.priority == UserPriority.PRIORITY_ICE)
+					priority != (initialData?.priority == com.bpawlowski.core.model.ContactPriority.PRIORITY_ICE)
 		}
 
 	fun initData(contact: Contact) {
@@ -91,16 +90,16 @@ class ContactFormModel : BaseObservable() {
 		name = contact.name
 		mobile = contact.mobile.toString()
 		email = contact.email ?: String.empty
-		priority = contact.priority == UserPriority.PRIORITY_ICE
+		priority = contact.priority == com.bpawlowski.core.model.ContactPriority.PRIORITY_ICE
 		filePath = contact.photoPath
 	}
 
-	fun resetData(){
+	fun resetData() {
 		initialData?.let {
 			name = it.name
 			mobile = it.mobile.toString()
 			email = it.email ?: String.empty
-			priority = it.priority == UserPriority.PRIORITY_ICE
+			priority = it.priority == com.bpawlowski.core.model.ContactPriority.PRIORITY_ICE
 			filePath = it.photoPath
 		}
 	}

@@ -1,8 +1,8 @@
 package com.bpawlowski.system.location
 
 import android.location.Location
-import com.bpawlowski.database.domain.FallDetectorResult
+import com.bpawlowski.core.domain.FallDetectorResult
 
 interface LocationProvider {
-    suspend fun getLastKnownLocation(): FallDetectorResult<Location>
+    suspend fun getLastKnownLocation(): com.bpawlowski.core.domain.FallDetectorResult<Location>
 }

@@ -2,28 +2,20 @@ package com.bpawlowski.system.connectivity
 
 import android.location.Location
 import android.telephony.SmsManager
-import com.bpawlowski.database.repository.ServiceStateRepository
 
 internal class TextMessageServiceImpl(
-    private val smsManager: SmsManager,
-	private val serviceStateRepository: ServiceStateRepository
+	private val smsManager: SmsManager
 ) : TextMessageService {
 
-    override suspend fun sendMessage(number: Int, location: Location) = with(smsManager) {
-		val serviceState = serviceStateRepository.getServiceState().getOrThrow()
+	override suspend fun sendMessage(number: Int, location: Location?) = with(smsManager) {
 
-		if(serviceState.sendingSms){
-			val parts = divideMessage(if(serviceState.sendingLocation){
-				location.smsBody
-			} else {
-				smsWithoutLocation
-			})
-//			sendMultipartTextMessage(number.toString(), null, parts, null, null) //todo
-		}
-    }
+		val message = location?.smsBody ?: smsWithoutLocation
+		val parts = divideMessage(message)
+		//			sendMultipartTextMessage(number.toString(), null, parts, null, null) //todo
+	}
 
 	private val smsWithoutLocation = "l" //TODO()
 
-    private val Location.smsBody: String
-        get() = "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude"
+	private val Location.smsBody: String
+		get() = "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude"
 }

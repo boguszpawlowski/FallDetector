@@ -1,8 +1,8 @@
 package com.bpawlowski.system.accelometer
 
 import android.content.Context
+import com.bpawlowski.core.model.Sensitivity
 import com.bpawlowski.system.model.AccelerometerEvent
-import com.bpawlowski.database.entity.Sensitivity
 import com.bpawlowski.system.rx.SchedulerProvider
 import io.reactivex.Flowable
 import java.lang.Math.abs

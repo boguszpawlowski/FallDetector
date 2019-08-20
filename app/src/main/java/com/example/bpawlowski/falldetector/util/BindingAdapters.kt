@@ -8,7 +8,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
-import com.bpawlowski.database.util.doNothing
+import com.bpawlowski.core.util.doNothing
 import com.example.bpawlowski.falldetector.R
 import com.google.android.material.textfield.TextInputLayout
 

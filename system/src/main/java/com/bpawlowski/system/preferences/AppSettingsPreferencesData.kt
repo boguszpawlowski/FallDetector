@@ -2,8 +2,8 @@ package com.bpawlowski.system.preferences
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
+import com.bpawlowski.core.model.Sensitivity
 import com.bpawlowski.system.model.AppSettings
-import com.bpawlowski.database.entity.Sensitivity
 
 const val DARK_THEME_KEY = "dark_theme"
 private const val SEND_SMS_KEY = "send_sms"

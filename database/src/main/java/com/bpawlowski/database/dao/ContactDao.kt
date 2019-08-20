@@ -7,31 +7,31 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.bpawlowski.database.entity.Contact
+import com.bpawlowski.database.entity.ContactDb
 
 @Dao
 internal interface ContactDao {
 
     @Query("SELECT * FROM contact")
-    fun getAllData(): LiveData<List<Contact>>
+    fun getAllData(): LiveData<List<ContactDb>>
 
     @Query("SELECT * FROM contact WHERE id like :id")
-    suspend fun getContactById(id: Long): Contact?
+    suspend fun getContactById(id: Long): ContactDb?
 
     @Query("SELECT * FROM contact")
-    suspend fun getAll(): List<Contact>
+    suspend fun getAll(): List<ContactDb>
 
     @Query("SELECT * FROM contact WHERE mobile LIKE :mobile")
-    suspend fun getContactByMobile(mobile: Int): Contact?
+    suspend fun getContactByMobile(mobile: Int): ContactDb?
 
 	@Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insert(contact: Contact): Long
+    suspend fun insert(contact: ContactDb): Long
 
     @Delete
-    suspend fun delete(contact: Contact): Int
+    suspend fun delete(contact: ContactDb): Int
 
 	@Update
-	suspend fun update(contact: Contact): Int
+	suspend fun update(contact: ContactDb): Int
 
     @Query(value = "UPDATE contact SET email=:email WHERE id like :id")
     suspend fun updateEmail(id: Long, email: String): Int

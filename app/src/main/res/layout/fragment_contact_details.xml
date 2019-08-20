@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:tools="http://schemas.android.com/tools"
-		tools:context=".ui.main.MainActivity">
+		tools:context=".screens.main.MainActivity">
 
 	<data>
 
 		<variable
 			name="viewModel"
-			type="com.example.bpawlowski.falldetector.ui.main.details.ContactDetailsViewModel"/>
+			type="com.example.bpawlowski.falldetector.screens.main.details.ContactDetailsViewModel"/>
 	</data>
 
 	<ScrollView

@@ -1,7 +1,7 @@
 package com.example.bpawlowski.falldetector.util
 
 import android.app.Activity
-import com.bpawlowski.database.util.doNothing
+import com.bpawlowski.core.util.doNothing
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken

@@ -12,6 +12,12 @@ android {
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
         testInstrumentationRunner rootProject.ext.testInstrumentationRunner
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -24,11 +30,12 @@ android {
             debuggable true
         }
     }
-
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(path: ':core')
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
@@ -37,21 +44,12 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
 
-    //Timber
-    api "com.jakewharton.timber:timber:$timber_version"
-
-    //Koin
-    api "org.koin:koin-core:$koin_version"
-    api "org.koin:koin-android:$koin_version"
-    api "org.koin:koin-androidx-scope:$koin_version"
-    api "org.koin:koin-androidx-viewmodel:$koin_version"
-    api "org.koin:koin-androidx-ext:$koin_version"
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
+
 repositories {
     mavenCentral()
 }

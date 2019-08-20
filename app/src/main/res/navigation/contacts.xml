@@ -6,7 +6,7 @@
 
 	<fragment
 		android:id="@+id/contactsFragment"
-		android:name="com.example.bpawlowski.falldetector.ui.main.contacts.ContactsFragment"
+		android:name="com.example.bpawlowski.falldetector.screens.main.contacts.ContactsFragment"
 		android:label="Contacts">
 		<action
 			android:id="@+id/showDialog"
@@ -17,11 +17,11 @@
 	</fragment>
 	<dialog
 		android:id="@+id/formDialogFragment"
-		android:name="com.example.bpawlowski.falldetector.ui.main.contacts.FormDialogFragment"
+		android:name="com.example.bpawlowski.falldetector.screens.main.contacts.FormDialogFragment"
 		android:label="FormDialogFragment"/>
 	<fragment
 		android:id="@+id/contactDetailsFragment"
-		android:name="com.example.bpawlowski.falldetector.ui.main.details.ContactDetailsFragment"
+		android:name="com.example.bpawlowski.falldetector.screens.main.details.ContactDetailsFragment"
 		android:label="Contact Details">
 		<argument
 			android:name="contact_id"

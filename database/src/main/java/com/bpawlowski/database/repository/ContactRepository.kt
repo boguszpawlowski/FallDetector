@@ -1,8 +1,8 @@
 package com.bpawlowski.database.repository
 
 import androidx.lifecycle.LiveData
-import com.bpawlowski.database.domain.FallDetectorResult
-import com.bpawlowski.database.entity.Contact
+import com.bpawlowski.core.domain.FallDetectorResult
+import com.bpawlowski.core.model.Contact
 
 interface ContactRepository {
     fun getAllContactsData(): LiveData<List<Contact>>

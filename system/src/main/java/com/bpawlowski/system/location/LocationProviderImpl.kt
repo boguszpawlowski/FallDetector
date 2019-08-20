@@ -3,9 +3,9 @@ package com.bpawlowski.system.location
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
-import com.bpawlowski.database.domain.FallDetectorResult
-import com.bpawlowski.database.domain.failure
-import com.bpawlowski.database.domain.success
+import com.bpawlowski.core.domain.FallDetectorResult
+import com.bpawlowski.core.domain.failure
+import com.bpawlowski.core.domain.success
 import com.google.android.gms.location.LocationServices
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine

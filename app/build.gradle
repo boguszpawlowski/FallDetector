@@ -30,6 +30,7 @@ android {
             debuggable true
         }
     }
+
     dataBinding {
         enabled = true
     }
@@ -38,8 +39,9 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    api project(path: ':database')
-    api project(path: ':system')
+    implementation project(path: ':core')
+    implementation project(path: ':database')
+    implementation project(path: ':system')
 
     //kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -68,7 +70,7 @@ dependencies {
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
-    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'

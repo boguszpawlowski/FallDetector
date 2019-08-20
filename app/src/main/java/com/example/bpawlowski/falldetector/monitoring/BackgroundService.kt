@@ -15,15 +15,14 @@ import com.bpawlowski.system.accelometer.FallDetector
 import com.bpawlowski.system.alarm.AlarmService
 import com.bpawlowski.database.repository.ContactRepository
 import com.bpawlowski.database.repository.ServiceStateRepository
-import com.bpawlowski.database.domain.zip
 import com.bpawlowski.system.location.LocationProvider
-import com.bpawlowski.database.entity.Sensitivity
+import com.bpawlowski.core.model.Sensitivity
+import com.bpawlowski.core.util.doNothing
 import com.bpawlowski.system.rx.SchedulerProvider
-import com.bpawlowski.database.util.doNothing
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.START_SERVICE
 import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.STOP_SERVICE
-import com.example.bpawlowski.falldetector.ui.main.MainActivity
+import com.example.bpawlowski.falldetector.screens.main.MainActivity
 import com.example.bpawlowski.falldetector.util.notificationManager
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
@@ -162,7 +161,7 @@ class BackgroundService : Service(), CoroutineScope {
 			val contacts = async { contactRepository.getAllContacts() }
 			val location = async { locationProvider.getLastKnownLocation() }
 
-			zip(contacts.await(), location.await())
+			com.bpawlowski.core.domain.zip(contacts.await(), location.await())
 				.onSuccess { alarmService.raiseAlarm(it.first, it.second) }
 				.onException { Timber.e(it) }
 		}

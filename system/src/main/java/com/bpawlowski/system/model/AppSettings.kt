@@ -1,10 +1,10 @@
 package com.bpawlowski.system.model
 
-import com.bpawlowski.database.entity.Sensitivity
+import com.bpawlowski.core.model.Sensitivity
 
 data class AppSettings(
-    val darkMode: Boolean,
-    val sendingSms: Boolean,
-    val sendingLocation: Boolean,
-    val sensitivity: Sensitivity
+	val darkMode: Boolean,
+	val sendingSms: Boolean,
+	val sendingLocation: Boolean,
+	val sensitivity: Sensitivity
 )

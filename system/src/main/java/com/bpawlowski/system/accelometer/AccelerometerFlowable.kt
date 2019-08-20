@@ -5,9 +5,9 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import com.bpawlowski.core.util.doNothing
 import com.bpawlowski.system.model.AccelerometerEvent
 import com.bpawlowski.system.util.accelerometer
-import com.bpawlowski.database.util.doNothing
 import com.bpawlowski.system.util.sensorManager
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable

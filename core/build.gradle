@@ -1,0 +1,18 @@
+apply plugin: 'java-library' //todo find way for kotlin lib + flavors
+apply plugin: 'kotlin'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    //Timber
+    api "com.jakewharton.timber:timber:$timber_version"
+
+    //Koin
+    api "org.koin:koin-core:$koin_version"
+    api "org.koin:koin-android:$koin_version"
+    api "org.koin:koin-androidx-scope:$koin_version"
+    api "org.koin:koin-androidx-viewmodel:$koin_version"
+    api "org.koin:koin-androidx-ext:$koin_version"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}

@@ -16,7 +16,7 @@ import org.koin.dsl.module
 val systemModule = module {
 	single<AlarmService> { AlarmServiceImpl(get(), get(), get()) }
 	single<CallService> { CallServiceImpl() }
-	single<TextMessageService> { TextMessageServiceImpl(get(), get()) }
+	single<TextMessageService> { TextMessageServiceImpl(get()) }
 	single<LocationProvider> { LocationProviderImpl(get()) }
 	single<SchedulerProvider> { SchedulerProviderImpl() }
 	single<SmsManager> { SmsManager.getDefault() }

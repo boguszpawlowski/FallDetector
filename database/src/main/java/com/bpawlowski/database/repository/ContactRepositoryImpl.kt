@@ -1,14 +1,17 @@
 package com.bpawlowski.database.repository
 
 import androidx.lifecycle.LiveData
-import com.bpawlowski.database.domain.FallDetectorResult
+import com.bpawlowski.core.domain.FallDetectorResult
+import com.bpawlowski.core.domain.failure
+import com.bpawlowski.core.domain.success
+import com.bpawlowski.core.exception.FallDetectorException
+import com.bpawlowski.core.model.Contact
+import com.bpawlowski.core.model.ContactPriority
 import com.bpawlowski.database.dbservice.DatabaseService
-import com.bpawlowski.database.exceptions.FallDetectorException
-import com.bpawlowski.database.domain.failure
-import com.bpawlowski.database.domain.success
-import com.bpawlowski.database.entity.Contact
-import com.bpawlowski.database.entity.UserPriority
+import com.bpawlowski.database.util.map
 import com.bpawlowski.database.util.sortedByDescending
+import com.bpawlowski.database.util.toContact
+import com.bpawlowski.database.util.toContactDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -19,44 +22,29 @@ internal class ContactRepositoryImpl(
 	private val contactDao by lazy { databaseService.getContactDao() }
 
 	override suspend fun addContact(contact: Contact): FallDetectorResult<Long> = withContext(Dispatchers.IO) {
-		if (isContactNotValid(contact)) {
-			failure(FallDetectorException.IceAlreadyExistsException)
-		} else {
-			if (contactDao.getContactByMobile(contact.mobile) != null) {
-				failure(FallDetectorException.MobileAlreadyExisting(contact.mobile))
-			} else {
-				success(contactDao.insert(contact))
-			}
+		checkContact(contact).map {
+			contactDao.insert(contact.toContactDb())
 		}
 	}
 
 	override suspend fun getContact(id: Long): FallDetectorResult<Contact> = withContext(Dispatchers.IO) {
-		val contact = contactDao.getContactById(id)
+		val contact = contactDao.getContactById(id)?.toContact()
 		if (contact != null) {
 			success(contact)
 		} else {
-			failure(FallDetectorException.NoSuchRecordException())
+			failure(FallDetectorException.NoSuchRecordException(id))
 		}
 	}
 
 	override fun getAllContactsData(): LiveData<List<Contact>> =
-		contactDao.getAllData().sortedByDescending { it.priority }
+		contactDao.getAllData().map { it.map { it.toContact() } }.sortedByDescending { it.priority }
 
 	override suspend fun updateContact(contact: Contact): FallDetectorResult<Unit> = withContext(Dispatchers.IO) {
-		when {
-			isContactNotValid(contact) -> failure(FallDetectorException.IceAlreadyExistsException)
-			contactDao.getContactByMobile(contact.mobile) != null -> failure(
-				FallDetectorException.MobileAlreadyExisting(
-					contact.mobile
-				)
-			)
-
-			else -> {
-				if (contactDao.update(contact) != 0) {
-					success(Unit)
-				} else {
-					failure(FallDetectorException.NoSuchRecordException())
-				}
+		checkContact(contact).flatMap {
+			if (contactDao.update(contact.toContactDb()) != 0) {
+				success(Unit)
+			} else {
+				failure(FallDetectorException.RecordNotUpdatedException(contact.id))
 			}
 		}
 	}
@@ -80,16 +68,16 @@ internal class ContactRepositoryImpl(
 	}
 
 	override suspend fun getContactByMobile(mobile: Int): FallDetectorResult<Contact> = withContext(Dispatchers.IO) {
-		val contact = contactDao.getContactByMobile(mobile)
+		val contact = contactDao.getContactByMobile(mobile)?.toContact()
 		if (contact != null) {
 			success(contact)
 		} else {
-			failure(FallDetectorException.NoSuchRecordException())
+			failure(FallDetectorException.InvalidMobileException(mobile))
 		}
 	}
 
 	override suspend fun getAllContacts(): FallDetectorResult<List<Contact>> = withContext(Dispatchers.IO) {
-		val contacts = contactDao.getAll()
+		val contacts = contactDao.getAll().map { it.toContact() }
 		if (contacts.isNotEmpty()) {
 			success(contacts)
 		} else {
@@ -98,18 +86,26 @@ internal class ContactRepositoryImpl(
 	}
 
 	override suspend fun removeContact(contact: Contact): FallDetectorResult<Contact> = withContext(Dispatchers.IO) {
-		val columnsAffected = contactDao.delete(contact)
+		val columnsAffected = contactDao.delete(contact.toContactDb())
 		if (columnsAffected != 0) {
 			success(contact)
 		} else {
-			failure(FallDetectorException.NoSuchRecordException())
+			failure(FallDetectorException.NoSuchRecordException(contact.id))
 		}
 	}
 
-	private suspend fun isContactNotValid(contact: Contact): Boolean = withContext(Dispatchers.IO) {
+	private suspend fun checkContact(contact: Contact): FallDetectorResult<Unit> = withContext(Dispatchers.IO) {
 		val iceContactId = contactDao.findIceContact()
-		contact.priority == UserPriority.PRIORITY_ICE
-				&& iceContactId != null
-				&& contact.id != iceContactId
+		val contactWithSameMobile = contactDao.getContactByMobile(contact.mobile)
+		if (contact.priority == ContactPriority.PRIORITY_ICE
+			&& iceContactId != null
+			&& contact.id != iceContactId
+		) {
+			failure(FallDetectorException.IceAlreadyExistsException)
+		} else if (contactWithSameMobile != null && contactWithSameMobile.id != contact.id) {
+			failure(FallDetectorException.MobileAlreadyExisting(contact.mobile))
+		} else {
+			success(Unit)
+		}
 	}
 }

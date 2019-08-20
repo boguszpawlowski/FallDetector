@@ -6,17 +6,17 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.bpawlowski.database.entity.Sensitivity
-import com.bpawlowski.database.entity.ServiceState
+import com.bpawlowski.core.model.Sensitivity
+import com.bpawlowski.database.entity.ServiceStateDb
 
 @Dao
 internal interface ServiceStateDao {
 
     @Query("SELECT * FROM service_state LIMIT 1")
-    suspend fun getServiceState(): ServiceState?
+    suspend fun getServiceState(): ServiceStateDb?
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun initiateState(serviceState: ServiceState): Long
+    suspend fun initiateState(serviceState: ServiceStateDb): Long
 
     @Query("SELECT sensitivity FROM service_state LIMIT 1")
     fun getSensitivityData(): LiveData<Sensitivity>
@@ -34,5 +34,5 @@ internal interface ServiceStateDao {
     suspend fun updateSensitivity(sensitivity: Sensitivity): Int
 
 	@Update
-	suspend fun updateServiceState(serviceState: ServiceState): Int
+	suspend fun updateServiceState(serviceState: ServiceStateDb): Int
 }

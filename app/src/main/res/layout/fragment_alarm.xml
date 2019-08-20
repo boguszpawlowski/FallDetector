@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="viewModel" type="com.example.bpawlowski.falldetector.ui.main.alarm.AlarmViewModel"/>
+        <variable name="viewModel" type="com.example.bpawlowski.falldetector.screens.main.alarm.AlarmViewModel"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.alarm.AlarmActivity">
+            tools:context=".screens.alarm.AlarmActivity">
         <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/btn_alarm"
                 android:layout_width="wrap_content"

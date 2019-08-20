@@ -1,13 +1,13 @@
 package com.bpawlowski.database.repository
 
 import androidx.lifecycle.LiveData
-import com.bpawlowski.database.domain.FallDetectorResult
+import com.bpawlowski.core.domain.FallDetectorResult
+import com.bpawlowski.core.domain.failure
+import com.bpawlowski.core.domain.success
+import com.bpawlowski.core.exception.FallDetectorException
 import com.bpawlowski.database.dbservice.DatabaseService
-import com.bpawlowski.database.exceptions.FallDetectorException
-import com.bpawlowski.database.domain.failure
-import com.bpawlowski.database.domain.success
-import com.bpawlowski.database.entity.Sensitivity
-import com.bpawlowski.database.entity.ServiceState
+import com.bpawlowski.core.model.Sensitivity
+import com.bpawlowski.database.entity.ServiceStateDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -28,7 +28,7 @@ internal class ServiceStateRepositoryImpl(
 		if (serviceStateDao.getServiceState() == null) {
 		 	withContext(Dispatchers.IO) {
 				try {
-					serviceStateDao.initiateState(ServiceState())
+					serviceStateDao.initiateState(ServiceStateDb())
 				} catch (e: Exception) {
 					Timber.e(e)
 				}
@@ -50,7 +50,7 @@ internal class ServiceStateRepositoryImpl(
 		return if (updated != 0) {
 			success(Unit)
 		} else {
-			failure(FallDetectorException.RecordNotUpdatedException())
+			failure(FallDetectorException.StateNotInitializedException)
 		}
 	}
 
@@ -59,25 +59,25 @@ internal class ServiceStateRepositoryImpl(
 		return if (updated != 0) {
 			success(Unit)
 		} else {
-			failure(FallDetectorException.RecordNotUpdatedException())
+			failure(FallDetectorException.StateNotInitializedException)
 		}
 	}
 
-	override suspend fun updateState(serviceState: ServiceState): FallDetectorResult<Unit> {
+	override suspend fun updateState(serviceState: ServiceStateDb): FallDetectorResult<Unit> {
 		val updated = serviceStateDao.updateServiceState(serviceState)
 		return if (updated != 0) {
 			success(Unit)
 		} else {
-			failure(FallDetectorException.RecordNotUpdatedException())
+			failure(FallDetectorException.StateNotInitializedException)
 		}
 	}
 
-	override suspend fun getServiceState(): FallDetectorResult<ServiceState> {
+	override suspend fun getServiceState(): FallDetectorResult<ServiceStateDb> {
 		val state = serviceStateDao.getServiceState()
 		return if(state !=null){
 			success(state)
 		} else {
-			failure(FallDetectorException.NoSuchRecordException())
+			failure(FallDetectorException.StateNotInitializedException)
 		}
 	}
 }

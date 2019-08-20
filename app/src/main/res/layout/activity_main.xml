@@ -7,7 +7,7 @@
 
 		<variable
 			name="viewModel"
-			type="com.example.bpawlowski.falldetector.ui.main.MainViewModel"/>
+			type="com.example.bpawlowski.falldetector.screens.main.MainViewModel"/>
 	</data>
 
 	<LinearLayout
@@ -15,7 +15,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:orientation="vertical"
-		tools:context="com.example.bpawlowski.falldetector.ui.main.MainActivity">
+		tools:context="com.example.bpawlowski.falldetector.screens.main.MainActivity">
 
 		<com.google.android.material.appbar.AppBarLayout
 			android:layout_width="match_parent"
