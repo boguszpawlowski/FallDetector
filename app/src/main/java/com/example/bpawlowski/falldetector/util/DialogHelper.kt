@@ -12,7 +12,6 @@ const val DIALOG_DISMISS_DELAY = 300L
 
 inline fun showBottomSheetDialog(context: Context, crossinline onItemSelectedListener: (Int) -> Unit) =
 	MaterialDialog(context, BottomSheet(LayoutMode.WRAP_CONTENT))
-		.title(R.string.bottom_dialog_title)
 		.show {
 			listItems(R.array.bottom_sheet_items) { _, index, _ ->
 				dismiss()

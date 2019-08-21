@@ -22,7 +22,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val CODE_REQUEST_GALLERY = 9999
 
-class FormDialogFragment : DialogFragment() { //todo add camera fragment
+class FormDialogFragment : DialogFragment() { //todo probably change this to normal fragment/bottom sheet
 
 	private var binding by autoCleared<DialogFormBinding>()
 
