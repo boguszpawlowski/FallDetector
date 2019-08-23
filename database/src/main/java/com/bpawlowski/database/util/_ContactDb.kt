@@ -3,7 +3,7 @@ package com.bpawlowski.database.util
 import com.bpawlowski.core.model.Contact
 import com.bpawlowski.database.entity.ContactDb
 
-internal fun ContactDb.toContact() = Contact(
+internal fun ContactDb.toDomain() = Contact(
 	id = id,
 	name = name,
 	mobile = mobile,
@@ -12,7 +12,7 @@ internal fun ContactDb.toContact() = Contact(
 	photoPath = photoPath
 )
 
-internal fun Contact.toContactDb() = ContactDb(
+internal fun Contact.toEntity() = ContactDb(
 	id = id,
 	name = name,
 	mobile = mobile,

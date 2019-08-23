@@ -19,6 +19,7 @@ import com.example.bpawlowski.falldetector.screens.main.camera.KEY_EVENT_ACTION
 import com.example.bpawlowski.falldetector.screens.main.camera.KEY_EVENT_EXTRA
 import com.example.bpawlowski.falldetector.util.getPermissions
 import com.example.bpawlowski.falldetector.util.setupWithNavController
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val CHANGE_THEME_DELAY = 450L
@@ -53,6 +54,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {  //todo hide keyboard
 		super.onStart()
 
 		checkPermissions()
+		viewModel.loadEvents()
 	}
 
 	override fun onRestoreInstanceState(savedInstanceState: Bundle?) {

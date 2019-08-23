@@ -1,6 +1,7 @@
 package com.bpawlowski.database.repository
 
 import androidx.lifecycle.LiveData
+import com.bpawlowski.core.domain.Result
 import com.bpawlowski.core.model.Sensitivity
 import com.bpawlowski.database.entity.ServiceStateDb
 
@@ -12,13 +13,13 @@ interface ServiceStateRepository {
 
 	fun getSensitivityData(): LiveData<Sensitivity>
 
-	suspend fun getServiceState(): com.bpawlowski.core.domain.FallDetectorResult<ServiceStateDb>
+	suspend fun getServiceState(): Result<ServiceStateDb>
 
-	suspend fun getIsRunningFlag(): com.bpawlowski.core.domain.FallDetectorResult<Boolean>
+	suspend fun getIsRunningFlag(): Result<Boolean>
 
-	suspend fun updateSensitivity(sensitivity: Sensitivity): com.bpawlowski.core.domain.FallDetectorResult<Unit>
+	suspend fun updateSensitivity(sensitivity: Sensitivity): Result<Unit>
 
-	suspend fun updateIsRunning(isRunning: Boolean): com.bpawlowski.core.domain.FallDetectorResult<Unit>
+	suspend fun updateIsRunning(isRunning: Boolean): Result<Unit>
 
-	suspend fun updateState(serviceState: ServiceStateDb): com.bpawlowski.core.domain.FallDetectorResult<Unit>
+	suspend fun updateState(serviceState: ServiceStateDb): Result<Unit>
 }

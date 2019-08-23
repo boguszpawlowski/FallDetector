@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.bpawlowski.core.domain.Event
+import com.bpawlowski.core.domain.EventWrapper
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.databinding.FragmentContactDetailsBinding
@@ -43,8 +43,8 @@ class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 		}
 	}
 
-	private val photoDataObserver: Observer<Event<File>> by lazy {
-		Observer<Event<File>> { event ->
+	private val photoDataObserver: Observer<EventWrapper<File>> by lazy {
+		Observer<EventWrapper<File>> { event ->
 			event.value?.let { file ->
 				viewModel.updatePhotoPath(file)
 			}

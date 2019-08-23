@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.bpawlowski.database.FallDetectorDatabase
 import com.bpawlowski.database.dao.ContactDao
+import com.bpawlowski.database.dao.EventDao
 import com.bpawlowski.database.dao.ServiceStateDao
 
 private const val name = "FDDatabase"
@@ -28,4 +29,6 @@ internal class DatabaseServiceImpl(
 	override fun getContactDao(): ContactDao = getDatabaseInstance().contactDao()
 
 	override fun getServiceStateDao(): ServiceStateDao = getDatabaseInstance().serviceStateDao()
+
+	override fun getEventDao(): EventDao = getDatabaseInstance().eventDao()
 }

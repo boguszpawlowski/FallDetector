@@ -15,7 +15,7 @@ val viewModelModule = module {
 	viewModel { HomeViewModel(get()) }
 	viewModel { ContactsViewModel(get(), get(), get(), get()) }
 	viewModel { FormDialogViewModel(get()) }
-	viewModel { MainViewModel(get(named("Default")), get()) }
+	viewModel { MainViewModel(get(named("Default")), get(), get()) }
 	viewModel { AlarmViewModel(get(), get(), get()) }
 	viewModel { ContactDetailsViewModel(get(), get(), get(), get()) }
 	viewModel { CameraViewModel() }

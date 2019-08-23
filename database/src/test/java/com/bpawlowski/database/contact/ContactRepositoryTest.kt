@@ -1,14 +1,13 @@
 package com.bpawlowski.database.contact
 
-import com.bpawlowski.core.domain.FallDetectorResult
 import com.bpawlowski.core.exception.FallDetectorException
 import com.bpawlowski.core.model.ContactPriority
 import com.bpawlowski.database.dao.ContactDao
 import com.bpawlowski.database.dbservice.DatabaseService
 import com.bpawlowski.database.entity.ContactDb
 import com.bpawlowski.database.repository.ContactRepositoryImpl
-import com.bpawlowski.database.util.toContact
-import com.bpawlowski.database.util.toContactDb
+import com.bpawlowski.data.toDomain
+import com.bpawlowski.data.toEntity
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
@@ -33,9 +32,9 @@ class ContactRepositoryTest {
 
 	private val iceContact = getDummyContact(ID, MOBILE, ContactPriority.PRIORITY_ICE)
 	private val normalContact = getDummyContact(ID_2, DIFFERENT_MOBILE)
-	private val duplicateMobileContact = getDummyContact(null, DIFFERENT_MOBILE).toContact()
-	private val newIceContact = getDummyContact(null, DIFFERENT_MOBILE, ContactPriority.PRIORITY_ICE).toContact()
-	private val newValidContact = getDummyContact(null, DIFFERENT_MOBILE).toContact()
+	private val duplicateMobileContact = getDummyContact(null, DIFFERENT_MOBILE).toDomain()
+	private val newIceContact = getDummyContact(null, DIFFERENT_MOBILE, ContactPriority.PRIORITY_ICE).toDomain()
+	private val newValidContact = getDummyContact(null, DIFFERENT_MOBILE).toDomain()
 
 	@Before
 	fun init() {
@@ -56,7 +55,7 @@ class ContactRepositoryTest {
 
 		verify(contactDao).getContactByMobile(duplicateMobileContact.mobile)
 		verify(contactDao, never()).insert(any())
-		assert((result as? FallDetectorResult.Failure)?.error == FallDetectorException.MobileAlreadyExisting(normalContact.mobile))
+		assert((result as? com.bpawlowski.core.domain.FallDetectorResult.Result.Failure)?.error == FallDetectorException.MobileAlreadyExisting(normalContact.mobile))
 	}
 
 	@Test
@@ -66,19 +65,19 @@ class ContactRepositoryTest {
 		val result = contactRepository.addContact(newIceContact)
 
 		verify(contactDao, never()).insert(any())
-		assert((result as? FallDetectorResult.Failure)?.error == FallDetectorException.IceAlreadyExistsException)
+		assert((result as? com.bpawlowski.core.domain.FallDetectorResult.Result.Failure)?.error == FallDetectorException.IceAlreadyExistsException)
 	}
 
 	@Test
 	fun `When contact is valid, add it to database`() = runBlocking {
 		whenever(contactDao.findIceContact()) doReturn iceContact.id
 		whenever(contactDao.getContactByMobile(newIceContact.mobile)) doReturn null
-		whenever(contactDao.insert(eq(newValidContact.toContactDb()))) doReturn ID
+		whenever(contactDao.insert(eq(newValidContact.toEntity()))) doReturn 1L
 
 		val result = contactRepository.addContact(newValidContact)
 
-		verify(contactDao).insert(newValidContact.toContactDb())
-		assert((result as? FallDetectorResult.Success)?.data == ID)
+		verify(contactDao).insert(newValidContact.toEntity())
+		assert((result as? com.bpawlowski.core.domain.FallDetectorResult.Result.Success)?.data == 1L)
 	}
 
 	@Test
@@ -86,10 +85,10 @@ class ContactRepositoryTest {
 		whenever(contactDao.findIceContact()) doReturn iceContact.id
 		whenever(contactDao.update(eq(iceContact.copy(name = NEW_NAME)))) doReturn 1
 
-		val result = contactRepository.updateContact(iceContact.copy(name = NEW_NAME).toContact())
+		val result = contactRepository.updateContact(iceContact.copy(name = NEW_NAME).toDomain())
 
 		verify(contactDao).update(iceContact.copy(name = NEW_NAME))
-		assert((result as? FallDetectorResult.Success)?.data == Unit)
+		assert((result as? com.bpawlowski.core.domain.FallDetectorResult.Result.Success)?.data == Unit)
 	}
 
 	private fun getDummyContact(id: Long?, mobile: Int, priority: ContactPriority = ContactPriority.PRIORITY_NORMAL) =

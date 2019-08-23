@@ -1,6 +1,6 @@
 package com.bpawlowski.core.domain
 
-data class Event<out T>(private val content: T) {
+data class EventWrapper<out T>(private val content: T) {
 
 	var hasBeenHandled = false
 		private set

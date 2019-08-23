@@ -17,6 +17,10 @@ sealed class FallDetectorException(override val message: String, val rationale: 
 		private val id: Long?
 	) : FallDetectorException("Record with id $id was not updated", "Record was not updated.")
 
+	data class RecordNotDeletedException(
+		private val id: Long?
+	) : FallDetectorException("Record with id $id was not deleted", "Record was not deleted.")
+
 	data class MobileAlreadyExisting(
 		private val mobile: Int
 	) : FallDetectorException("Record with mobile $mobile already existing.")

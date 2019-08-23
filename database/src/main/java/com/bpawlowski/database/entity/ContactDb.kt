@@ -13,7 +13,7 @@ import com.bpawlowski.core.model.ContactPriority
 	indices = [Index("mobile", unique = true)],
 	tableName = "contact"
 )
-internal data class ContactDb(
+data class ContactDb(
 	@PrimaryKey(autoGenerate = true)
 	@ColumnInfo(name = "Id", typeAffinity = ColumnInfo.INTEGER)
 	@NonNull

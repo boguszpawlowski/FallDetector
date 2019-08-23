@@ -1,7 +1,7 @@
 package com.bpawlowski.database.repository
 
 import androidx.lifecycle.LiveData
-import com.bpawlowski.core.domain.FallDetectorResult
+import com.bpawlowski.core.domain.Result
 import com.bpawlowski.core.domain.failure
 import com.bpawlowski.core.domain.success
 import com.bpawlowski.core.exception.FallDetectorException
@@ -36,7 +36,7 @@ internal class ServiceStateRepositoryImpl(
 		}
 	}
 
-	override suspend fun getIsRunningFlag(): FallDetectorResult<Boolean> {
+	override suspend fun getIsRunningFlag(): Result<Boolean> {
 		val isRunning = serviceStateDao.getIsRunningFlag()
 		return if (isRunning != null) {
 			success(isRunning)
@@ -45,7 +45,7 @@ internal class ServiceStateRepositoryImpl(
 		}
 	}
 
-	override suspend fun updateSensitivity(sensitivity: Sensitivity): FallDetectorResult<Unit> {
+	override suspend fun updateSensitivity(sensitivity: Sensitivity): Result<Unit> {
 		val updated = serviceStateDao.updateSensitivity(sensitivity)
 		return if (updated != 0) {
 			success(Unit)
@@ -54,7 +54,7 @@ internal class ServiceStateRepositoryImpl(
 		}
 	}
 
-	override suspend fun updateIsRunning(isRunning: Boolean): FallDetectorResult<Unit> {
+	override suspend fun updateIsRunning(isRunning: Boolean): Result<Unit> {
 		val updated = serviceStateDao.updateIsRunningFlag(isRunning)
 		return if (updated != 0) {
 			success(Unit)
@@ -63,7 +63,7 @@ internal class ServiceStateRepositoryImpl(
 		}
 	}
 
-	override suspend fun updateState(serviceState: ServiceStateDb): FallDetectorResult<Unit> {
+	override suspend fun updateState(serviceState: ServiceStateDb): Result<Unit> {
 		val updated = serviceStateDao.updateServiceState(serviceState)
 		return if (updated != 0) {
 			success(Unit)
@@ -72,7 +72,7 @@ internal class ServiceStateRepositoryImpl(
 		}
 	}
 
-	override suspend fun getServiceState(): FallDetectorResult<ServiceStateDb> {
+	override suspend fun getServiceState(): Result<ServiceStateDb> {
 		val state = serviceStateDao.getServiceState()
 		return if(state !=null){
 			success(state)

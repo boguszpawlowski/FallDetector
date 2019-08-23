@@ -4,7 +4,8 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.bpawlowski.core.domain.Event
+import com.bpawlowski.core.domain.EventWrapper
+import com.bpawlowski.data.repository.EventRepository
 import com.bpawlowski.database.repository.ServiceStateRepository
 import com.bpawlowski.system.model.AppSettings
 import com.bpawlowski.system.preferences.AppSettingsPreferencesData
@@ -15,17 +16,18 @@ import java.io.File
 
 class MainViewModel(
 	private val sharedPreferences: SharedPreferences,
-	private val serviceStateRepository: ServiceStateRepository
+	private val serviceStateRepository: ServiceStateRepository,
+	private val eventRepository: EventRepository
 ) : BaseViewModel() {
 
 	val appSettingsPreferencesData: AppSettingsPreferencesData
 		get() = AppSettingsPreferencesData(sharedPreferences)
 
-	private val _capturedPhotoData = MutableLiveData<Event<File>>()
-	val capturedPhotoData: LiveData<Event<File>>
+	private val _capturedPhotoData = MutableLiveData<EventWrapper<File>>()
+	val capturedPhotoData: LiveData<EventWrapper<File>>
 		get() = _capturedPhotoData.toSingleEvent()
 
-	fun onPhotoAdded(file: File) = _capturedPhotoData.postValue(Event(file))
+	fun onPhotoAdded(file: File) = _capturedPhotoData.postValue(EventWrapper(file))
 
 	fun initiateServiceState() = viewModelScope.launch {
 		serviceStateRepository.initiateState()
@@ -41,5 +43,9 @@ class MainViewModel(
 				)
 			)
 		}
+	}
+
+	fun loadEvents() = viewModelScope.launch{
+		eventRepository.syncEvents()
 	}
 }

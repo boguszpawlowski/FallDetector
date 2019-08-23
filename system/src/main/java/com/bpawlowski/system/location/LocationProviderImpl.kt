@@ -3,7 +3,7 @@ package com.bpawlowski.system.location
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
-import com.bpawlowski.core.domain.FallDetectorResult
+import com.bpawlowski.core.domain.Result
 import com.bpawlowski.core.domain.failure
 import com.bpawlowski.core.domain.success
 import com.google.android.gms.location.LocationServices
@@ -17,7 +17,7 @@ internal class LocationProviderImpl(
 	private var fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
 
 	@SuppressLint("MissingPermission")
-	override suspend fun getLastKnownLocation(): FallDetectorResult<Location> = suspendCoroutine { cont ->
+	override suspend fun getLastKnownLocation(): Result<Location> = suspendCoroutine { cont ->
 		fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
 			location?.let { cont.resume(success(it)) }
 		}

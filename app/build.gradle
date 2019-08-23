@@ -40,8 +40,10 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(path: ':core')
-    implementation project(path: ':database')
+    implementation project(path: ':database') //todo hide this module in data
     implementation project(path: ':system')
+    implementation project(path: ':data')
+    implementation project(path: ':remote') //todo hide this module in data
 
     // Support
     implementation "androidx.recyclerview:recyclerview:$recycler_version"
