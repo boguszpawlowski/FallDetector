@@ -24,9 +24,8 @@ import java.io.File
 const val IMAGE_TYPE = "image/*"
 private const val CONTACT_ID = "contact_id"
 private const val EMAIL_TYPE = "message/rfc822"
-private const val DIALOG_DISMISS_DELAY = 300L
 
-class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() { //todo change lifecycle of this fragment
+class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 
 	override val layoutResID = R.layout.fragment_contact_details
 

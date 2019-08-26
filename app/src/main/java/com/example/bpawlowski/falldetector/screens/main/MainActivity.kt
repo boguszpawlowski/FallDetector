@@ -23,7 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val CHANGE_THEME_DELAY = 450L
 
-class MainActivity : BaseActivity<ActivityMainBinding>() {
+class MainActivity : BaseActivity<ActivityMainBinding>() {  //todo hide keyboard on click outside
 
 	override val layoutId = R.layout.activity_main
 

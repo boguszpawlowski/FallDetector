@@ -13,6 +13,8 @@ import com.bpawlowski.database.util.sortedByDescending
 import com.bpawlowski.database.util.toContact
 import com.bpawlowski.database.util.toContactDb
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 internal class ContactRepositoryImpl(
@@ -36,8 +38,10 @@ internal class ContactRepositoryImpl(
 		}
 	}
 
-	override fun getAllContactsData(): LiveData<List<Contact>> =
-		contactDao.getAllData().map { it.map { it.toContact() } }.sortedByDescending { it.priority }
+	override fun getAllContactsFlow(): Flow<List<Contact>> =
+		contactDao.getAllData()
+			.map { it.map { it.toContact() } }
+			.sortedByDescending { it.priority }
 
 	override suspend fun updateContact(contact: Contact): FallDetectorResult<Unit> = withContext(Dispatchers.IO) {
 		checkContact(contact).flatMap {
