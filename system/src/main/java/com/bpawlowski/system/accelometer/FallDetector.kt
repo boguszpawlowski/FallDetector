@@ -1,49 +1,61 @@
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package com.bpawlowski.system.accelometer
 
 import android.content.Context
 import com.bpawlowski.core.model.Sensitivity
 import com.bpawlowski.system.model.AccelerometerEvent
-import com.bpawlowski.system.rx.SchedulerProvider
-import io.reactivex.Flowable
-import java.lang.Math.abs
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.dropWhile
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.retryWhen
+import kotlinx.coroutines.flow.scan
+import kotlinx.coroutines.flow.take
+import timber.log.Timber
+import kotlin.math.abs
 
 class FallDetector(
 	private val context: Context,
-	private val schedulerProvider: SchedulerProvider,
 	private var sensitivity: Sensitivity = Sensitivity.HIGH
 ) {
 
-	private val accelerometerFlowable by lazy {
-		AccelerometerFlowable(context)
+	private val accelerometerListener by lazy {
+		AccelerometerListener(context)
 	}
 
-	fun getFallEvents(): Flowable<Boolean> =
-		accelerometerFlowable
-			.subscribeOn(schedulerProvider.COMPUTATION)
+	fun getFallEvents(): Flow<Boolean> =
+		accelerometerListener.flow()
 			.skipUntilPeak(sensitivity)
 			.detectNoMovement(sensitivity)
+			.flowOn(Dispatchers.Default)
 
 	fun changeSensitivity(sensitivity: Sensitivity) {
 		this.sensitivity = sensitivity
 	}
 }
 
-private fun Flowable<AccelerometerEvent>.skipUntilPeak(sensitivity: Sensitivity): Flowable<AccelerometerEvent> =
-	skipWhile { event ->
+private fun Flow<AccelerometerEvent>.skipUntilPeak(sensitivity: Sensitivity): Flow<AccelerometerEvent> =
+	dropWhile { event ->
+		Timber.e("before dropping: $event")
 		event.mean < sensitivity.maxAcc
 	}
 
 /**
  * Accumulates items for period defined in [Sensitivity], then compares its mean and emits result.
  * After one emission whole stream is completed and subscriber then resubscribes.
+ * Throwing error to restart the flow after false alarm
  */
-private fun Flowable<AccelerometerEvent>.detectNoMovement(sensitivity: Sensitivity): Flowable<Boolean> =
-	skip(2, TimeUnit.SECONDS)
+private fun Flow<AccelerometerEvent>.detectNoMovement(sensitivity: Sensitivity): Flow<Boolean> =
+	drop(30) //todo number count
 		.map { event -> event.mean }
-		.buffer(sensitivity.noMovementPeriod, TimeUnit.SECONDS)
+		.take(100)
+		.scan(mutableListOf()) { accumulator: MutableList<Float>, value -> accumulator.add(value); accumulator }
+		.drop(100)
 		.map { buffer ->
-			abs(buffer.toTypedArray().average()) < sensitivity.meanAccDuringNoMovement
-		}
-		.take(1)
-		.repeat()
+			if (abs(buffer.toTypedArray().average()) < sensitivity.meanAccDuringNoMovement) {
+				true
+			} else throw IllegalStateException()
+		}.retryWhen { cause, _ -> cause is IllegalStateException }

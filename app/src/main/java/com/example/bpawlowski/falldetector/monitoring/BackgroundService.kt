@@ -11,31 +11,34 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.Observer
-import com.bpawlowski.system.accelometer.FallDetector
-import com.bpawlowski.system.alarm.AlarmService
+import com.bpawlowski.core.domain.zip
+import com.bpawlowski.core.model.Sensitivity
 import com.bpawlowski.database.repository.ContactRepository
 import com.bpawlowski.database.repository.ServiceStateRepository
+import com.bpawlowski.system.accelometer.FallDetector
+import com.bpawlowski.system.alarm.AlarmService
 import com.bpawlowski.system.location.LocationProvider
-import com.bpawlowski.core.model.Sensitivity
-import com.bpawlowski.core.util.doNothing
-import com.bpawlowski.system.rx.SchedulerProvider
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.START_SERVICE
 import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.STOP_SERVICE
 import com.example.bpawlowski.falldetector.screens.main.MainActivity
 import com.example.bpawlowski.falldetector.util.notificationManager
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class BackgroundService : Service(), CoroutineScope {
 
-	private val schedulerProvider: SchedulerProvider by inject()
 	private val alarmService: AlarmService by inject()
 	private val locationProvider: LocationProvider by inject()
 	private val contactRepository: ContactRepository by inject()
@@ -43,10 +46,8 @@ class BackgroundService : Service(), CoroutineScope {
 
 	override val coroutineContext = Dispatchers.Main + SupervisorJob()
 
-	private val disposable = CompositeDisposable()
-
 	private val fallDetector: FallDetector by lazy {
-		FallDetector(applicationContext, schedulerProvider)
+		FallDetector(applicationContext)
 	}
 
 	private val sensitivityData by lazy {
@@ -92,13 +93,13 @@ class BackgroundService : Service(), CoroutineScope {
 		super.onDestroy()
 
 		sensitivityData.removeObserver(sensitivityObserver)
-		disposable.dispose()
+		coroutineContext.cancel()
 	}
 
 	private fun stopService() {
 		Timber.i("STOP")
 
-		launch {
+		launch(Dispatchers.Default) {
 			serviceStateRepository.updateIsRunning(false)
 			stopForeground(true)
 			stopSelf()
@@ -110,14 +111,12 @@ class BackgroundService : Service(), CoroutineScope {
 
 		launch {
 			serviceStateRepository.updateIsRunning(true)
+
+			fallDetector.getFallEvents().collect {
+				raiseAlarm(it)
+				stopService()
+			}
 		}
-		disposable.add(
-			fallDetector.getFallEvents().subscribe(
-				{ raiseAlarm(it) },
-				{ Timber.e(it) },
-				{ doNothing }
-			)
-		)
 	} //TODO show AlarmActivity Screen
 
 	@Suppress("DEPRECATION")
@@ -161,7 +160,7 @@ class BackgroundService : Service(), CoroutineScope {
 			val contacts = async { contactRepository.getAllContacts() }
 			val location = async { locationProvider.getLastKnownLocation() }
 
-			com.bpawlowski.core.domain.zip(contacts.await(), location.await())
+			zip(contacts.await(), location.await())
 				.onSuccess { alarmService.raiseAlarm(it.first, it.second) }
 				.onException { Timber.e(it) }
 		}

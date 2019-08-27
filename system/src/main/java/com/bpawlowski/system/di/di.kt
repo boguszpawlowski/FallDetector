@@ -9,8 +9,6 @@ import com.bpawlowski.system.connectivity.TextMessageService
 import com.bpawlowski.system.connectivity.TextMessageServiceImpl
 import com.bpawlowski.system.location.LocationProvider
 import com.bpawlowski.system.location.LocationProviderImpl
-import com.bpawlowski.system.rx.SchedulerProvider
-import com.bpawlowski.system.rx.SchedulerProviderImpl
 import org.koin.dsl.module
 
 val systemModule = module {
@@ -18,6 +16,5 @@ val systemModule = module {
 	single<CallService> { CallServiceImpl() }
 	single<TextMessageService> { TextMessageServiceImpl(get()) }
 	single<LocationProvider> { LocationProviderImpl(get()) }
-	single<SchedulerProvider> { SchedulerProviderImpl() }
 	single<SmsManager> { SmsManager.getDefault() }
 }

@@ -43,9 +43,6 @@ dependencies {
     implementation project(path: ':database')
     implementation project(path: ':system')
 
-    //kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
     // Support
     implementation "androidx.recyclerview:recyclerview:$recycler_version"
     implementation "com.google.android.material:material:$material_version"
