@@ -1,11 +1,12 @@
-package com.bpawlowski.database.repository
+package com.bpawlowski.data.repository
 
+import androidx.lifecycle.LiveData
 import com.bpawlowski.core.domain.Result
 import com.bpawlowski.core.model.Contact
 import kotlinx.coroutines.flow.Flow
 
 interface ContactRepository {
-	fun getAllContactsFlow(): Flow<List<Contact>>
+	fun getAllContactsData(): LiveData<List<Contact>>
 
     suspend fun getAllContacts(): Result<List<Contact>>
 

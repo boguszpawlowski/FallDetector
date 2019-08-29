@@ -3,7 +3,7 @@ package com.example.bpawlowski.falldetector.screens.main.contacts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.bpawlowski.database.repository.ContactRepository
+import com.bpawlowski.data.repository.ContactRepository
 import com.example.bpawlowski.falldetector.domain.ContactFormModel
 import com.example.bpawlowski.falldetector.domain.ScreenState
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel

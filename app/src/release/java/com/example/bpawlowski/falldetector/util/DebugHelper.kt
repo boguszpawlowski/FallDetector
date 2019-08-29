@@ -1,8 +1,9 @@
-package com.example.bpawlowski.falldetector.presentation.util
+package com.example.bpawlowski.falldetector.util
 
 import android.app.Application
 import android.util.Log
+import timber.log.Timber
 
 fun initializeDebugTools(app: Application){
-    Log.d("StethoHelper", "not initializing stetho")
+    Timber.d("not initializing stetho")
 }

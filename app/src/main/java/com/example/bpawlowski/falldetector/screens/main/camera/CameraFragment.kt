@@ -176,7 +176,7 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>() {  //todo review th
 		}
 	}
 
-	private fun handlePhotoCaptured(file: File) { //fixme - weird glitch with animation - bright square
+	private fun handlePhotoCaptured(file: File) { //fixme - glitch with animation - bright square
 		sharedViewModel.onPhotoAdded(file)
 		postDelayed {
 			findNavController().navigateUp()

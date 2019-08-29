@@ -3,10 +3,8 @@ package com.example.bpawlowski.falldetector.screens.main.contacts
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.bpawlowski.core.model.Contact
-import com.bpawlowski.database.repository.ContactRepository
-import com.bpawlowski.database.util.fromFlow
+import com.bpawlowski.data.repository.ContactRepository
 import com.bpawlowski.system.connectivity.CallService
 import com.bpawlowski.system.connectivity.TextMessageService
 import com.bpawlowski.system.location.LocationProvider
@@ -23,13 +21,8 @@ class ContactsViewModel(
 	private val locationProvider: LocationProvider
 ) : BaseViewModel() {
 
-	private val _contactsLiveData = MutableLiveData<List<Contact>>().apply {
-		viewModelScope.launch {
-			fromFlow(contactsRepository.getAllContactsFlow())
-		}
-	}
 	val contactsLiveData: LiveData<List<Contact>>
-		get() = _contactsLiveData
+		get() = contactsRepository.getAllContactsData()
 
 	private val _screenStateData = MutableLiveData<ScreenState<Contact>>()
 	val screenStateData = _screenStateData.toSingleEvent()
@@ -41,7 +34,7 @@ class ContactsViewModel(
 	}
 
 	fun addContact(contact: Contact) = backgroundScope.launch {
-		contactsRepository.addContact(contact.copy(id = null))
+		contactsRepository.addContact(contact)
 			.onException { Timber.e(it) }
 	}
 

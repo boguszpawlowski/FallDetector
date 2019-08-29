@@ -6,7 +6,7 @@ import com.bpawlowski.remote.model.EventDto
 internal fun EventDto.toDomain() = Event(
     title = title,
     creatorId = creatorId,
-    location = location,
+    latLang = latitude to longitude,
     date = date,
     remoteId = id
 )
@@ -15,6 +15,7 @@ internal fun Event.toDto() = EventDto(
     id = remoteId,
     title = title,
     creatorId = creatorId,
-    location = location,
+    latitude = latLang.first,
+	longitude = latLang.second,
     date = date
 )

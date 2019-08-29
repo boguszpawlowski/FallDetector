@@ -1,0 +1,30 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		tools:context="com.example.bpawlowski.falldetector.screens.main.map.MapFragment">
+
+		<fragment
+			android:id="@+id/mapFragment"
+			android:name="com.google.android.gms.maps.SupportMapFragment"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:layout_editor_absoluteX="184dp"
+			tools:layout_editor_absoluteY="245dp" />
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
+	<data>
+
+		<variable
+			name="viewModel"
+			type="com.example.bpawlowski.falldetector.screens.main.map.MapViewModel" />
+	</data>
+</layout>

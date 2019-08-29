@@ -1,5 +1,6 @@
 package com.bpawlowski.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -10,10 +11,10 @@ import com.bpawlowski.database.entity.ContactDb
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-internal interface ContactDao: BaseDao<ContactDb> {
+interface ContactDao: BaseDao<ContactDb> {
 
 	@Query("SELECT * FROM contact")
-	fun getAllData(): Flow<List<ContactDb>>
+	fun getAllData(): LiveData<List<ContactDb>>
 
 	@Query("SELECT * FROM contact WHERE id like :id")
 	suspend fun getContactById(id: Long): ContactDb?

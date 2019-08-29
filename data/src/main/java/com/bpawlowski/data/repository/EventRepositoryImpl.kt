@@ -9,14 +9,18 @@ import com.bpawlowski.core.model.Event
 import com.bpawlowski.data.util.toDomain
 import com.bpawlowski.data.util.toEntity
 import com.bpawlowski.database.dao.EventDao
+import com.bpawlowski.database.dbservice.DatabaseService
 import com.bpawlowski.database.util.mapList
 import com.bpawlowski.remote.client.EventClient
 
 internal class EventRepositoryImpl(
     private val eventClient: EventClient,
-    private val eventDao: EventDao
+    private val databaseService: DatabaseService
 ): EventRepository{
 
+	private val eventDao: EventDao by lazy {
+		databaseService.getEventDao()
+	}
     /**
      * Cache methods
      */
@@ -36,13 +40,17 @@ internal class EventRepositoryImpl(
      * Remote methods
      */
     override suspend fun syncEvents() {
-        val events = eventClient.getEvents()
+        val remoteEvents = eventClient.getEvents()
         val localEvents = eventDao.getAll()
 
-        val newEvents = events
+		val removedEvents = localEvents
+			.filter { localEvent -> remoteEvents.all { localEvent.remoteId != it.remoteId }  }
+
+        val newEvents = remoteEvents
             .filter { remoteEvent -> localEvents.all { remoteEvent.remoteId != it.remoteId } }
             .map { it.toEntity() }
 
+		eventDao.delete(*removedEvents.toTypedArray())
         eventDao.insert(*newEvents.toTypedArray())
     }
 

@@ -1,4 +1,4 @@
-package com.bpawlowski.database.repository
+package com.bpawlowski.data.repository
 
 import androidx.lifecycle.LiveData
 import com.bpawlowski.core.domain.Result

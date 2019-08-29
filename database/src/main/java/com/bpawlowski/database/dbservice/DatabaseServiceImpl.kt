@@ -24,11 +24,9 @@ internal class DatabaseServiceImpl(
 			.build()
 	}
 
-	override fun getDatabaseInstance(): FallDetectorDatabase = dbInstance
+	override fun getContactDao(): ContactDao = dbInstance.contactDao()
 
-	override fun getContactDao(): ContactDao = getDatabaseInstance().contactDao()
+	override fun getServiceStateDao(): ServiceStateDao = dbInstance.serviceStateDao()
 
-	override fun getServiceStateDao(): ServiceStateDao = getDatabaseInstance().serviceStateDao()
-
-	override fun getEventDao(): EventDao = getDatabaseInstance().eventDao()
+	override fun getEventDao(): EventDao = dbInstance.eventDao()
 }

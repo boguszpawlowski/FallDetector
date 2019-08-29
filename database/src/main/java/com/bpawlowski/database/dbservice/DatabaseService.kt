@@ -5,9 +5,7 @@ import com.bpawlowski.database.dao.ContactDao
 import com.bpawlowski.database.dao.EventDao
 import com.bpawlowski.database.dao.ServiceStateDao
 
-internal interface DatabaseService {
-
-    fun getDatabaseInstance(): FallDetectorDatabase
+interface DatabaseService {
 
     fun getContactDao(): ContactDao
 

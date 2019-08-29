@@ -5,7 +5,7 @@ import com.bpawlowski.core.model.ContactPriority
 import com.bpawlowski.database.dao.ContactDao
 import com.bpawlowski.database.dbservice.DatabaseService
 import com.bpawlowski.database.entity.ContactDb
-import com.bpawlowski.database.repository.ContactRepositoryImpl
+import com.bpawlowski.data.repository.ContactRepositoryImpl
 import com.bpawlowski.data.toDomain
 import com.bpawlowski.data.toEntity
 import com.nhaarman.mockitokotlin2.any
@@ -28,7 +28,7 @@ class ContactRepositoryTest {
 	@Mock
 	private lateinit var contactDao: ContactDao
 
-	private lateinit var contactRepository: ContactRepositoryImpl
+	private lateinit var contactRepository: com.bpawlowski.data.repository.ContactRepositoryImpl
 
 	private val iceContact = getDummyContact(ID, MOBILE, ContactPriority.PRIORITY_ICE)
 	private val normalContact = getDummyContact(ID_2, DIFFERENT_MOBILE)
@@ -43,7 +43,7 @@ class ContactRepositoryTest {
 		runBlocking {
 			whenever(databaseService.getContactDao()) doReturn contactDao
 
-			contactRepository = ContactRepositoryImpl(databaseService)
+			contactRepository = com.bpawlowski.data.repository.ContactRepositoryImpl(databaseService)
 		}
 	}
 

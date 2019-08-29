@@ -10,7 +10,7 @@ import com.bpawlowski.core.model.Sensitivity
 import com.bpawlowski.database.entity.ServiceStateDb
 
 @Dao
-internal interface ServiceStateDao: BaseDao<ServiceStateDb> {
+interface ServiceStateDao: BaseDao<ServiceStateDb> {
 
     @Query("SELECT * FROM service_state LIMIT 1")
     suspend fun getServiceState(): ServiceStateDb?

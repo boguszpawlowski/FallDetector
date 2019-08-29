@@ -1,4 +1,4 @@
-package com.bpawlowski.database.util
+package com.bpawlowski.data.util
 
 import com.bpawlowski.core.model.Contact
 import com.bpawlowski.database.entity.ContactDb

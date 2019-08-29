@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bpawlowski.core.domain.EventWrapper
 import com.bpawlowski.data.repository.EventRepository
-import com.bpawlowski.database.repository.ServiceStateRepository
+import com.bpawlowski.data.repository.ServiceStateRepository
 import com.bpawlowski.system.model.AppSettings
 import com.bpawlowski.system.preferences.AppSettingsPreferencesData
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
@@ -16,8 +16,7 @@ import java.io.File
 
 class MainViewModel(
 	private val sharedPreferences: SharedPreferences,
-	private val serviceStateRepository: ServiceStateRepository,
-	private val eventRepository: EventRepository
+	private val serviceStateRepository: ServiceStateRepository
 ) : BaseViewModel() {
 
 	val appSettingsPreferencesData: AppSettingsPreferencesData
@@ -43,9 +42,5 @@ class MainViewModel(
 				)
 			)
 		}
-	}
-
-	fun loadEvents() = viewModelScope.launch{
-		eventRepository.syncEvents()
 	}
 }

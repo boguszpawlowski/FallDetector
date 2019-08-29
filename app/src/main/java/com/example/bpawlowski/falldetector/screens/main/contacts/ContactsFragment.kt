@@ -52,9 +52,7 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding>() {
 		Observer<ScreenState<Contact>> { screenState ->
 			screenState.onSuccess { contact ->
 				snackbar(message = getString(R.string.snackbar_deleted), actionListener = R.string.snackbar_undo) {
-					viewModel.addContact(
-						contact
-					)
+					viewModel.addContact(contact)
 				}
 			}
 		}

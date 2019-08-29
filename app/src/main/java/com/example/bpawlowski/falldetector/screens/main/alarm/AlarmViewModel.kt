@@ -3,7 +3,7 @@ package com.example.bpawlowski.falldetector.screens.main.alarm
 import androidx.lifecycle.viewModelScope
 import com.bpawlowski.core.domain.zip
 import com.bpawlowski.system.alarm.AlarmService
-import com.bpawlowski.database.repository.ContactRepository
+import com.bpawlowski.data.repository.ContactRepository
 import com.bpawlowski.system.location.LocationProvider
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
 import kotlinx.coroutines.async

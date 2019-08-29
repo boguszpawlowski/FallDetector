@@ -1,19 +1,19 @@
 @file:Suppress("EXPERIMENTAL_API_USAGE")
 
-package com.bpawlowski.database.repository
+package com.bpawlowski.data.repository
 
+import androidx.lifecycle.LiveData
 import com.bpawlowski.core.domain.Result
 import com.bpawlowski.core.domain.failure
 import com.bpawlowski.core.domain.success
 import com.bpawlowski.core.exception.FallDetectorException
 import com.bpawlowski.core.model.Contact
 import com.bpawlowski.core.model.ContactPriority
+import com.bpawlowski.data.util.toDomain
+import com.bpawlowski.data.util.toEntity
 import com.bpawlowski.database.dbservice.DatabaseService
+import com.bpawlowski.database.util.mapList
 import com.bpawlowski.database.util.sortedByDescending
-import com.bpawlowski.database.util.toDomain
-import com.bpawlowski.database.util.toEntity
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 internal class ContactRepositoryImpl(
 	databaseService: DatabaseService
@@ -35,9 +35,9 @@ internal class ContactRepositoryImpl(
 		}
 	}
 
-	override fun getAllContactsFlow(): Flow<List<Contact>> =
+	override fun getAllContactsData(): LiveData<List<Contact>> =
 		contactDao.getAllData()
-			.map { it.map { it.toDomain() } }
+			.mapList { it.toDomain() }
 			.sortedByDescending { it.priority }
 
 	override suspend fun updateContact(contact: Contact): Result<Unit> =

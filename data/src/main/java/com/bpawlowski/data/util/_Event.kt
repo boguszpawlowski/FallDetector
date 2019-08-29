@@ -7,7 +7,7 @@ fun EventDb.toDomain() = Event(
     id = id,
     title = title,
     creatorId = creatorId,
-    location = location,
+    latLang = latitude.toDouble() to longitude.toDouble(),
     date = date,
     remoteId = remoteId
 )
@@ -16,7 +16,8 @@ fun Event.toEntity() = EventDb(
     id = id,
     title = title,
     creatorId = creatorId,
-    location = location,
+    latitude = latLang.first.toString(),
+	longitude = latLang.second.toString(),
     date = date,
     remoteId = remoteId
 )

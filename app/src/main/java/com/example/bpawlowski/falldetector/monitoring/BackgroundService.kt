@@ -13,8 +13,8 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.Observer
 import com.bpawlowski.core.domain.zip
 import com.bpawlowski.core.model.Sensitivity
-import com.bpawlowski.database.repository.ContactRepository
-import com.bpawlowski.database.repository.ServiceStateRepository
+import com.bpawlowski.data.repository.ContactRepository
+import com.bpawlowski.data.repository.ServiceStateRepository
 import com.bpawlowski.system.accelometer.FallDetector
 import com.bpawlowski.system.alarm.AlarmService
 import com.bpawlowski.system.location.LocationProvider
@@ -25,14 +25,10 @@ import com.example.bpawlowski.falldetector.screens.main.MainActivity
 import com.example.bpawlowski.falldetector.util.notificationManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -45,6 +41,8 @@ class BackgroundService : Service(), CoroutineScope {
 	private val serviceStateRepository: ServiceStateRepository by inject()
 
 	override val coroutineContext = Dispatchers.Main + SupervisorJob()
+
+	private val backgroundScope = CoroutineScope(Dispatchers.Default)
 
 	private val fallDetector: FallDetector by lazy {
 		FallDetector(applicationContext)
@@ -99,7 +97,7 @@ class BackgroundService : Service(), CoroutineScope {
 	private fun stopService() {
 		Timber.i("STOP")
 
-		launch(Dispatchers.Default) {
+		backgroundScope.launch {
 			serviceStateRepository.updateIsRunning(false)
 			stopForeground(true)
 			stopSelf()
@@ -155,7 +153,7 @@ class BackgroundService : Service(), CoroutineScope {
 	/**
 	 * If There is no movement, raise alarm, if there is still ask user if everything is ok
 	 */
-	private fun raiseAlarm(shouldRaise: Boolean) = launch {
+	private fun raiseAlarm(shouldRaise: Boolean) = backgroundScope.launch {
 		if (shouldRaise) {
 			val contacts = async { contactRepository.getAllContacts() }
 			val location = async { locationProvider.getLastKnownLocation() }

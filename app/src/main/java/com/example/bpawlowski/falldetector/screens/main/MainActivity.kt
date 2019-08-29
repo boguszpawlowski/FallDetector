@@ -19,7 +19,6 @@ import com.example.bpawlowski.falldetector.screens.main.camera.KEY_EVENT_ACTION
 import com.example.bpawlowski.falldetector.screens.main.camera.KEY_EVENT_EXTRA
 import com.example.bpawlowski.falldetector.util.getPermissions
 import com.example.bpawlowski.falldetector.util.setupWithNavController
-import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val CHANGE_THEME_DELAY = 450L
@@ -34,7 +33,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {  //todo hide keyboard
 
 	private val appSettingsObserver: Observer<AppSettings> by lazy {
 		Observer<AppSettings> { appSettings ->
-			appSettings?.let { updateApp(it) }
+			appSettings?.let { updateAppUi(it) }
 		}
 	}
 
@@ -54,7 +53,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {  //todo hide keyboard
 		super.onStart()
 
 		checkPermissions()
-		viewModel.loadEvents()
 	}
 
 	override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -72,6 +70,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {  //todo hide keyboard
 				LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
 				true
 			}
+
 			else -> super.onKeyDown(keyCode, event)
 		}
 	}
@@ -79,7 +78,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {  //todo hide keyboard
 	private fun setupBottomNavigation() {
 		val bottomNavigation = binding.bottomNavigation
 
-		val navGraphIds = listOf(R.navigation.home, R.navigation.contacts, R.navigation.alarm, R.navigation.settings)
+		val navGraphIds = listOf(
+			R.navigation.home,
+			R.navigation.contacts,
+			R.navigation.alarm,
+			R.navigation.map,
+			R.navigation.settings
+		)
 
 		val controller = bottomNavigation.setupWithNavController(
 			navGraphIds = navGraphIds,
@@ -95,7 +100,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {  //todo hide keyboard
 		currentNavController = controller
 	}
 
-	private fun updateApp(appSettings: AppSettings) {
+	private fun updateAppUi(appSettings: AppSettings) {
 		postDelayed(CHANGE_THEME_DELAY) {
 			AppCompatDelegate.setDefaultNightMode(if (appSettings.darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
 		}

@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.bpawlowski.system.connectivity.CallService
 import com.bpawlowski.system.connectivity.TextMessageService
 import com.bpawlowski.core.exception.FallDetectorException
-import com.bpawlowski.database.repository.ContactRepository
+import com.bpawlowski.data.repository.ContactRepository
 import com.bpawlowski.core.domain.zip
 import com.bpawlowski.system.location.LocationProvider
 import com.example.bpawlowski.falldetector.domain.ContactFormModel

@@ -3,6 +3,7 @@ package com.bpawlowski.system.location
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
+import androidx.lifecycle.LiveData
 import com.bpawlowski.core.domain.Result
 import com.bpawlowski.core.domain.failure
 import com.bpawlowski.core.domain.success
@@ -15,6 +16,10 @@ internal class LocationProviderImpl(
 ) : LocationProvider {
 
 	private var fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+
+	override val locationLiveData: LiveData<Location> by lazy {
+		LocationLiveData(fusedLocationProviderClient)
+	}
 
 	@SuppressLint("MissingPermission")
 	override suspend fun getLastKnownLocation(): Result<Location> = suspendCoroutine { cont ->

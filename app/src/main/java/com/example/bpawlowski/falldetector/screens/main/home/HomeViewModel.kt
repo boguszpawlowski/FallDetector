@@ -2,7 +2,7 @@ package com.example.bpawlowski.falldetector.screens.main.home
 
 import android.content.Context
 import com.bpawlowski.core.exception.FallDetectorException
-import com.bpawlowski.database.repository.ServiceStateRepository
+import com.bpawlowski.data.repository.ServiceStateRepository
 import com.example.bpawlowski.falldetector.monitoring.BackgroundService
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
 import kotlinx.coroutines.launch
