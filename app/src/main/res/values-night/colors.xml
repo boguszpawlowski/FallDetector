@@ -15,4 +15,6 @@
 	<color name="navBarBackground">@color/primary</color>
 	<color name="iconSelected">@color/white</color>
 	<color name="iconNotSelected">@color/grey</color>
+	<color name="marker">@color/lightBlue</color>
+
 </resources>

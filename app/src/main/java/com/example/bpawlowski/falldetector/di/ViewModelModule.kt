@@ -6,6 +6,7 @@ import com.example.bpawlowski.falldetector.screens.main.camera.CameraViewModel
 import com.example.bpawlowski.falldetector.screens.main.contacts.ContactsViewModel
 import com.example.bpawlowski.falldetector.screens.main.contacts.FormDialogViewModel
 import com.example.bpawlowski.falldetector.screens.main.details.ContactDetailsViewModel
+import com.example.bpawlowski.falldetector.screens.main.events.EventDetailsViewModel
 import com.example.bpawlowski.falldetector.screens.main.home.HomeViewModel
 import com.example.bpawlowski.falldetector.screens.main.map.MapViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -21,4 +22,5 @@ val viewModelModule = module {
 	viewModel { ContactDetailsViewModel(get(), get(), get(), get()) }
 	viewModel { CameraViewModel() }
 	viewModel { MapViewModel(get(), get()) }
+	viewModel { EventDetailsViewModel(get()) }
 }

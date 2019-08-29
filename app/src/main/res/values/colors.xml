@@ -23,6 +23,7 @@
 	<color name="yellow">#FFEB3B</color>
 	<color name="green">#8BC34A</color>
 	<color name="blue">#2196F3</color>
+	<color name="lightBlue">#25A0D8</color>
 	<color name="purple">#673AB7</color>
     <color name="black">#000000</color>
     <color name="transparent">#00FFFFFF</color>
@@ -35,6 +36,7 @@
     <color name="deleteIcon">@color/white</color>
 	<color name="textColor">#2B2B2B</color>
 	<color name="profileCard">@color/primary</color>
+	<color name="marker">@color/primaryDark</color>
 
 	<!--nav bar-->
 	<color name="navBarBackground">@color/white</color>

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:tools="http://schemas.android.com/tools"
-		tools:context=".screens.main.MainActivity">
+	tools:context=".screens.main.MainActivity">
 
 	<data>
 
 		<variable
 			name="viewModel"
-			type="com.example.bpawlowski.falldetector.screens.main.details.ContactDetailsViewModel"/>
+			type="com.example.bpawlowski.falldetector.screens.main.details.ContactDetailsViewModel" />
 	</data>
 
-	<ScrollView
-		android:id="@+id/scroll_view"
+	<ScrollView android:id="@+id/scroll_view"
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:app="http://schemas.android.com/apk/res-auto"
 		android:layout_width="match_parent"
@@ -30,7 +29,7 @@
 				android:src="@drawable/background_profile"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toTopOf="parent"/>
+				app:layout_constraintTop_toTopOf="parent" />
 
 			<androidx.appcompat.widget.AppCompatEditText
 				android:id="@+id/tv_name"
@@ -46,7 +45,7 @@
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent"
-				tools:text="John Doe"/>
+				tools:text="John Doe" />
 
 			<com.google.android.material.floatingactionbutton.FloatingActionButton
 				android:id="@+id/fab"
@@ -59,7 +58,7 @@
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintHorizontal_bias="0.7"
 				app:layout_constraintStart_toStartOf="parent"
-				tools:src="@drawable/ic_star_border_black_24dp"/>
+				tools:src="@drawable/ic_star_border_black_24dp" />
 
 			<androidx.appcompat.widget.AppCompatImageView
 				android:id="@+id/img_profile"
@@ -73,7 +72,7 @@
 				app:file_src="@{viewModel.contactForm.filePath}"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/tv_name"/>
+				app:layout_constraintTop_toBottomOf="@id/tv_name" />
 
 			<androidx.appcompat.widget.AppCompatImageButton
 				android:id="@+id/btn_sms"
@@ -85,7 +84,7 @@
 				android:src="@drawable/ic_chat_black_32dp"
 				app:layout_constraintEnd_toStartOf="@id/btn_email"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/img_profile"/>
+				app:layout_constraintTop_toBottomOf="@+id/img_profile" />
 
 			<androidx.appcompat.widget.AppCompatImageButton
 				android:id="@+id/btn_email"
@@ -97,7 +96,7 @@
 				android:src="@drawable/ic_email_black_32dp"
 				app:layout_constraintEnd_toStartOf="@id/btn_call"
 				app:layout_constraintStart_toEndOf="@id/btn_sms"
-				app:layout_constraintTop_toBottomOf="@+id/img_profile"/>
+				app:layout_constraintTop_toBottomOf="@+id/img_profile" />
 
 			<androidx.appcompat.widget.AppCompatImageButton
 				android:id="@+id/btn_call"
@@ -109,14 +108,14 @@
 				android:src="@drawable/ic_call_black_32dp"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toEndOf="@id/btn_email"
-				app:layout_constraintTop_toBottomOf="@+id/img_profile"/>
+				app:layout_constraintTop_toBottomOf="@+id/img_profile" />
 
 			<com.google.android.material.textfield.TextInputLayout
 				android:id="@+id/tv_phone"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginEnd="@dimen/margin_small"
-				android:layout_marginStart="@dimen/margin_small"
+				android:layout_marginEnd="@dimen/margin_medium"
+				android:layout_marginStart="@dimen/margin_medium"
 				android:background="@color/transparent"
 				app:error="@{viewModel.contactForm.mobileError}"
 				app:errorEnabled="true"
@@ -136,15 +135,15 @@
 					android:maxLength="9"
 					android:text="@={viewModel.contactForm.mobile}"
 					android:textColor="@color/onBackground"
-					tools:text="312321321"/>
+					tools:text="312321321" />
 			</com.google.android.material.textfield.TextInputLayout>
 
 			<com.google.android.material.textfield.TextInputLayout
 				android:id="@+id/tv_email"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginEnd="@dimen/margin_small"
-				android:layout_marginStart="@dimen/margin_small"
+				android:layout_marginEnd="@dimen/margin_medium"
+				android:layout_marginStart="@dimen/margin_medium"
 				android:background="@color/transparent"
 				app:error="@{viewModel.contactForm.emailError}"
 				app:errorEnabled="true"
@@ -163,7 +162,7 @@
 					android:inputType="textEmailAddress"
 					android:text="@={viewModel.contactForm.email}"
 					android:textColor="@color/onBackground"
-					tools:text="john.doe@gmail.com"/>
+					tools:text="john.doe@gmail.com" />
 			</com.google.android.material.textfield.TextInputLayout>
 
 			<com.google.android.material.button.MaterialButton
@@ -180,7 +179,7 @@
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/tv_email"
 				app:visible="@{viewModel.contactForm.hasChanged}"
-				tools:visibility="visible"/>
+				tools:visibility="visible" />
 
 			<com.google.android.material.button.MaterialButton
 				android:id="@+id/btn_reset"
@@ -198,7 +197,7 @@
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/btn_save"
 				app:visible="@{viewModel.contactForm.hasChanged}"
-				tools:visibility="visible"/>
+				tools:visibility="visible" />
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>

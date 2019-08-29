@@ -14,6 +14,7 @@ buildscript {
         dagger2_version = '2.16'
         retrofit_version = '2.4.0'
         androidx_version = '1.0.0'
+        coordinator_version = '28.0.0'
         androidx_appcompat_version = '1.1.0-rc01'
         recycler_version = '1.1.0-beta01'
         material_version = '1.1.0-alpha08'

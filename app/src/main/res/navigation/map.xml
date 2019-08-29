@@ -5,5 +5,18 @@
 
     <fragment android:id="@+id/mapFragment"
               android:name="com.example.bpawlowski.falldetector.screens.main.map.MapFragment"
-              android:label="Events Map"/>
+              android:label="Events Map">
+		<action
+			android:id="@+id/showEventDetails"
+			app:destination="@id/eventDetailsFragment" />
+	</fragment>
+
+	<fragment
+		android:id="@+id/eventDetailsFragment"
+		android:name="com.example.bpawlowski.falldetector.screens.main.events.EventDetailsFragment"
+		android:label="Event Details" >
+		<argument
+			android:name="event_id_key"
+			app:argType="long"/>
+	</fragment>
 </navigation>

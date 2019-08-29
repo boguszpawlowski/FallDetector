@@ -35,4 +35,22 @@
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
+
+	<style name="Headline1">
+		<item name="android:textSize">@dimen/h1_font_size</item>
+		<item name="android:lineSpacingExtra">@dimen/h1_extra_spacing</item>
+		<item name="android:textStyle">bold</item>
+	</style>
+
+	<style name="Headline2">
+		<item name="android:textSize">@dimen/h2_font_size</item>
+		<item name="android:lineSpacingExtra">@dimen/h2_extra_spacing</item>
+		<item name="android:textStyle">bold</item>
+	</style>
+
+	<style name="Headline3">
+		<item name="android:textSize">@dimen/h3_font_size</item>
+		<item name="android:lineSpacingExtra">@dimen/h3_extra_spacing</item>
+		<item name="android:textStyle">bold</item>
+	</style>
 </resources>

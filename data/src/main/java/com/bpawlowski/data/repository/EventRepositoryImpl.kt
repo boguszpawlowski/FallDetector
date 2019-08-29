@@ -12,6 +12,7 @@ import com.bpawlowski.database.dao.EventDao
 import com.bpawlowski.database.dbservice.DatabaseService
 import com.bpawlowski.database.util.mapList
 import com.bpawlowski.remote.client.EventClient
+import timber.log.Timber
 
 internal class EventRepositoryImpl(
     private val eventClient: EventClient,
@@ -21,6 +22,7 @@ internal class EventRepositoryImpl(
 	private val eventDao: EventDao by lazy {
 		databaseService.getEventDao()
 	}
+
     /**
      * Cache methods
      */
@@ -40,18 +42,21 @@ internal class EventRepositoryImpl(
      * Remote methods
      */
     override suspend fun syncEvents() {
-        val remoteEvents = eventClient.getEvents()
-        val localEvents = eventDao.getAll()
+       eventClient.getEvents().onSuccess { remoteEvents ->
+			val localEvents = eventDao.getAll()
 
-		val removedEvents = localEvents
-			.filter { localEvent -> remoteEvents.all { localEvent.remoteId != it.remoteId }  }
+			val removedEvents = localEvents
+				.filter { localEvent -> remoteEvents.all { localEvent.remoteId != it.remoteId } }
 
-        val newEvents = remoteEvents
-            .filter { remoteEvent -> localEvents.all { remoteEvent.remoteId != it.remoteId } }
-            .map { it.toEntity() }
+			val newEvents = remoteEvents
+				.filter { remoteEvent -> localEvents.all { remoteEvent.remoteId != it.remoteId } }
+				.map { it.toEntity() }
 
-		eventDao.delete(*removedEvents.toTypedArray())
-        eventDao.insert(*newEvents.toTypedArray())
+			eventDao.delete(*removedEvents.toTypedArray())
+			eventDao.insert(*newEvents.toTypedArray())
+		}.onException {
+		   Timber.e(it)
+	   }
     }
 
     override suspend fun addEvent(event: Event): Result<Unit> =

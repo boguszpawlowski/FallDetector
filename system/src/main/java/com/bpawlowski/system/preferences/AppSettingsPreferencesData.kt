@@ -31,6 +31,7 @@ class AppSettingsPreferencesData(
 		super.onActive()
 
 		sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
+		value = initAppSettings()
 	}
 
 	override fun onInactive() {

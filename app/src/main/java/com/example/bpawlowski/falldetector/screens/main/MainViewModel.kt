@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.bpawlowski.core.domain.EventWrapper
 import com.bpawlowski.data.repository.EventRepository
 import com.bpawlowski.data.repository.ServiceStateRepository
+import com.bpawlowski.database.util.map
 import com.bpawlowski.system.model.AppSettings
 import com.bpawlowski.system.preferences.AppSettingsPreferencesData
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
@@ -15,12 +16,13 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class MainViewModel(
-	private val sharedPreferences: SharedPreferences,
+	sharedPreferences: SharedPreferences,
 	private val serviceStateRepository: ServiceStateRepository
 ) : BaseViewModel() {
 
-	val appSettingsPreferencesData: AppSettingsPreferencesData
-		get() = AppSettingsPreferencesData(sharedPreferences)
+	val appSettingsPreferencesData = AppSettingsPreferencesData(sharedPreferences)
+
+	val darkModeLiveData: LiveData<Boolean> = appSettingsPreferencesData.map { it.darkMode }
 
 	private val _capturedPhotoData = MutableLiveData<EventWrapper<File>>()
 	val capturedPhotoData: LiveData<EventWrapper<File>>
