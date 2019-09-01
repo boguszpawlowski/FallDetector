@@ -20,12 +20,12 @@ import androidx.camera.core.Preview
 import androidx.camera.core.PreviewConfig
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
-import com.bpawlowski.database.util.postDelayed
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.base.fragment.BaseFragment
 import com.example.bpawlowski.falldetector.databinding.FragmentCameraBinding
 import com.example.bpawlowski.falldetector.screens.main.MainActivity
 import com.example.bpawlowski.falldetector.screens.main.MainViewModel
+import com.example.bpawlowski.falldetector.util.postDelayed
 import com.example.bpawlowski.falldetector.util.setVisible
 import com.example.bpawlowski.falldetector.util.simulateClick
 import com.example.bpawlowski.falldetector.util.toast

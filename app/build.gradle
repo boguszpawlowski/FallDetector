@@ -83,12 +83,16 @@ dependencies {
     implementation "com.afollestad.material-dialogs:core:$dialogs_version"
     implementation "com.afollestad.material-dialogs:bottomsheets:$dialogs_version"
 
+    // test
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     //Leak Canary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${leak_canary_version}"
+
+    //map
     implementation "com.google.android.gms:play-services-maps:$maps_version"
     implementation "com.google.android.gms:play-services-location:$maps_version"
+    implementation "com.google.maps.android:android-maps-utils:$map_utils_version"
 }

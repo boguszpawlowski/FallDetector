@@ -4,7 +4,6 @@
 	xmlns:tools="http://schemas.android.com/tools">
 
 	<data>
-
 		<variable
 			name="viewModel"
 			type="com.example.bpawlowski.falldetector.screens.main.events.EventDetailsViewModel" />
@@ -96,24 +95,11 @@
 					android:layout_height="wrap_content"
 					android:layout_marginStart="@dimen/margin_medium"
 					android:layout_marginTop="@dimen/margin_small"
-					android:text="16th march"
+					android:text="@{viewModel.eventMarkerData.exactDate}"
 					android:theme="@style/Headline3"
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintTop_toBottomOf="@+id/txtEventTitle"
 					tools:text="16th march"
-					tools:textSize="18sp" />
-
-				<TextView
-					android:id="@+id/txtEventHour"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_extra_small"
-					android:text="19:00"
-					android:theme="@style/Headline3"
-					app:layout_constraintBottom_toBottomOf="@id/txtEventDate"
-					app:layout_constraintStart_toEndOf="@id/txtEventDate"
-					app:layout_constraintTop_toTopOf="@id/txtEventDate"
-					tools:text="19:00"
 					tools:textSize="18sp" />
 
 				<TextView
@@ -133,7 +119,7 @@
 					android:id="@+id/eventMapFragment"
 					android:name="com.example.bpawlowski.falldetector.screens.main.events.SafeScrollMapFragment"
 					android:layout_width="0dp"
-					android:layout_height="@dimen/img_profile_size"
+					android:layout_height="@dimen/event_detail_map_height"
 					android:layout_margin="@dimen/margin_medium"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"

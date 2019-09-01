@@ -5,7 +5,6 @@ import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.list.listItems
-import com.bpawlowski.database.util.postDelayed
 import com.example.bpawlowski.falldetector.R
 
 const val DIALOG_DISMISS_DELAY = 300L

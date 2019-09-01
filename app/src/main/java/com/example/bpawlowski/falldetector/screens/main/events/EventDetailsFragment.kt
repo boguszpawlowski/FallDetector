@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_event_details.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 const val EVENT_ID_KEY = "event_id_key"
 const val CAMERA_ZOOM_DISTANT = 18f

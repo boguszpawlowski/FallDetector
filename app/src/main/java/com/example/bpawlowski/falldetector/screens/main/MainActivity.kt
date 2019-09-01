@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.bpawlowski.database.util.postDelayed
 import com.bpawlowski.system.model.AppSettings
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.base.activity.BaseActivity
@@ -18,6 +17,7 @@ import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
 import com.example.bpawlowski.falldetector.screens.main.camera.KEY_EVENT_ACTION
 import com.example.bpawlowski.falldetector.screens.main.camera.KEY_EVENT_EXTRA
 import com.example.bpawlowski.falldetector.util.getPermissions
+import com.example.bpawlowski.falldetector.util.postDelayed
 import com.example.bpawlowski.falldetector.util.setupWithNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

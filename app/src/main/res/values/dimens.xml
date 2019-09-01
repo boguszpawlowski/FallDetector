@@ -32,6 +32,9 @@
 
 	<dimen name="bottom_sheet_corner_radius">16dp</dimen>
 
+	<!--	map-->
+	<dimen name="event_detail_map_height">350dp</dimen>
+
 	<!--headlines-->
 	<dimen name="h1_font_size">32sp</dimen>
 	<dimen name="h1_extra_spacing">8dp</dimen>

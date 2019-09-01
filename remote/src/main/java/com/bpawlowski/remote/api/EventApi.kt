@@ -9,7 +9,7 @@ interface EventApi {
     suspend fun getEvents(): Response<List<EventDto>>
 
     @POST("events/")
-    suspend fun postEvent(@Body body: EventDto): Response<EventDto> //todo post with simple Event
+    suspend fun postEvent(@Body body: EventDto): Response<EventDto>
 
     @PUT("events/{id}")
     suspend fun putEvent(@Path("id") id: Long, @Body body: EventDto): Response<Unit>
