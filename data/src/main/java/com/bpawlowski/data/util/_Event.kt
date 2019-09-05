@@ -9,15 +9,19 @@ fun EventDb.toDomain() = Event(
     creatorId = creatorId,
     latLang = latitude.toDouble() to longitude.toDouble(),
     date = date,
-    remoteId = remoteId
+    remoteId = remoteId,
+	attendingUsers = attending,
+	isAttending = isAttending
 )
 
 fun Event.toEntity() = EventDb(
     id = id,
     title = title,
-    creatorId = creatorId,
-    latitude = latLang.first.toString(),
+	creatorId = creatorId,
+	latitude = latLang.first.toString(),
 	longitude = latLang.second.toString(),
     date = date,
-    remoteId = remoteId
+    remoteId = remoteId,
+	attending = attendingUsers,
+	isAttending = isAttending
 )

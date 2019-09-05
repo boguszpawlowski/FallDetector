@@ -10,8 +10,10 @@ import com.bpawlowski.data.repository.ContactRepository
 import com.bpawlowski.core.domain.zip
 import com.bpawlowski.system.location.LocationProvider
 import com.example.bpawlowski.falldetector.domain.ContactFormModel
-import com.example.bpawlowski.falldetector.domain.ScreenState
+import com.example.bpawlowski.falldetector.domain.ScreenResult
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
+import com.example.bpawlowski.falldetector.domain.ScreenState
+import com.example.bpawlowski.falldetector.domain.reduce
 import com.example.bpawlowski.falldetector.util.mapToContact
 import com.example.bpawlowski.falldetector.util.toSingleEvent
 import kotlinx.coroutines.async
@@ -44,13 +46,13 @@ class ContactDetailsViewModel(
 	fun updateContact(contactId: Long) = backgroundScope.launch {
 		val contact = contactForm.mapToContact().copy(id = contactId)
 
-		_screenStateData.postValue(ScreenState.Loading)
+		_screenStateData.reduce(ScreenResult.Loading)
 		contactsRepository.updateContact(contact)
 			.onSuccess {
-				_screenStateData.postValue(ScreenState.Success(Unit))
+				_screenStateData.reduce(ScreenResult.Success(Unit))
 				initData(contactId)
 			}.onFailure {
-				_screenStateData.postValue(ScreenState.Failure(it))
+				_screenStateData.reduce(ScreenResult.Failure(it))
 			}
 	}
 

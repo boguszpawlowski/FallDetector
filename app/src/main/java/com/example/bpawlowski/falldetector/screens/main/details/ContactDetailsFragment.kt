@@ -35,9 +35,10 @@ class ContactDetailsFragment : BaseFragment<FragmentContactDetailsBinding>() {
 
 	private val screenStateObserver: Observer<ScreenState<Unit>> by lazy {
 		Observer<ScreenState<Unit>> { state ->
-			state.onSuccess {
+			state.data?.let {
 				snackbar(message = getString(R.string.snb_updated))
-			}.onFailure {
+			}
+			state.error?.let {
 				snackbar(message = it.rationale)
 			}
 		}

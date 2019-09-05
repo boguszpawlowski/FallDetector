@@ -70,9 +70,11 @@
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_marginStart="@dimen/margin_medium"
+					android:layout_marginEnd="@dimen/margin_small"
 					android:layout_marginTop="@dimen/margin_medium"
-					android:text="@{viewModel.eventData.title}"
-					android:theme="@style/Headline1"
+					android:text="@{viewModel.eventMarkerData.title}"
+					android:theme="@style/Headline2"
+					android:textColor="@color/textAccent"
 					app:layout_constraintEnd_toStartOf="@id/btnAttend"
 					app:layout_constraintStart_toStartOf="parent"
 					app:layout_constraintTop_toTopOf="parent"
@@ -84,10 +86,11 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginEnd="@dimen/margin_medium"
-					android:text="@string/btn_attend"
+					android:text="@{viewModel._eventData.isAttending ? @string/btn_leave : @string/btn_attend}"
 					app:layout_constraintBottom_toBottomOf="@+id/txtEventTitle"
 					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintTop_toTopOf="@+id/txtEventTitle" />
+					app:layout_constraintTop_toTopOf="@+id/txtEventTitle"
+					tools:text="Attend"/>
 
 				<TextView
 					android:id="@+id/txtEventDate"
@@ -101,6 +104,20 @@
 					app:layout_constraintTop_toBottomOf="@+id/txtEventTitle"
 					tools:text="16th march"
 					tools:textSize="18sp" />
+
+				<TextView
+					android:id="@+id/txtAttending"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="@dimen/margin_medium"
+					android:theme="@style/Headline3"
+					android:textColor="@color/textAccent"
+					android:text='@{"Attending " + viewModel.eventMarkerData.attendingUsers}'
+					app:layout_constraintTop_toTopOf="@+id/txtEventDate"
+					app:layout_constraintBottom_toBottomOf="@id/txtEventDate"
+					app:layout_constraintEnd_toEndOf="parent"
+					tools:text="Attending: 12"
+					tools:textSize="18sp"/>
 
 				<TextView
 					android:id="@+id/txtEventDescription"
@@ -128,7 +145,15 @@
 					tools:layout_editor_absoluteY="245dp" />
 
 			</androidx.constraintlayout.widget.ConstraintLayout>
-
 		</androidx.core.widget.NestedScrollView>
+
+		<ProgressBar
+			android:id="@+id/progressBar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:visibility="gone"
+			tools:visibility="visible"/>
+
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

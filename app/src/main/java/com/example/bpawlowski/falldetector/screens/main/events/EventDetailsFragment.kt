@@ -13,6 +13,7 @@ import com.example.bpawlowski.falldetector.domain.EventMarker
 import com.example.bpawlowski.falldetector.domain.ScreenState
 import com.example.bpawlowski.falldetector.screens.main.MainActivity
 import com.example.bpawlowski.falldetector.screens.main.MainViewModel
+import com.example.bpawlowski.falldetector.util.setVisible
 import com.example.bpawlowski.falldetector.util.snackbar
 import com.example.bpawlowski.falldetector.util.toBitmap
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -24,7 +25,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_event_details.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 const val EVENT_ID_KEY = "event_id_key"
 const val CAMERA_ZOOM_DISTANT = 18f
@@ -49,22 +49,27 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(), OnMapR
 
 	private val screenStateObserver: Observer<ScreenState<Unit>> by lazy {
 		Observer<ScreenState<Unit>> { state ->
-			state.onFailure {
+			state.error?.let {
 				snackbar(message = it.rationale)
 			}
+			progressBar.setVisible(state.loading)
+			btnAttend.isEnabled = state.loading.not()
 		}
 	}
 
 	private val eventMarkerObserver: Observer<EventMarker> by lazy {
 		Observer<EventMarker> { event ->
 			val bitmap = R.drawable.ic_directions_run_black_24dp.toBitmap(requireContext())
-			map.addMarker(
-				MarkerOptions()
-					.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-					.position(event.latLng)
-					.title(event.title)
-			)
-			map.animateCamera(CameraUpdateFactory.newLatLngZoom(event.latLng, CAMERA_ZOOM_DISTANT))
+			with(map) {
+				clear()
+				addMarker(
+					MarkerOptions()
+						.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+						.position(event.latLng)
+						.title(event.title)
+				)
+				animateCamera(CameraUpdateFactory.newLatLngZoom(event.latLng, CAMERA_ZOOM_DISTANT))
+			}
 		}
 	}
 
@@ -85,6 +90,7 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(), OnMapR
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+
 		collapsingToolbar.apply {
 			setExpandedTitleColor(
 				ContextCompat.getColor(
@@ -93,6 +99,8 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(), OnMapR
 				)
 			) //todo check if you can display home button?
 		}
+
+		btnAttend.setOnClickListener { viewModel.updateAttending() }
 
 		(childFragmentManager.findFragmentById(R.id.eventMapFragment) as SafeScrollMapFragment).let {
 			it.getMapAsync(this)

@@ -8,5 +8,6 @@ data class EventDto(
 	@SerializedName("creator_id") val creatorId: Long,
 	@SerializedName("date") val date: String,
 	@SerializedName("latitude") val latitude: Double,
-	@SerializedName("longitude") val longitude: Double
+	@SerializedName("longitude") val longitude: Double,
+	@SerializedName("attending") val attending: Int
 )

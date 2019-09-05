@@ -9,7 +9,9 @@ import com.bpawlowski.system.connectivity.CallService
 import com.bpawlowski.system.connectivity.TextMessageService
 import com.bpawlowski.system.location.LocationProvider
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
+import com.example.bpawlowski.falldetector.domain.ScreenResult
 import com.example.bpawlowski.falldetector.domain.ScreenState
+import com.example.bpawlowski.falldetector.domain.reduce
 import com.example.bpawlowski.falldetector.util.toSingleEvent
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -29,7 +31,7 @@ class ContactsViewModel(
 
 	fun removeContact(contact: Contact) = backgroundScope.launch {
 		contactsRepository.removeContact(contact)
-			.onSuccess { _screenStateData.postValue(ScreenState.Success(it)) }
+			.onSuccess { _screenStateData.reduce(ScreenResult.Success(it)) }
 			.onException { Timber.e(it) }
 	}
 

@@ -9,7 +9,7 @@ import com.bpawlowski.remote.util.call
 import com.bpawlowski.remote.util.toDomain
 import com.bpawlowski.remote.util.toDto
 import kotlinx.coroutines.withContext
-import timber.log.Timber
+import kotlin.random.Random
 
 internal class EventClientImpl(
 	private val eventApi: EventApi,
@@ -17,7 +17,13 @@ internal class EventClientImpl(
 ) : EventClient {
 
 	override suspend fun getEvents() = withContext(dispatcher.IO) {
-		eventApi.getEvents().call().map { it.map { it.toDomain() } }
+		eventApi.getEvents().call().map {
+			it.map {
+				it.toDomain().copy( //todo change this
+					latLang = 51.1078852 + Random.nextDouble(-0.06, 0.06) to 17.0385376 + Random.nextDouble(-0.06, 0.06)
+				)
+			}
+		}
 	}
 
 	override suspend fun putEvent(event: Event): Result<Unit> = withContext(dispatcher.IO) {

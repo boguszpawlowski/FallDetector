@@ -8,7 +8,9 @@ internal fun EventDto.toDomain() = Event(
     creatorId = creatorId,
     latLang = latitude to longitude,
     date = date,
-    remoteId = id
+    remoteId = id,
+	attendingUsers = attending,
+	isAttending = false
 )
 
 internal fun Event.toDto() = EventDto(
@@ -17,5 +19,6 @@ internal fun Event.toDto() = EventDto(
     creatorId = creatorId,
     latitude = latLang.first,
 	longitude = latLang.second,
-    date = date
+    date = date,
+	attending = attendingUsers
 )

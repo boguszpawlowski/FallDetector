@@ -30,9 +30,10 @@ class FormDialogFragment : DialogFragment() { //todo probably change this to nor
 
 	private val screenStateObserver: Observer<ScreenState<Long>> by lazy {
 		Observer<ScreenState<Long>> { state ->
-			state.onSuccess {
+			state.data?.let {
 				dismiss()
-			}.onFailure {
+			}
+			state.error?.let {
 				toast(it.rationale)
 			}
 		}

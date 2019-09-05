@@ -16,5 +16,6 @@
 	<color name="iconSelected">@color/white</color>
 	<color name="iconNotSelected">@color/grey</color>
 	<color name="marker">@color/lightBlue</color>
+	<color name="textAccent">@color/white</color>
 
 </resources>

@@ -43,6 +43,7 @@
 	</style>
 
 	<style name="Headline2">
+		<item name="android:textColor">@color/black</item>
 		<item name="android:textSize">@dimen/h2_font_size</item>
 		<item name="android:lineSpacingExtra">@dimen/h2_extra_spacing</item>
 		<item name="android:textStyle">bold</item>

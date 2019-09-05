@@ -34,5 +34,13 @@ data class EventDb(
 
 	@ColumnInfo(name = "longitude", typeAffinity = ColumnInfo.TEXT)
 	@NonNull
-	val longitude: String
+	val longitude: String,
+
+	@ColumnInfo(name = "attending_users", typeAffinity = ColumnInfo.INTEGER)
+	@NonNull
+	val attending: Int,
+
+	@ColumnInfo(name = "is_attending", typeAffinity = ColumnInfo.INTEGER)
+	@NonNull
+	val isAttending: Boolean
 )

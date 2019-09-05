@@ -50,7 +50,7 @@ class ContactsFragment : BaseFragment<FragmentContactsBinding>() {
 
 	private val screenStateObserver: Observer<ScreenState<Contact>> by lazy {
 		Observer<ScreenState<Contact>> { screenState ->
-			screenState.onSuccess { contact ->
+			screenState.data?.let { contact ->
 				snackbar(message = getString(R.string.snackbar_deleted), actionListener = R.string.snackbar_undo) {
 					viewModel.addContact(contact)
 				}

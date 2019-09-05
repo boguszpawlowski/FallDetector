@@ -13,7 +13,6 @@ import com.bpawlowski.database.dbservice.DatabaseService
 import com.bpawlowski.database.util.mapList
 import com.bpawlowski.remote.client.EventClient
 import timber.log.Timber
-import kotlin.random.Random
 
 internal class EventRepositoryImpl(
 	private val eventClient: EventClient,
@@ -28,9 +27,7 @@ internal class EventRepositoryImpl(
 	 * Cache methods
 	 */
 	override val allEvents: LiveData<List<Event>>
-		get() = eventDao.getAllData().mapList { it.toDomain().copy( //todo change this
-			latLang = 51.1078852 + Random.nextDouble(-0.06, 0.06) to 17.0385376 + Random.nextDouble(-0.06, 0.06)
-		) }
+		get() = eventDao.getAllData().mapList { it.toDomain() }
 
 	override suspend fun getEvent(eventId: Long): Result<Event> {
 		val event = eventDao.getEventById(eventId)?.toDomain()
@@ -39,6 +36,18 @@ internal class EventRepositoryImpl(
 		} else {
 			failure(FallDetectorException.NoSuchRecordException(eventId))
 		}
+	}
+
+	override suspend fun updateAttending(event: Event?): Result<Event> {
+		event ?: return failure(IllegalArgumentException("Event cant be null"))
+
+		val updatedAttending = if (event.isAttending) event.attendingUsers - 1 else event.attendingUsers + 1
+
+		val updatedEvent = event.copy(attendingUsers = updatedAttending, isAttending = event.isAttending.not())
+
+		return updateEvent(updatedEvent).flatMap {
+			eventClient.putEvent(event)
+		}.map { updatedEvent }
 	}
 
 	/**
@@ -60,10 +69,15 @@ internal class EventRepositoryImpl(
 			eventDao.insert(*newEvents.toTypedArray())
 
 			remoteEvents.forEach { remoteEvent ->
-					localEvents.firstOrNull{ remoteEvent.remoteId == it.remoteId && it.toDomain() != remoteEvent }?.let {
-					  eventDao.update(remoteEvent.toEntity().copy(id = it.id))
-					}
+				localEvents.firstOrNull { remoteEvent.remoteId == it.remoteId && it.toDomain() != remoteEvent }?.let {
+					eventDao.update(
+						remoteEvent.toEntity().copy(
+							id = it.id,
+							isAttending = it.isAttending
+						)
+					)
 				}
+			}
 		}.onException { Timber.e(it) }
 	}
 

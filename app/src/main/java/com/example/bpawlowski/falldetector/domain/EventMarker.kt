@@ -10,7 +10,8 @@ data class EventMarker(
 	val title: String,
 	val eventId: Long?,
 	val date: String,
-	val exactDate: String
+	val exactDate: String,
+	val attendingUsers: String
 )
 
 fun Event.toMarker() = EventMarker(
@@ -18,5 +19,6 @@ fun Event.toMarker() = EventMarker(
 	title,
 	id,
 	date.dayMonthDate(),
-	date.dayMonthHourDate()
+	date.dayMonthHourDate(),
+	attendingUsers.toString()
 )
