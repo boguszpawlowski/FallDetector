@@ -7,6 +7,9 @@ import com.bpawlowski.core.domain.success
 import com.bpawlowski.core.exception.FallDetectorException
 import com.bpawlowski.database.dbservice.DatabaseService
 import com.bpawlowski.core.model.Sensitivity
+import com.bpawlowski.core.model.ServiceState
+import com.bpawlowski.data.util.toDomain
+import com.bpawlowski.data.util.toEntity
 import com.bpawlowski.database.entity.ServiceStateDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -63,8 +66,8 @@ internal class ServiceStateRepositoryImpl(
 		}
 	}
 
-	override suspend fun updateState(serviceState: ServiceStateDb): Result<Unit> {
-		val updated = serviceStateDao.updateServiceState(serviceState)
+	override suspend fun updateState(serviceState: ServiceState): Result<Unit> {
+		val updated = serviceStateDao.updateServiceState(serviceState.toEntity())
 		return if (updated != 0) {
 			success(Unit)
 		} else {
@@ -72,8 +75,8 @@ internal class ServiceStateRepositoryImpl(
 		}
 	}
 
-	override suspend fun getServiceState(): Result<ServiceStateDb> {
-		val state = serviceStateDao.getServiceState()
+	override suspend fun getServiceState(): Result<ServiceState> {
+		val state = serviceStateDao.getServiceState()?.toDomain()
 		return if(state !=null){
 			success(state)
 		} else {

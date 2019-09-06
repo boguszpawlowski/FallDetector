@@ -62,13 +62,10 @@ class CameraFragment : BaseFragment<FragmentCameraBinding>() {  //todo review th
 
 	private val photoCapturedListener by lazy {
 		object : ImageCapture.OnImageSavedListener {
-			override fun onError(
-				error: ImageCapture.UseCaseError,
-				message: String,
-				exc: Throwable?
-			) {
+
+			override fun onError(imageCaptureError: ImageCapture.ImageCaptureError, message: String, cause: Throwable?) {
 				toast(getString(R.string.toast_photo_failed))
-				Timber.e(exc, "Photo capture failed: $message")
+				Timber.e(imageCaptureError.name, "Photo capture failed: $message")
 			}
 
 			override fun onImageSaved(file: File) {

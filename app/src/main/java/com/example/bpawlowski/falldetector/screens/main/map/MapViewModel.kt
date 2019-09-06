@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bpawlowski.data.repository.EventRepository
-import com.bpawlowski.database.util.mapList
 import com.bpawlowski.system.location.LocationProvider
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
+import com.example.bpawlowski.falldetector.util.mapList
 import com.example.bpawlowski.falldetector.util.toSingleEvent
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch

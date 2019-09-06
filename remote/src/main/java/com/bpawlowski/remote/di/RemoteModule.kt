@@ -6,8 +6,8 @@ import com.bpawlowski.core.di.RETROFIT_AUTHORIZED
 import com.bpawlowski.remote.api.EventApi
 import com.bpawlowski.remote.client.EventClient
 import com.bpawlowski.remote.client.EventClientImpl
-import com.bpawlowski.remote.config.API_ENDPOINT
-import com.bpawlowski.remote.config.MAX_TIMEOUT
+import com.bpawlowski.core.config.API_ENDPOINT
+import com.bpawlowski.core.config.MAX_TIMEOUT
 import com.google.gson.Gson
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

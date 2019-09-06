@@ -40,10 +40,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(path: ':core')
-    implementation project(path: ':database') //todo hide this module in data
     implementation project(path: ':system')
     implementation project(path: ':data')
-    implementation project(path: ':remote') //todo hide this module in data
 
     // Support
     implementation "androidx.recyclerview:recyclerview:$recycler_version"
@@ -56,7 +54,7 @@ dependencies {
 
     //lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha02"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha04"
 
     //Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"

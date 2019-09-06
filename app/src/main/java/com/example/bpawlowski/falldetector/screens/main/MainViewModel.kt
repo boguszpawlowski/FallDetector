@@ -5,12 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bpawlowski.core.domain.EventWrapper
-import com.bpawlowski.data.repository.EventRepository
 import com.bpawlowski.data.repository.ServiceStateRepository
-import com.bpawlowski.database.util.map
 import com.bpawlowski.system.model.AppSettings
 import com.bpawlowski.system.preferences.AppSettingsPreferencesData
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
+import com.example.bpawlowski.falldetector.util.map
 import com.example.bpawlowski.falldetector.util.toSingleEvent
 import kotlinx.coroutines.launch
 import java.io.File

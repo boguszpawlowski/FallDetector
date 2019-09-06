@@ -6,13 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bpawlowski.core.model.Event
 import com.bpawlowski.data.repository.EventRepository
-import com.bpawlowski.database.util.map
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.domain.EventMarker
 import com.example.bpawlowski.falldetector.domain.ScreenResult
 import com.example.bpawlowski.falldetector.domain.ScreenState
 import com.example.bpawlowski.falldetector.domain.reduce
 import com.example.bpawlowski.falldetector.domain.toMarker
+import com.example.bpawlowski.falldetector.util.map
 import com.example.bpawlowski.falldetector.util.toSingleEvent
 import kotlinx.coroutines.launch
 import timber.log.Timber

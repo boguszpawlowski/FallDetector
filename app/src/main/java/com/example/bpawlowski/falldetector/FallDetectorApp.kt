@@ -3,16 +3,15 @@ package com.example.bpawlowski.falldetector
 import android.app.Application
 import android.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatDelegate
-import com.bpawlowski.core.di.coroutineModule
+import com.bpawlowski.data.di.DataModule
 import com.bpawlowski.data.di.dataModule
-import com.bpawlowski.database.di.databaseModule
-import com.bpawlowski.remote.di.remoteModule
 import com.bpawlowski.system.preferences.DARK_THEME_KEY
 import com.bpawlowski.system.di.systemModule
 import com.example.bpawlowski.falldetector.di.viewModelModule
 import com.example.bpawlowski.falldetector.util.initializeDebugTools
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 
 class FallDetectorApp : Application() {
@@ -33,16 +32,21 @@ class FallDetectorApp : Application() {
         startKoin {
             androidLogger()
             androidContext(this@FallDetectorApp)
-            modules(
-                listOf(
-                    viewModelModule,
-                    databaseModule,
-                    systemModule,
-                    remoteModule,
-                    coroutineModule,
-                    dataModule
-                )
-            )
         }
+
+		DataModule.load()
+		loadKoinModules(
+			listOf(
+				viewModelModule,
+				systemModule,
+				dataModule
+			)
+		)
     }
+
+	override fun onTerminate() {
+		super.onTerminate()
+
+		DataModule.unload()
+	}
 }

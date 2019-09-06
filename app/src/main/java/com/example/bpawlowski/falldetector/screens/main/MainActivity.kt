@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.bpawlowski.data.di.DataModule
 import com.bpawlowski.system.model.AppSettings
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.base.activity.BaseActivity

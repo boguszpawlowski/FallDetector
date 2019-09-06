@@ -3,7 +3,7 @@ package com.bpawlowski.data.repository
 import androidx.lifecycle.LiveData
 import com.bpawlowski.core.domain.Result
 import com.bpawlowski.core.model.Sensitivity
-import com.bpawlowski.database.entity.ServiceStateDb
+import com.bpawlowski.core.model.ServiceState
 
 interface ServiceStateRepository {
 
@@ -13,7 +13,7 @@ interface ServiceStateRepository {
 
 	fun getSensitivityData(): LiveData<Sensitivity>
 
-	suspend fun getServiceState(): Result<ServiceStateDb>
+	suspend fun getServiceState(): Result<ServiceState>
 
 	suspend fun getIsRunningFlag(): Result<Boolean>
 
@@ -21,5 +21,5 @@ interface ServiceStateRepository {
 
 	suspend fun updateIsRunning(isRunning: Boolean): Result<Unit>
 
-	suspend fun updateState(serviceState: ServiceStateDb): Result<Unit>
+	suspend fun updateState(serviceState: ServiceState): Result<Unit>
 }
