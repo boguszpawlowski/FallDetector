@@ -36,6 +36,11 @@
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
+	<style name="MapInfoWindow">
+		<item name="android:windowBackground">@drawable/background_transparent</item>
+		<item name="android:background">@drawable/background_rounded_outline</item>
+	</style>
+
 	<style name="Headline1">
 		<item name="android:textSize">@dimen/h1_font_size</item>
 		<item name="android:lineSpacingExtra">@dimen/h1_extra_spacing</item>

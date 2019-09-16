@@ -10,6 +10,7 @@
 	<color name="onSurface">@color/white</color>
 	<color name="secondary">#8F0000</color>
 	<color name="profileCard">#383838</color>
+	<color name="infoWindowOutline">@color/darkBlue</color>
 
 	<!--nav bar-->
 	<color name="navBarBackground">@color/primary</color>

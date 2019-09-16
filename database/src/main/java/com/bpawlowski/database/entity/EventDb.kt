@@ -42,5 +42,9 @@ data class EventDb(
 
 	@ColumnInfo(name = "is_attending", typeAffinity = ColumnInfo.INTEGER)
 	@NonNull
-	val isAttending: Boolean
+	val isAttending: Boolean,
+
+	@ColumnInfo(name = "creator_mobile", typeAffinity = ColumnInfo.TEXT)
+	@NonNull
+	val creatorName: String
 )

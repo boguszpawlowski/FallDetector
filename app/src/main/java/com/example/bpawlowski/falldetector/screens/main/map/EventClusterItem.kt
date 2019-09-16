@@ -7,8 +7,9 @@ import com.google.maps.android.clustering.ClusterItem
 
 class EventClusterItem(
 	val eventId: Long?,
+	val eventTitle: String,
+	val creatorMobile: String,
 	private val eventLocation: LatLng,
-	private val eventTitle: String,
 	private val eventSnippet: String?
 ) : ClusterItem {
 
@@ -20,8 +21,9 @@ class EventClusterItem(
 }
 
 fun Event.toClusterItem() = EventClusterItem(
-	id,
-	LatLng(latLang.first, latLang.second),
-	title,
-	date.dayMonthDate()
+	eventId = id,
+	eventTitle = title,
+	creatorMobile = creatorMobile,
+	eventLocation = LatLng(latLang.first, latLang.second),
+	eventSnippet = date.dayMonthDate()
 )

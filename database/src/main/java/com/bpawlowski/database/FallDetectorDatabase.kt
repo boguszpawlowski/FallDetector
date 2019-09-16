@@ -10,7 +10,7 @@ import com.bpawlowski.database.entity.*
 
 @Database(
 	entities = [ContactDb::class, ServiceStateDb::class, EventDb::class],
-	version = 8
+	version = 9
 )
 @TypeConverters(UserPriorityConverter::class, SensitivityConverter::class)
 internal abstract class FallDetectorDatabase : RoomDatabase() {

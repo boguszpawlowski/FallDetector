@@ -22,8 +22,9 @@
 	<color name="red">#F44336</color>
 	<color name="yellow">#FFEB3B</color>
 	<color name="green">#8BC34A</color>
-	<color name="blue">#2196F3</color>
 	<color name="lightBlue">#25A0D8</color>
+	<color name="blue">#2196F3</color>
+	<color name="darkBlue">#015B9B</color>
 	<color name="purple">#673AB7</color>
     <color name="black">#000000</color>
     <color name="transparent">#00FFFFFF</color>
@@ -38,6 +39,7 @@
 	<color name="profileCard">@color/primary</color>
 	<color name="marker">@color/primaryDark</color>
 	<color name="textAccent">@color/black</color>
+	<color name="infoWindowOutline">@color/grey</color>
 
 	<!--nav bar-->
 	<color name="navBarBackground">@color/white</color>

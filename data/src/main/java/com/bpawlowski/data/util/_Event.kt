@@ -11,7 +11,8 @@ fun EventDb.toDomain() = Event(
     date = date,
     remoteId = remoteId,
 	attendingUsers = attending,
-	isAttending = isAttending
+	isAttending = isAttending,
+	creatorMobile = creatorName
 )
 
 fun Event.toEntity() = EventDb(
@@ -23,5 +24,6 @@ fun Event.toEntity() = EventDb(
     date = date,
     remoteId = remoteId,
 	attending = attendingUsers,
-	isAttending = isAttending
+	isAttending = isAttending,
+	creatorName = creatorMobile
 )

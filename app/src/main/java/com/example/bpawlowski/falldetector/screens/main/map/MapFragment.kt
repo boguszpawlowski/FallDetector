@@ -35,6 +35,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(), OnMapReadyCallback, Goog
 
 	private lateinit var map: GoogleMap
 
+	private var infoWindowAdapter: EventInfoWindowAdapter? = null
+
 	private val markerMap = hashMapOf<LatLng, EventClusterItem>()
 
 	private val onInfoClicked = GoogleMap.OnInfoWindowClickListener { marker ->
@@ -53,6 +55,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(), OnMapReadyCallback, Goog
 					clusterManager?.addItem(item)
 				}
 			}
+			infoWindowAdapter = EventInfoWindowAdapter(requireContext(), markerMap)
+			map.setInfoWindowAdapter(infoWindowAdapter)
 		}
 	}
 
@@ -94,7 +98,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(), OnMapReadyCallback, Goog
 				permission = Manifest.permission.ACCESS_FINE_LOCATION,
 				onGranted = {
 					map.isMyLocationEnabled = true
-					viewModel.userLocationData.observe(viewLifecycleOwner, userLocationObserver)
+					userLocationData.observe(viewLifecycleOwner, userLocationObserver)
 				})
 		}
 
@@ -110,6 +114,10 @@ class MapFragment : BaseFragment<FragmentMapBinding>(), OnMapReadyCallback, Goog
 	private fun setupClusterManager() {
 		if (clusterManager == null) {
 			clusterManager = ClusterManager(requireContext(), map)
+
+			clusterManager?.let {
+				it.renderer = EventClusterRenderer(map, it, requireContext())
+			}
 
 			map.setOnCameraIdleListener(clusterManager)
 		}

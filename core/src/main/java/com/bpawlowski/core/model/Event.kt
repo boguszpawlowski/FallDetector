@@ -8,7 +8,8 @@ data class Event(
 	val date: String,
 	val remoteId: Long?,
 	val attendingUsers: Int,
-	val isAttending: Boolean
+	val isAttending: Boolean,
+	val creatorMobile: String
 ){
 
 	override fun equals(other: Any?): Boolean {
@@ -23,6 +24,7 @@ data class Event(
 		if (date != other.date) return false
 		if (remoteId != other.remoteId) return false
 		if (attendingUsers != other.attendingUsers) return false
+		if (creatorMobile != other.creatorMobile) return false
 
 		return true
 	}
@@ -34,6 +36,7 @@ data class Event(
 		result = 31 * result + date.hashCode()
 		result = 31 * result + (remoteId?.hashCode() ?: 0)
 		result = 31 * result + attendingUsers
+		result = 31 * result + creatorMobile.hashCode()
 		return result
 	}
 }

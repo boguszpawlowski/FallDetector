@@ -9,5 +9,6 @@ data class EventDto(
 	@SerializedName("date") val date: String,
 	@SerializedName("latitude") val latitude: Double,
 	@SerializedName("longitude") val longitude: Double,
-	@SerializedName("attending") val attending: Int
+	@SerializedName("attending") val attending: Int,
+	@SerializedName("creator_mobile") val creatorMobile: String
 )
