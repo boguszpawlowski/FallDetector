@@ -1,6 +1,7 @@
 @file:Suppress("UNCHECKED_CAST")
 
 package com.example.bpawlowski.falldetector.base.recycler
+/*
 
 import android.view.View
 import androidx.databinding.DataBindingUtil
@@ -19,7 +20,7 @@ abstract class Item<D, B : ViewDataBinding>(
     }
 
     fun bind(holder: ViewHolder) {
-		this.itemView = holder.itemView
+        this.itemView = holder.itemView
         onBind(holder.binding as B)
     }
 
@@ -32,4 +33,4 @@ abstract class Item<D, B : ViewDataBinding>(
     open fun hasSameContentAs(other: Item<*, *>): Boolean {
         return this.data == other.data
     }
-}
+}*/

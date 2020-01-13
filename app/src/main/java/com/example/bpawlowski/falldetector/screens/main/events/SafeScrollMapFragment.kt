@@ -12,36 +12,36 @@ import com.google.android.gms.maps.SupportMapFragment
 
 class SafeScrollMapFragment : SupportMapFragment() {
 
-	var scrollView: NestedScrollView? = null
+    var scrollView: NestedScrollView? = null
 
-	override fun onCreateView(
-		layoutInflater: LayoutInflater,
-		viewGroup: ViewGroup?,
-		savedInstance: Bundle?
-	): View? {
-		val mapView = super.onCreateView(layoutInflater, viewGroup, savedInstance)
+    override fun onCreateView(
+        layoutInflater: LayoutInflater,
+        viewGroup: ViewGroup?,
+        savedInstance: Bundle?
+    ): View? {
+        val mapView = super.onCreateView(layoutInflater, viewGroup, savedInstance)
 
-		if (mapView != null) {
-			(mapView as ViewGroup).addView(
-				TouchInterceptor(requireContext()),
-				ViewGroup.LayoutParams(
-					ViewGroup.LayoutParams.MATCH_PARENT,
-					ViewGroup.LayoutParams.MATCH_PARENT
-				)
-			)
-		}
+        if (mapView != null) {
+            (mapView as ViewGroup).addView(
+                TouchInterceptor(requireContext()),
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+            )
+        }
 
-		return mapView
-	}
+        return mapView
+    }
 
-	private inner class TouchInterceptor(context: Context) : FrameLayout(context) {
+    private inner class TouchInterceptor(context: Context) : FrameLayout(context) {
 
-		override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-			when (event.action) {
-				MotionEvent.ACTION_DOWN -> scrollView?.requestDisallowInterceptTouchEvent(true)
-				MotionEvent.ACTION_UP -> scrollView?.requestDisallowInterceptTouchEvent(true)
-			}
-			return super.dispatchTouchEvent(event)
-		}
-	}
+        override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> scrollView?.requestDisallowInterceptTouchEvent(true)
+                MotionEvent.ACTION_UP -> scrollView?.requestDisallowInterceptTouchEvent(true)
+            }
+            return super.dispatchTouchEvent(event)
+        }
+    }
 }

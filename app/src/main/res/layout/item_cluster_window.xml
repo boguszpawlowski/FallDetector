@@ -1,69 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_small_8dp"
+        android:padding="@dimen/margin_small_8dp"
+        android:theme="@style/MapInfoWindow">
 
-<layout>
+    <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgEventPhoto"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/transparent"
+            android:src="@drawable/icon_contact"
+            app:layout_constraintBottom_toBottomOf="@id/txtCreatorMobile"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txtEventTitle" />
 
-	<data>
+    <TextView
+            android:id="@+id/txtEventTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_medium_16dp"
+            android:background="@color/transparent"
+            android:theme="@style/Headline3"
+            app:layout_constraintBottom_toTopOf="@id/iconPhone"
+            app:layout_constraintStart_toEndOf="@+id/imgEventPhoto"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Event Title"
+            tools:textSize="18sp" />
 
-		<variable
-			name="event"
-			type="com.example.bpawlowski.falldetector.screens.main.map.EventClusterItem" />
-	</data>
+    <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iconPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="9dp"
+            android:layout_marginTop="@dimen/margin_extra_small_4dp"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_phone_android_black_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imgEventPhoto"
+            app:layout_constraintTop_toBottomOf="@id/txtEventTitle" />
 
-	<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		xmlns:tools="http://schemas.android.com/tools"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/margin_small"
-		android:padding="@dimen/margin_small"
-		android:theme="@style/MapInfoWindow">
+    <TextView
+            android:id="@+id/txtCreatorMobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:text="123 123 123"
+            app:layout_constraintBottom_toBottomOf="@id/iconPhone"
+            app:layout_constraintStart_toEndOf="@id/iconPhone"
+            app:layout_constraintTop_toTopOf="@id/iconPhone"
+            tools:text="123 231 233" />
 
-		<androidx.appcompat.widget.AppCompatImageView
-			android:id="@+id/imgEventPhoto"
-			android:layout_width="50dp"
-			android:layout_height="50dp"
-			android:background="@color/transparent"
-			android:src="@drawable/icon_contact"
-			app:layout_constraintBottom_toBottomOf="@id/txtCreatorMobile"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="@id/txtEventTitle" />
-
-		<TextView
-			android:id="@+id/txtEventTitle"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/margin_medium"
-			android:background="@color/transparent"
-			android:text="@{event.eventTitle}"
-			android:theme="@style/Headline3"
-			app:layout_constraintBottom_toTopOf="@id/iconPhone"
-			app:layout_constraintStart_toEndOf="@+id/imgEventPhoto"
-			app:layout_constraintTop_toTopOf="parent"
-			tools:text="Event Title"
-			tools:textSize="18sp" />
-
-		<androidx.appcompat.widget.AppCompatImageView
-			android:id="@+id/iconPhone"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="9dp"
-			android:layout_marginTop="@dimen/margin_extra_small"
-			android:background="@color/transparent"
-			android:src="@drawable/ic_phone_android_black_24dp"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintStart_toEndOf="@id/imgEventPhoto"
-			app:layout_constraintTop_toBottomOf="@id/txtEventTitle" />
-
-		<TextView
-			android:id="@+id/txtCreatorMobile"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:background="@color/transparent"
-			android:text="123 123 123"
-			app:layout_constraintBottom_toBottomOf="@id/iconPhone"
-			app:layout_constraintStart_toEndOf="@id/iconPhone"
-			app:layout_constraintTop_toTopOf="@id/iconPhone"
-			tools:text="123 231 233" />
-
-	</androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

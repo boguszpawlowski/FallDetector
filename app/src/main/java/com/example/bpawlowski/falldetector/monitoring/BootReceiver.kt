@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.bpawlowski.data.repository.ServiceStateRepository
+import com.bpawlowski.domain.repository.ServiceStateRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -14,22 +14,22 @@ import org.koin.core.inject
 
 class BootReceiver : BroadcastReceiver(), KoinComponent, CoroutineScope {
 
-	private val job = SupervisorJob()
+    private val job = SupervisorJob()
 
-	override val coroutineContext = Dispatchers.Main + job
+    override val coroutineContext = Dispatchers.Main + job
 
-	private val serviceStateRepository by inject<ServiceStateRepository>()
+    private val serviceStateRepository by inject<com.bpawlowski.domain.repository.ServiceStateRepository>()
 
-	@SuppressLint("UnsafeProtectedBroadcastReceiver")
-	override fun onReceive(context: Context?, intent: Intent?) {
-		launch(Dispatchers.IO) {
-			context?.let {
-				serviceStateRepository.getIsRunningFlag().onSuccess {
-					if (it) {
-						BackgroundService.startService(context)
-					}
-				}
-			}
-		}
-	}
+    @SuppressLint("UnsafeProtectedBroadcastReceiver")
+    override fun onReceive(context: Context?, intent: Intent?) {
+        launch(Dispatchers.IO) {
+            context?.let {
+                serviceStateRepository.getIsRunningFlag().onSuccess {
+                    if (it) {
+                        BackgroundService.startService(context)
+                    }
+                }
+            }
+        }
+    }
 }

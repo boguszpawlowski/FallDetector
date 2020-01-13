@@ -1,84 +1,94 @@
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package com.example.bpawlowski.falldetector.base.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
-import androidx.databinding.library.baseAdapters.BR
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.coroutineScope
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
-import com.example.bpawlowski.falldetector.util.autoCleared
+import com.example.bpawlowski.falldetector.domain.MviState
+import com.example.bpawlowski.falldetector.util.toggleNavigation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 
-abstract class BaseFragment<B : ViewDataBinding> : Fragment() {
+abstract class BaseFragment<S : MviState> : Fragment() {
 
-	abstract val layoutResID: Int
+    protected val viewScope: CoroutineScope
+        get() = viewLifecycleOwner.lifecycle.coroutineScope
 
-	abstract val viewModel: BaseViewModel
+    protected open val shouldShowNavigation = true
 
-	abstract val sharedViewModel: BaseViewModel
+    protected open val shouldShowActionBar = true
 
-	var binding by autoCleared<B>()
+    abstract val layoutResID: Int
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		Timber.tag(javaClass.simpleName).v("ON_CREATE")
-		super.onCreate(savedInstanceState)
-	}
+    abstract val viewModel: BaseViewModel<S>
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		Timber.tag(javaClass.simpleName).v("ON_CREATE_VIEW")
+    abstract fun invalidate(state: S)
 
-		val dataBinding = DataBindingUtil.inflate<B>(inflater, layoutResID, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Timber.tag(javaClass.simpleName).v("ON_CREATE")
+        super.onCreate(savedInstanceState)
+    }
 
-		binding = dataBinding
-		return dataBinding.root
-	}
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        Timber.tag(javaClass.simpleName).v("ON_CREATE_VIEW")
+        toggleNavigation(shouldShowNavigation, shouldShowActionBar)
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		Timber.tag(javaClass.simpleName).v("ON_VIEW_CREATED")
-		super.onViewCreated(view, savedInstanceState)
+        return inflater.inflate(layoutResID, container, false)
+    }
 
-		binding.lifecycleOwner = viewLifecycleOwner
-		binding.setVariable(BR.viewModel, viewModel)
-	}
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Timber.tag(javaClass.simpleName).v("ON_VIEW_CREATED")
+        super.onViewCreated(view, savedInstanceState)
 
-	override fun onStart() {
-		Timber.tag(javaClass.simpleName).v("ON_START")
-		super.onStart()
-	}
+        viewModel.stateFlow.onEach {
+            invalidate(it)
+        }.launchIn(viewScope)
+    }
 
-	override fun onResume() {
-		Timber.tag(javaClass.simpleName).v("ON_RESUME")
-		super.onResume()
+    override fun onStart() {
+        Timber.tag(javaClass.simpleName).v("ON_START")
+        super.onStart()
+    }
 
-		viewModel.onResume()
-	}
+    override fun onResume() {
+        Timber.tag(javaClass.simpleName).v("ON_RESUME")
+        super.onResume()
+    }
 
-	override fun onPause() {
-		Timber.tag(javaClass.simpleName).v("ON_PAUSE")
-		super.onPause()
-	}
+    override fun onPause() {
+        Timber.tag(javaClass.simpleName).v("ON_PAUSE")
+        super.onPause()
+    }
 
-	override fun onStop() {
-		Timber.tag(javaClass.simpleName).v("ON_STOP")
-		super.onStop()
-	}
+    override fun onStop() {
+        Timber.tag(javaClass.simpleName).v("ON_STOP")
+        super.onStop()
+    }
 
-	override fun onDestroyView() {
-		Timber.tag(javaClass.simpleName).v("ON_DESTROY_VIEW")
-		super.onDestroyView()
-	}
+    override fun onDestroyView() {
+        Timber.tag(javaClass.simpleName).v("ON_DESTROY_VIEW")
+        super.onDestroyView()
+    }
 
-	override fun onDestroy() {
-		Timber.tag(javaClass.simpleName).v("ON_DESTROY")
-		super.onDestroy()
-	}
+    override fun onDestroy() {
+        Timber.tag(javaClass.simpleName).v("ON_DESTROY")
+        super.onDestroy()
+    }
 
-	protected fun clearRootFocus() {
-		binding.root.findFocus()?.let { view ->
-			view.clearFocus()
-		}
-	}
+    protected fun clearRootFocus() {
+        view?.rootView?.findFocus()?.let { view ->
+            view.clearFocus()
+        }
+    }
 }

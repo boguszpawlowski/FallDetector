@@ -4,7 +4,8 @@ import android.app.Application
 import android.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatDelegate
 import com.bpawlowski.data.di.DataModule
-import com.bpawlowski.data.di.dataModule
+import com.bpawlowski.database.di.DatabaseModule
+import com.bpawlowski.remote.di.RemoteModule
 import com.bpawlowski.system.preferences.DARK_THEME_KEY
 import com.bpawlowski.system.di.systemModule
 import com.example.bpawlowski.falldetector.di.viewModelModule
@@ -34,19 +35,23 @@ class FallDetectorApp : Application() {
             androidContext(this@FallDetectorApp)
         }
 
-		DataModule.load()
-		loadKoinModules(
-			listOf(
-				viewModelModule,
-				systemModule,
-				dataModule
-			)
-		)
+        DataModule.load()
+        DatabaseModule.load()
+        RemoteModule.load()
+
+        loadKoinModules(
+            listOf(
+                viewModelModule,
+                systemModule
+            )
+        )
     }
 
-	override fun onTerminate() {
-		super.onTerminate()
+    override fun onTerminate() {
+        super.onTerminate()
 
-		DataModule.unload()
-	}
+        DataModule.unload()
+        DatabaseModule.unload()
+        RemoteModule.unload()
+    }
 }

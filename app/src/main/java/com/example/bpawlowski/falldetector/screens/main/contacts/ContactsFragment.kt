@@ -2,102 +2,113 @@ package com.example.bpawlowski.falldetector.screens.main.contacts
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.bpawlowski.core.model.Contact
+import com.airbnb.epoxy.EpoxyController
+import com.airbnb.epoxy.EpoxyTouchHelper
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.base.fragment.BaseFragment
-import com.example.bpawlowski.falldetector.base.recycler.DragToDismissCallback
-import com.example.bpawlowski.falldetector.base.recycler.ItemsAdapter
-import com.example.bpawlowski.falldetector.databinding.FragmentContactsBinding
-import com.example.bpawlowski.falldetector.domain.ScreenState
-import com.example.bpawlowski.falldetector.screens.main.MainViewModel
-import com.example.bpawlowski.falldetector.util.autoCleared
+import com.example.bpawlowski.falldetector.base.fragment.simpleController
+import com.example.bpawlowski.falldetector.base.recycler.SwipeCallback
+import com.example.bpawlowski.falldetector.domain.onFailure
+import com.example.bpawlowski.falldetector.domain.onSuccess
+import com.example.bpawlowski.falldetector.util.autoClearedLazy
 import com.example.bpawlowski.falldetector.util.setVisible
 import com.example.bpawlowski.falldetector.util.snackbar
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import kotlinx.android.synthetic.main.fragment_contacts.fabPriority
+import kotlinx.android.synthetic.main.fragment_contacts.recyclerContact
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val SCROLL_THRESHOLD = 20
 
-class ContactsFragment : BaseFragment<FragmentContactsBinding>() {
+class ContactsFragment : BaseFragment<ContactsViewState>() {
 
-	override val layoutResID = R.layout.fragment_contacts
+    override val layoutResID = R.layout.fragment_contacts
 
-	override val viewModel: ContactsViewModel by viewModel()
+    override val viewModel: ContactsViewModel by viewModel()
 
-	override val sharedViewModel: MainViewModel by sharedViewModel()
+    private val epoxyController: EpoxyController by autoClearedLazy {
+        simpleController { state ->
+            state.contacts.onSuccess {
+                it.forEach {
+                    contactView {
+                        id(it.id)
+                        contact(it)
+                        onItemClick { _ -> showDetails(it.id) }
+                        onCallClicked { _ -> viewModel.callContact(it) }
+                        onSmsClicked { _ -> viewModel.sendMessage(it) }
+                    }
+                }
+            }
+        }
+    }
 
-	private var adapter by autoCleared<ItemsAdapter>()
+    override fun invalidate(state: ContactsViewState) = epoxyController.requestModelBuild()
 
-	private val contactsObserver: Observer<List<Contact>> by lazy {
-		Observer<List<Contact>> { contacts ->
-			contacts?.let {
-				adapter.update(it.map { contact ->
-					ContactItem(
-						data = contact,
-						onDismissListener = { viewModel.removeContact(contact) },
-						onSelectListener = { showDetails(contact.id) },
-						onCallClickListener = { viewModel.callContact(requireContext(), contact) },
-						onSmsClickListener = { viewModel.sendMessage(contact) }
-					)
-				})
-			}
-		}
-	}
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-	private val screenStateObserver: Observer<ScreenState<Contact>> by lazy {
-		Observer<ScreenState<Contact>> { screenState ->
-			screenState.data?.let { contact ->
-				snackbar(message = getString(R.string.snackbar_deleted), actionListener = R.string.snackbar_undo) {
-					viewModel.addContact(contact)
-				}
-			}
-		}
-	}
+        recyclerContact.setController(epoxyController)
+        EpoxyTouchHelper.initSwiping(recyclerContact)
+            .leftAndRight()
+            .withTarget(ContactViewModel_::class.java)
+            .andCallbacks(object : SwipeCallback<ContactViewModel_>(requireContext()) {
+                override fun onSwipeCompleted(
+                    model: ContactViewModel_,
+                    itemView: View?,
+                    position: Int,
+                    direction: Int
+                ) {
+                    model.contact().id?.let {
+                        viewModel.removeContact(it)
+                    }
+                }
+            })
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
+        initListeners()
+    }
 
-		adapter = ItemsAdapter()
-		binding.recyclerContact.adapter = this@ContactsFragment.adapter
-		ItemTouchHelper(DragToDismissCallback(requireContext())).attachToRecyclerView(binding.recyclerContact)
+    private fun initListeners() {
+        fabPriority.setOnClickListener { showDialog() }
+        recyclerContact.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, verticalScroll: Int) {
+                if (verticalScroll < -SCROLL_THRESHOLD) {
+                    fabPriority.setVisible(true)
+                } else if (verticalScroll > SCROLL_THRESHOLD) {
+                    fabPriority.setVisible(false)
+                }
+            }
+        })
 
-		initListeners()
-		initObservers()
-	}
+        viewScope.launch {
+            viewModel.subscribe(ContactsViewState::removeContactRequest) {
+                it.onSuccess { contact ->
+                    snackbar(
+                        message = getString(R.string.snackbar_deleted),
+                        actionResId = R.string.snackbar_undo,
+                        actionListener = {
+                            viewModel.addContact(contact)
+                        }
+                    )
+                }.onFailure { exception ->
+                    snackbar(message = exception.rationale)
+                }
+            }
+        }
+    }
 
-	private fun initListeners() = with(binding) {
-		fab.setOnClickListener { showDialog() }
-		recyclerContact.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-			override fun onScrolled(recyclerView: RecyclerView, dx: Int, verticalScroll: Int) {
-				if (verticalScroll < -SCROLL_THRESHOLD) {
-					fab.setVisible(true)
-				} else if (verticalScroll > SCROLL_THRESHOLD) {
-					fab.setVisible(false)
-				}
-			}
-		})
-	}
+    private fun showDialog() {
+        findNavController().navigate(
+            ContactsFragmentDirections.showDialog()
+        )
+    }
 
-	private fun initObservers() {
-		viewModel.contactsLiveData.observe(viewLifecycleOwner, contactsObserver)
-		viewModel.screenStateData.observe(viewLifecycleOwner, screenStateObserver)
-	}
-
-	private fun showDialog() {
-		findNavController().navigate(
-			ContactsFragmentDirections.showDialog()
-		)
-	}
-
-	private fun showDetails(id: Long? = null) {
-		id?.let {
-			findNavController().navigate(
-				ContactsFragmentDirections.showDetails(id)
-			)
-		}
-	}
+    private fun showDetails(id: Long? = null) {
+        id?.let {
+            findNavController().navigate(
+                ContactsFragmentDirections.showDetails(id)
+            )
+        }
+    }
 }

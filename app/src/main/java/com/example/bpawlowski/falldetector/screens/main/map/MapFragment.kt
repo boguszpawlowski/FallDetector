@@ -5,121 +5,90 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.bpawlowski.domain.util.doNothing
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.base.fragment.BaseFragment
-import com.example.bpawlowski.falldetector.databinding.FragmentMapBinding
+import com.example.bpawlowski.falldetector.domain.onSuccess
 import com.example.bpawlowski.falldetector.screens.main.MainViewModel
 import com.example.bpawlowski.falldetector.util.checkPermission
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.Marker
-import com.google.maps.android.clustering.ClusterManager
+import kotlinx.android.synthetic.main.fragment_map.*
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val CAMERA_ZOOM_DEFAULT = 15f
 
-class MapFragment : BaseFragment<FragmentMapBinding>(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class MapFragment : BaseFragment<MapViewState>() {
 
-	override val layoutResID = R.layout.fragment_map
+    override val layoutResID = R.layout.fragment_map
 
-	override val viewModel: MapViewModel by viewModel()
+    override val viewModel: MapViewModel by viewModel()
 
-	override val sharedViewModel: MainViewModel by sharedViewModel()
+    private val sharedViewModel: MainViewModel by sharedViewModel()
 
-	private var clusterManager: ClusterManager<EventClusterItem>? = null
+    private val darkModeObserver: Observer<Boolean> by lazy {
+        Observer<Boolean> { nightMode ->
+            eventsMapView.nightMode = nightMode
+        }
+    }
 
-	private lateinit var map: GoogleMap
+    override fun invalidate(state: MapViewState) = doNothing
 
-	private var infoWindowAdapter: EventInfoWindowAdapter? = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        eventsMapView.onCreate(savedInstanceState)
 
-	private val markerMap = hashMapOf<LatLng, EventClusterItem>()
+        eventsMapView.onEventInfoClickedListener = { showEventDetails(it) }
 
-	private val onInfoClicked = GoogleMap.OnInfoWindowClickListener { marker ->
-		markerMap[marker.position]?.eventId?.let { eventId ->
-			findNavController().navigate(
-				MapFragmentDirections.showEventDetails(eventId)
-			)
-		}
-	}
+        checkPermission(
+            activity = requireActivity(),
+            permission = Manifest.permission.ACCESS_FINE_LOCATION,
+            onGranted = { eventsMapView.isLocationEnabled = true }
+        )
 
-	private val eventsObserver: Observer<List<EventClusterItem>> by lazy {
-		Observer<List<EventClusterItem>> { items ->
-			items.forEach { item ->
-				if (markerMap[item.position] == null) {
-					markerMap[item.position] = item
-					clusterManager?.addItem(item)
-				}
-			}
-			infoWindowAdapter = EventInfoWindowAdapter(requireContext(), markerMap)
-			map.setInfoWindowAdapter(infoWindowAdapter)
-		}
-	}
+        viewScope.launch {
+            viewModel.subscribeToAll(MapViewState::events) { result ->
+                result.onSuccess { eventsMapView.invalidateMapMarkers(it) }
+            }
+        }
 
-	private val darkModeObserver: Observer<Boolean> by lazy {
-		Observer<Boolean> { darkMode ->
-			if (darkMode) {
-				map.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_night))
-			}
-		}
-	}
+        viewScope.launch {
+            viewModel.subscribeOnce(MapViewState::userLocation) { locationResult ->
+                locationResult.onSuccess { eventsMapView.userLocation = it }
+            }
+        }
 
-	private val userLocationObserver: Observer<LatLng> by lazy {
-		Observer<LatLng> { userLocation ->
-			map.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, CAMERA_ZOOM_DEFAULT))
-		}
-	}
+        sharedViewModel.darkModeLiveData.observe(viewLifecycleOwner, darkModeObserver)
+    }
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
+    override fun onStart() {
+        super.onStart()
+        eventsMapView.onStart()
+    }
 
-		if (savedInstanceState == null) {
-			viewModel.loadData()
-		}
-		(childFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment).getMapAsync(this)
-	}
+    override fun onResume() {
+        super.onResume()
+        eventsMapView.onResume()
+    }
 
-	override fun onMapReady(googleMap: GoogleMap) {
-		map = googleMap.apply {
-			setOnMarkerClickListener(this@MapFragment)
-			setOnInfoWindowClickListener(onInfoClicked)
-			uiSettings.isMapToolbarEnabled = true
-		}
-		setupClusterManager()
+    override fun onPause() {
+        super.onPause()
+        eventsMapView.onPause()
+    }
 
-		with(viewModel) {
-			eventsData.observe(viewLifecycleOwner, eventsObserver)
-			checkPermission(
-				activity = requireActivity(),
-				permission = Manifest.permission.ACCESS_FINE_LOCATION,
-				onGranted = {
-					map.isMyLocationEnabled = true
-					userLocationData.observe(viewLifecycleOwner, userLocationObserver)
-				})
-		}
+    override fun onStop() {
+        super.onStop()
+        eventsMapView.onStop()
+    }
 
-		sharedViewModel.darkModeLiveData.observe(viewLifecycleOwner, darkModeObserver)
-	}
+    override fun onDestroyView() {
+        super.onDestroyView()
+        eventsMapView.onDestroy()
+    }
 
-	override fun onMarkerClick(marker: Marker?) = marker?.let {
-		map.animateCamera(CameraUpdateFactory.newLatLngZoom(it.position, CAMERA_ZOOM_DEFAULT))
-		marker.showInfoWindow()
-		true
-	} ?: false
-
-	private fun setupClusterManager() {
-		if (clusterManager == null) {
-			clusterManager = ClusterManager(requireContext(), map)
-
-			clusterManager?.let {
-				it.renderer = EventClusterRenderer(map, it, requireContext())
-			}
-
-			map.setOnCameraIdleListener(clusterManager)
-		}
-	}
+    private fun showEventDetails(eventId: Long) {
+        findNavController().navigate(
+            MapFragmentDirections.showEventDetails(eventId)
+        )
+    }
 }

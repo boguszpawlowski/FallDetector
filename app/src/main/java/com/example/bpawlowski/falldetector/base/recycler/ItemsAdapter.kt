@@ -1,9 +1,6 @@
 package com.example.bpawlowski.falldetector.base.recycler
 
-import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
-import com.example.bpawlowski.falldetector.util.layoutInflater
+/*
 
 open class ItemsAdapter : RecyclerView.Adapter<ViewHolder>() {
 
@@ -83,4 +80,4 @@ open class ItemsAdapter : RecyclerView.Adapter<ViewHolder>() {
         }
         throw IllegalStateException("Could not find model for view type: $layoutResId")
     }
-}
+}*/

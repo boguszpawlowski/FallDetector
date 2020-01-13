@@ -35,7 +35,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation project(path: ':core')
+    implementation project(path: ':domain')
+    implementation project(path: ':data')
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 

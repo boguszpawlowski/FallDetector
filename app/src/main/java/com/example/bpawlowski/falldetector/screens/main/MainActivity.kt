@@ -10,112 +10,151 @@ import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.bpawlowski.data.di.DataModule
 import com.bpawlowski.system.model.AppSettings
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.base.activity.BaseActivity
-import com.example.bpawlowski.falldetector.databinding.ActivityMainBinding
 import com.example.bpawlowski.falldetector.screens.main.camera.KEY_EVENT_ACTION
 import com.example.bpawlowski.falldetector.screens.main.camera.KEY_EVENT_EXTRA
+import com.example.bpawlowski.falldetector.util.BottomNavigationManager
+import com.example.bpawlowski.falldetector.util.SnackbarManager
+import com.example.bpawlowski.falldetector.util.SnackbarPayload
 import com.example.bpawlowski.falldetector.util.getPermissions
 import com.example.bpawlowski.falldetector.util.postDelayed
+import com.example.bpawlowski.falldetector.util.setVisible
 import com.example.bpawlowski.falldetector.util.setupWithNavController
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.bottomNavigation
+import kotlinx.android.synthetic.main.activity_main.snackbarContainer
+import kotlinx.android.synthetic.main.activity_main.toolbar
+import kotlinx.coroutines.ObsoleteCoroutinesApi
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val CHANGE_THEME_DELAY = 450L
 
-class MainActivity : BaseActivity<ActivityMainBinding>() {  //todo hide keyboard on click outside
+class MainActivity : BaseActivity<MainViewState>() { // todo hide keyboard on click outside
 
-	override val layoutId = R.layout.activity_main
+    override val layoutId = R.layout.activity_main
 
-	override val viewModel: MainViewModel by viewModel()
+    override val viewModel: MainViewModel by viewModel()
 
-	private var currentNavController: LiveData<NavController>? = null
+    private var currentNavController: LiveData<NavController>? = null
 
-	private val appSettingsObserver: Observer<AppSettings> by lazy {
-		Observer<AppSettings> { appSettings ->
-			appSettings?.let { updateAppUi(it) }
-		}
-	}
+    private val appSettingsObserver: Observer<AppSettings> by lazy {
+        Observer<AppSettings> { appSettings ->
+            appSettings?.let { updateAppUi(it) }
+        }
+    }
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
+    override fun invalidate(state: MainViewState) {}
 
-		setSupportActionBar(binding.toolbar)
+    @ObsoleteCoroutinesApi
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-		if (savedInstanceState == null) {
-			setupBottomNavigation()
-		}
-		viewModel.initiateServiceState()
-		viewModel.appSettingsPreferencesData.observe(this, appSettingsObserver)
-	}
+        setSupportActionBar(toolbar)
 
-	override fun onStart() {
-		super.onStart()
+        if (savedInstanceState == null) {
+            setupBottomNavigation()
+        }
+        viewModel.initiateServiceState()
+        viewModel.appSettingsPreferencesData.observe(this, appSettingsObserver)
 
-		checkPermissions()
-	}
+        viewScope.launch {
+            SnackbarManager.messageChannel.consumeEach { showSnackbar(it) }
+        }
 
-	override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-		super.onRestoreInstanceState(savedInstanceState)
+        viewScope.launch {
+            BottomNavigationManager.broadcastChannel.consumeEach { configuration ->
+                bottomNavigation.setVisible(configuration.showBottomNaigation)
+                if (configuration.showActionBar) {
+                    supportActionBar?.show()
+                } else {
+                    supportActionBar?.hide()
+                }
+            }
+        }
+    }
 
-		setupBottomNavigation()
-	}
+    override fun onStart() {
+        super.onStart()
 
-	override fun onSupportNavigateUp() = currentNavController?.value?.navigateUp() ?: false
+        checkPermissions()
+    } //TODO adding photo not working
 
-	override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-		return when (keyCode) {
-			KeyEvent.KEYCODE_VOLUME_DOWN -> {
-				val intent = Intent(KEY_EVENT_ACTION).apply { putExtra(KEY_EVENT_EXTRA, keyCode) }
-				LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-				true
-			}
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
 
-			else -> super.onKeyDown(keyCode, event)
-		}
-	}
+        setupBottomNavigation()
+    }
 
-	private fun setupBottomNavigation() {
-		val bottomNavigation = binding.bottomNavigation
+    override fun onSupportNavigateUp() = currentNavController?.value?.navigateUp() ?: false
 
-		val navGraphIds = listOf(
-			R.navigation.home,
-			R.navigation.contacts,
-			R.navigation.alarm,
-			R.navigation.map,
-			R.navigation.settings
-		)
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                val intent =
+                    Intent(KEY_EVENT_ACTION).apply { putExtra(KEY_EVENT_EXTRA, keyCode) }
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+                true
+            }
 
-		val controller = bottomNavigation.setupWithNavController(
-			navGraphIds = navGraphIds,
-			fragmentManager = supportFragmentManager,
-			containerId = R.id.nav_host_container,
-			intent = intent
-		)
+            else -> super.onKeyDown(keyCode, event)
+        }
+    }
 
-		controller.observe(this, Observer { navController ->
-			setupActionBarWithNavController(navController)
-		})
+    private fun setupBottomNavigation() {
+        val bottomNavigation = bottomNavigation
 
-		currentNavController = controller
-	}
+        val navGraphIds = listOf(
+            R.navigation.home,
+            R.navigation.contacts,
+            R.navigation.alarm,
+            R.navigation.map,
+            R.navigation.settings
+        )
 
-	private fun updateAppUi(appSettings: AppSettings) {
-		postDelayed(CHANGE_THEME_DELAY) {
-			AppCompatDelegate.setDefaultNightMode(if (appSettings.darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
-		}
-		viewModel.changeServiceState(appSettings)
-	}
+        val controller = bottomNavigation.setupWithNavController(
+            navGraphIds = navGraphIds,
+            fragmentManager = supportFragmentManager,
+            containerId = R.id.navHostContainer,
+            intent = intent
+        )
 
-	private fun checkPermissions() =
-		getPermissions(
-			this,
-			listOf(
-				Manifest.permission.ACCESS_COARSE_LOCATION,
-				Manifest.permission.CALL_PHONE,
-				Manifest.permission.SEND_SMS,
-				Manifest.permission.READ_PHONE_STATE
-			)
-		)
+        controller.observe(this, Observer { navController ->
+            setupActionBarWithNavController(navController)
+        })
+
+        currentNavController = controller
+    }
+
+    private fun updateAppUi(appSettings: AppSettings) {
+        postDelayed(CHANGE_THEME_DELAY) {
+            AppCompatDelegate.setDefaultNightMode(if (appSettings.darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+        }
+        viewModel.changeServiceState(appSettings)
+    }
+
+    private fun checkPermissions() =
+        getPermissions(
+            this,
+            listOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.CALL_PHONE,
+                Manifest.permission.SEND_SMS,
+                Manifest.permission.READ_PHONE_STATE
+            )
+        )
+
+    private fun showSnackbar(payload: SnackbarPayload) {
+        if (payload.actionResId == null) {
+            Snackbar.make(snackbarContainer, payload.message, Snackbar.LENGTH_LONG).show()
+        } else {
+            with(Snackbar.make(snackbarContainer, payload.message, Snackbar.LENGTH_LONG)) {
+                setAction(payload.actionResId, payload.actionListener)
+                show()
+            }
+        }
+    }
 }

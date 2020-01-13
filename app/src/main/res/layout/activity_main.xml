@@ -1,53 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		xmlns:tools="http://schemas.android.com/tools">
+<LinearLayout android:id="@+id/container"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        tools:context="com.example.bpawlowski.falldetector.screens.main.MainActivity"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-	<data>
+    <com.google.android.material.appbar.AppBarLayout
+            android:fitsSystemWindows="true"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-		<variable
-			name="viewModel"
-			type="com.example.bpawlowski.falldetector.screens.main.MainViewModel"/>
-	</data>
+        <androidx.appcompat.widget.Toolbar
+                android:background="?attr/colorPrimary"
+                android:id="@+id/toolbar"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_width="match_parent"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-	<LinearLayout
-		android:id="@+id/container"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="vertical"
-		tools:context="com.example.bpawlowski.falldetector.screens.main.MainActivity">
+    </com.google.android.material.appbar.AppBarLayout>
 
-		<com.google.android.material.appbar.AppBarLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:theme="@style/AppTheme.AppBarOverlay"
-			android:fitsSystemWindows="true">
+    <FrameLayout
+            android:id="@+id/navHostContainer"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent" />
 
-			<androidx.appcompat.widget.Toolbar
-				android:id="@+id/toolbar"
-				android:layout_width="match_parent"
-				android:layout_height="?attr/actionBarSize"
-				android:background="?attr/colorPrimary"
-				app:popupTheme="@style/AppTheme.PopupOverlay"/>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/snackbarContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-		</com.google.android.material.appbar.AppBarLayout>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottomNavigation"
+                android:background="@color/navBarBackground"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                app:itemBackground="@color/navBarBackground"
+                app:itemIconTint="@drawable/bottom_navigation_colors"
+                app:itemTextColor="@drawable/bottom_navigation_colors"
+                app:labelVisibilityMode="selected"
+                app:menu="@menu/bottom_menu" />
 
-		<FrameLayout
-			android:id="@+id/nav_host_container"
-			android:layout_width="match_parent"
-			android:layout_height="0dp"
-			android:layout_weight="1" />
-
-		<com.google.android.material.bottomnavigation.BottomNavigationView
-			android:id="@+id/bottom_navigation"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:background="@color/navBarBackground"
-			app:itemBackground="@color/navBarBackground"
-			app:itemIconTint="@drawable/bottom_navigation_colors"
-			app:itemTextColor="@drawable/bottom_navigation_colors"
-			app:labelVisibilityMode="selected"
-			app:menu="@menu/bottom_menu"/>
-
-	</LinearLayout>
-</layout>
+</LinearLayout>

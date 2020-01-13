@@ -1,113 +1,107 @@
 package com.bpawlowski.data.repository
 
-import androidx.lifecycle.LiveData
-import com.bpawlowski.core.domain.Result
-import com.bpawlowski.core.domain.failure
-import com.bpawlowski.core.domain.success
-import com.bpawlowski.core.exception.FallDetectorException
-import com.bpawlowski.core.model.Event
-import com.bpawlowski.data.util.toDomain
-import com.bpawlowski.data.util.toEntity
-import com.bpawlowski.database.dao.EventDao
-import com.bpawlowski.database.dbservice.DatabaseService
-import com.bpawlowski.database.util.mapList
-import com.bpawlowski.remote.client.EventClient
-import timber.log.Timber
+import com.bpawlowski.data.BaseRepository
+import com.bpawlowski.data.datasource.EventLocalDataSource
+import com.bpawlowski.data.datasource.EventRemoteDataSource
+import com.bpawlowski.domain.Result
+import com.bpawlowski.domain.exception.FallDetectorException
+import com.bpawlowski.domain.failure
+import com.bpawlowski.domain.model.Event
+import com.bpawlowski.domain.repository.EventRepository
+import com.bpawlowski.domain.success
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 internal class EventRepositoryImpl(
-	private val eventClient: EventClient,
-	private val databaseService: DatabaseService
-) : EventRepository {
+    private val eventRemoteDataSource: EventRemoteDataSource,
+    private val eventLocalDataSource: EventLocalDataSource
+) : BaseRepository(), EventRepository {
 
-	private val eventDao: EventDao by lazy {
-		databaseService.getEventDao()
-	}
+    /**
+     * Cache methods
+     */
+    override fun getEvents(): Flow<List<Event>> =
+        eventLocalDataSource.getAllFlow()
 
-	/**
-	 * Cache methods
-	 */
-	override val allEvents: LiveData<List<Event>>
-		get() = eventDao.getAllData().mapList { it.toDomain() }
+    override suspend fun getEvent(eventId: Long): Result<Event> {
+        val event = eventLocalDataSource.getById(eventId)
+        return if (event != null) {
+            success(event)
+        } else {
+            failure(FallDetectorException.NoSuchRecordException(eventId))
+        }
+    }
 
-	override suspend fun getEvent(eventId: Long): Result<Event> {
-		val event = eventDao.getEventById(eventId)?.toDomain()
-		return if (event != null) {
-			success(event)
-		} else {
-			failure(FallDetectorException.NoSuchRecordException(eventId))
-		}
-	}
+    override suspend fun updateAttending(event: Event?): Result<Event> {
+        event ?: return failure(IllegalArgumentException("Event cant be null"))
+        val updatedAttending =
+            if (event.isAttending) event.attendingUsers - 1 else event.attendingUsers + 1
+        val updatedEvent =
+            event.copy(attendingUsers = updatedAttending, isAttending = event.isAttending.not())
 
-	override suspend fun updateAttending(event: Event?): Result<Event> {
-		event ?: return failure(IllegalArgumentException("Event cant be null"))
+        return updateEvent(updatedEvent).flatMap {
+            eventRemoteDataSource.putEvent(event)
+        }.map { updatedEvent }
+    }
 
-		val updatedAttending = if (event.isAttending) event.attendingUsers - 1 else event.attendingUsers + 1
+    override suspend fun syncEvents() = withContext(backgroundContext) {
+        eventRemoteDataSource.getEvents().onSuccess { remoteEvents ->
+            val localEvents = eventLocalDataSource.getAll().toMutableList()
+            val eventsToRemove = localEvents
+                .filter { localEvent -> remoteEvents.all { localEvent.remoteId != it.remoteId } }
+                .onEach { localEvents.remove(it) }
 
-		val updatedEvent = event.copy(attendingUsers = updatedAttending, isAttending = event.isAttending.not())
+            val newEvents = remoteEvents
+                .filter { remoteEvent -> localEvents.all { remoteEvent.remoteId != it.remoteId } }
 
-		return updateEvent(updatedEvent).flatMap {
-			eventClient.putEvent(event)
-		}.map { updatedEvent }
-	}
+            eventLocalDataSource.delete(*eventsToRemove.toTypedArray())
+            eventLocalDataSource.insert(*newEvents.toTypedArray())
 
-	/**
-	 * Remote methods
-	 */
-	override suspend fun syncEvents() {
-		eventClient.getEvents().onSuccess { remoteEvents ->
-			val localEvents = eventDao.getAll().toMutableList()
+            remoteEvents.forEach { remoteEvent ->
+                localEvents.firstOrNull { remoteEvent.remoteId == it.remoteId && it != remoteEvent }
+                    ?.let {
+                        eventLocalDataSource.update(
+                            remoteEvent.copy(
+                                id = it.id,
+                                isAttending = it.isAttending
+                            )
+                        )
+                    }
+            }
+        }
+        Unit
+    }
 
-			val eventsToRemove = localEvents
-				.filter { localEvent -> remoteEvents.all { localEvent.remoteId != it.remoteId } }
-				.onEach { localEvents.remove(it) }
+    override suspend fun addEvent(event: Event): Result<Unit> = withContext(iOContext) {
+        eventRemoteDataSource.postEvent(event).flatMap {
+            val id = eventLocalDataSource.insert(event.copy(remoteId = it))
+            if (id != -1L) {
+                success(Unit)
+            } else {
+                failure(FallDetectorException.NoSuchRecordException(id))
+            }
+        }
+    }
 
-			val newEvents = remoteEvents
-				.filter { remoteEvent -> localEvents.all { remoteEvent.remoteId != it.remoteId } }
-				.map { it.toEntity() }
+    override suspend fun updateEvent(event: Event): Result<Unit> = withContext(backgroundContext) {
+        eventRemoteDataSource.putEvent(event).flatMap {
+            val updatedColumns = eventLocalDataSource.update(event)
+            if (updatedColumns > 0) {
+                success(Unit)
+            } else {
+                failure(FallDetectorException.RecordNotUpdatedException(event.id))
+            }
+        }
+    }
 
-			eventDao.delete(*eventsToRemove.toTypedArray())
-			eventDao.insert(*newEvents.toTypedArray())
-
-			remoteEvents.forEach { remoteEvent ->
-				localEvents.firstOrNull { remoteEvent.remoteId == it.remoteId && it.toDomain() != remoteEvent }?.let {
-					eventDao.update(
-						remoteEvent.toEntity().copy(
-							id = it.id,
-							isAttending = it.isAttending
-						)
-					)
-				}
-			}
-		}.onException { Timber.e(it) }
-	}
-
-	override suspend fun addEvent(event: Event): Result<Unit> =
-		eventClient.postEvent(event).flatMap {
-			val id = eventDao.insert(event.toEntity().copy(remoteId = it))
-			return if (id != -1L) {
-				success(Unit)
-			} else {
-				failure(FallDetectorException.NoSuchRecordException(id))
-			}
-		}
-
-	override suspend fun updateEvent(event: Event): Result<Unit> =
-		eventClient.putEvent(event).flatMap {
-			val updatedColumns = eventDao.update(event.toEntity())
-			return if (updatedColumns > 0) {
-				success(Unit)
-			} else {
-				failure(FallDetectorException.RecordNotUpdatedException(event.id))
-			}
-		}
-
-	override suspend fun removeEvent(event: Event): Result<Unit> =
-		eventClient.deleteEvent(event).flatMap {
-			val deletedColumns = eventDao.delete(event.toEntity())
-			return if (deletedColumns > 0) {
-				success(Unit)
-			} else {
-				failure(FallDetectorException.RecordNotDeletedException(event.id))
-			}
-		}
+    override suspend fun removeEvent(event: Event): Result<Unit> = withContext(backgroundContext) {
+        eventRemoteDataSource.deleteEvent(event).flatMap {
+            val deletedColumns = eventLocalDataSource.delete(event)
+            if (deletedColumns > 0) {
+                success(Unit)
+            } else {
+                failure(FallDetectorException.RecordNotDeletedException(event.id))
+            }
+        }
+    }
 }

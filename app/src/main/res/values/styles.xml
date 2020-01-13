@@ -1,62 +1,71 @@
 <resources>
     <!--main theme-->
-	<style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
-		<item name="colorPrimary">@color/primary</item>
-		<item name="colorPrimaryDark">@color/primaryDark</item>
-		<item name="colorSecondary">@color/secondary</item>
-		<item name="colorAccent">@color/secondary</item>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorAccent">@color/secondary</item>
 
-		<item name="colorError">@color/error</item>
-		<item name="android:colorBackground">@color/background</item>
-		<item name="colorSurface">@color/surface</item>
+        <item name="colorError">@color/error</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
 
-		<item name="colorOnPrimary">@color/onPrimary</item>
-		<item name="colorOnSecondary">@color/onSecondary</item>
-		<item name="colorOnError">@color/onError</item>
-		<item name="colorOnBackground">@color/onBackground</item>
-		<item name="colorOnSurface">@color/onSurface</item>
+        <item name="colorOnPrimary">@color/onPrimary</item>
+        <item name="colorOnSecondary">@color/onSecondary</item>
+        <item name="colorOnError">@color/onError</item>
+        <item name="colorOnBackground">@color/onBackground</item>
+        <item name="colorOnSurface">@color/onSurface</item>
 
-		<item name="android:itemBackground">@color/surface</item>
-		<item name="android:windowContentTransitions">true</item>
+        <item name="android:itemBackground">@color/surface</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
-	<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-	<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-	<style name="FormDialogStyle" parent="AppTheme">
-		<item name="android:windowIsFloating">true</item>
-		<item name="android:windowAnimationStyle">@style/FormDialogAnimation</item>
-		<item name="android:windowBackground">@drawable/background_transparent</item>
-		<item name="android:background">@drawable/background_rounded</item>
-	</style>
+    <style name="FormDialogStyle" parent="AppTheme">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowAnimationStyle">@style/FormDialogAnimation</item>
+        <item name="android:windowBackground">@drawable/background_transparent</item>
+        <item name="android:background">@drawable/background_rounded</item>
+    </style>
 
-	<style name="FormDialogAnimation">
+    <style name="FormDialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
-	<style name="MapInfoWindow">
-		<item name="android:windowBackground">@drawable/background_transparent</item>
-		<item name="android:background">@drawable/background_rounded_outline</item>
-	</style>
+    <style name="MapInfoWindow">
+        <item name="android:windowBackground">@drawable/background_transparent</item>
+        <item name="android:background">@drawable/background_rounded_outline</item>
+    </style>
 
-	<style name="Headline1">
-		<item name="android:textSize">@dimen/h1_font_size</item>
-		<item name="android:lineSpacingExtra">@dimen/h1_extra_spacing</item>
-		<item name="android:textStyle">bold</item>
-	</style>
+    <!--	text-->
+    <style name="Headline1">
+        <item name="android:textSize">@dimen/h1_font_size</item>
+        <item name="android:lineSpacingExtra">@dimen/h1_extra_spacing</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
-	<style name="Headline2">
-		<item name="android:textColor">@color/black</item>
-		<item name="android:textSize">@dimen/h2_font_size</item>
-		<item name="android:lineSpacingExtra">@dimen/h2_extra_spacing</item>
-		<item name="android:textStyle">bold</item>
-	</style>
+    <style name="Headline2">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/h2_font_size</item>
+        <item name="android:lineSpacingExtra">@dimen/h2_extra_spacing</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
-	<style name="Headline3">
-		<item name="android:textSize">@dimen/h3_font_size</item>
-		<item name="android:lineSpacingExtra">@dimen/h3_extra_spacing</item>
-		<item name="android:textStyle">bold</item>
-	</style>
+    <style name="Headline3">
+        <item name="android:textSize">@dimen/h3_font_size</item>
+        <item name="android:lineSpacingExtra">@dimen/h3_extra_spacing</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!--    buttons-->
+    <style name="ProfileImageButton">
+        <item name="android:padding">@dimen/padding_extra_small_2dp</item>
+        <item name="android:elevation">@dimen/img_profile_elevation</item>
+        <item name="android:background">@drawable/contact_placeholder</item>
+    </style>
+
 </resources>

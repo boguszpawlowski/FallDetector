@@ -10,14 +10,14 @@ import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 
 class EventClusterRenderer(
-	map: GoogleMap,
-	clusterManager: ClusterManager<EventClusterItem>,
-	private val context: Context
+    map: GoogleMap?,
+    clusterManager: ClusterManager<EventClusterItem>,
+    private val context: Context
 ) : DefaultClusterRenderer<EventClusterItem>(context, map, clusterManager) {
 
-	override fun onBeforeClusterItemRendered(item: EventClusterItem?, markerOptions: MarkerOptions?) {
-		val bitmap = R.drawable.ic_person_pin_black_32dp.toBitmap(context)
-		val markerDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap)
-		markerOptions?.icon(markerDescriptor)
-	}
+    override fun onBeforeClusterItemRendered(item: EventClusterItem?, markerOptions: MarkerOptions?) {
+        val bitmap = R.drawable.ic_person_pin_black_32dp.toBitmap(context)
+        val markerDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap)
+        markerOptions?.icon(markerDescriptor)
+    }
 }

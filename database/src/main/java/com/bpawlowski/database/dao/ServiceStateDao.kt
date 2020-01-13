@@ -1,16 +1,16 @@
 package com.bpawlowski.database.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.bpawlowski.core.model.Sensitivity
+import com.bpawlowski.domain.model.Sensitivity
 import com.bpawlowski.database.entity.ServiceStateDb
+import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface ServiceStateDao: BaseDao<ServiceStateDb> {
+interface ServiceStateDao : BaseDao<ServiceStateDb> {
 
     @Query("SELECT * FROM service_state LIMIT 1")
     suspend fun getServiceState(): ServiceStateDb?
@@ -19,10 +19,10 @@ interface ServiceStateDao: BaseDao<ServiceStateDb> {
     suspend fun initiateState(serviceState: ServiceStateDb): Long
 
     @Query("SELECT sensitivity FROM service_state LIMIT 1")
-    fun getSensitivityData(): LiveData<Sensitivity>
+    fun getSensitivityFlow(): Flow<Sensitivity>
 
     @Query("SELECT is_running FROM service_state LIMIT 1")
-    fun getIsRunningData(): LiveData<Boolean>
+    fun getIsRunningFlow(): Flow<Boolean>
 
     @Query("SELECT is_running FROM service_state LIMIT 1")
     suspend fun getIsRunningFlag(): Boolean?
@@ -33,6 +33,6 @@ interface ServiceStateDao: BaseDao<ServiceStateDb> {
     @Query("UPDATE service_state SET sensitivity=:sensitivity")
     suspend fun updateSensitivity(sensitivity: Sensitivity): Int
 
-	@Update
-	suspend fun updateServiceState(serviceState: ServiceStateDb): Int
+    @Update
+    suspend fun updateServiceState(serviceState: ServiceStateDb): Int
 }

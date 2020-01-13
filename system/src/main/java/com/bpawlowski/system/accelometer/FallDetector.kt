@@ -3,7 +3,7 @@
 package com.bpawlowski.system.accelometer
 
 import android.content.Context
-import com.bpawlowski.core.model.Sensitivity
+import com.bpawlowski.domain.model.Sensitivity
 import com.bpawlowski.system.model.AccelerometerEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -18,30 +18,30 @@ import timber.log.Timber
 import kotlin.math.abs
 
 class FallDetector(
-	private val context: Context,
-	private var sensitivity: Sensitivity = Sensitivity.HIGH
+    private val context: Context,
+    private var sensitivity: Sensitivity = Sensitivity.HIGH
 ) {
 
-	private val accelerometerListener by lazy {
-		AccelerometerListener(context)
-	}
+    private val accelerometerListener by lazy {
+        AccelerometerListener(context)
+    }
 
-	fun getFallEvents(): Flow<Boolean> =
-		accelerometerListener.flow()
-			.skipUntilPeak(sensitivity)
-			.detectNoMovement(sensitivity)
-			.flowOn(Dispatchers.Default)
+    fun getFallEvents(): Flow<Boolean> =
+        accelerometerListener.flow()
+            .skipUntilPeak(sensitivity)
+            .detectNoMovement(sensitivity)
+            .flowOn(Dispatchers.Default)
 
-	fun changeSensitivity(sensitivity: Sensitivity) {
-		this.sensitivity = sensitivity
-	}
+    fun changeSensitivity(sensitivity: Sensitivity) {
+        this.sensitivity = sensitivity
+    }
 }
 
 private fun Flow<AccelerometerEvent>.skipUntilPeak(sensitivity: Sensitivity): Flow<AccelerometerEvent> =
-	dropWhile { event ->
-		Timber.e("before dropping: $event")
-		event.mean < sensitivity.maxAcc
-	}
+    dropWhile { event ->
+        Timber.e("before dropping: $event")
+        event.mean < sensitivity.maxAcc
+    }
 
 /**
  * Accumulates items for period defined in [Sensitivity], then compares its mean and emits result.
@@ -49,13 +49,13 @@ private fun Flow<AccelerometerEvent>.skipUntilPeak(sensitivity: Sensitivity): Fl
  * Throwing error to restart the flow after false alarm
  */
 private fun Flow<AccelerometerEvent>.detectNoMovement(sensitivity: Sensitivity): Flow<Boolean> =
-	drop(30) //todo number count
-		.map { event -> event.mean }
-		.take(100)
-		.scan(mutableListOf()) { accumulator: MutableList<Float>, value -> accumulator.add(value); accumulator }
-		.drop(100)
-		.map { buffer ->
-			if (abs(buffer.toTypedArray().average()) < sensitivity.meanAccDuringNoMovement) {
-				true
-			} else throw IllegalStateException()
-		}.retryWhen { cause, _ -> cause is IllegalStateException }
+    drop(30) // todo number count
+        .map { event -> event.mean }
+        .take(100)
+        .scan(mutableListOf()) { accumulator: MutableList<Float>, value -> accumulator.add(value); accumulator }
+        .drop(100)
+        .map { buffer ->
+            if (abs(buffer.toTypedArray().average()) < sensitivity.meanAccDuringNoMovement) {
+                true
+            } else throw IllegalStateException()
+        }.retryWhen { cause, _ -> cause is IllegalStateException }

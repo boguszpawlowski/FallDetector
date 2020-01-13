@@ -1,159 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/mainContent"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:fitsSystemWindows="false"
+	app:layoutDescription="@xml/event_collapsing_animation_scene">
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools">
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/imageEventBackground"
+		android:layout_width="0dp"
+		android:layout_height="@dimen/detail_backdrop_height"
+		android:scaleType="centerCrop"
+		android:src="@drawable/elder_man_nordic_walking"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
 
-	<data>
-		<variable
-			name="viewModel"
-			type="com.example.bpawlowski.falldetector.screens.main.events.EventDetailsViewModel" />
-	</data>
+	<View
+		android:id="@+id/toolbarBackground"
+		android:layout_width="0dp"
+		android:layout_height="?android:attr/actionBarSize"
+		android:background="@color/primary"
+		android:visibility="gone"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
 
-	<androidx.coordinatorlayout.widget.CoordinatorLayout
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		android:id="@+id/main_content"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:fitsSystemWindows="false">
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/buttonBack"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/icon_back"
+		android:tint="@color/white"
+		android:visibility="invisible"
+		app:layout_constraintBottom_toBottomOf="@id/toolbarBackground"
+		app:layout_constraintEnd_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="@id/toolbarBackground" />
 
-		<com.google.android.material.appbar.AppBarLayout
-			android:id="@+id/eventsAppbar"
+	<androidx.appcompat.widget.AppCompatTextView
+		android:id="@+id/textEventTitle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_small_8dp"
+		android:layout_marginTop="@dimen/margin_small_8dp"
+		android:text="@string/event_details_label"
+		android:textColor="@color/white"
+		android:textSize="@dimen/text_toolbar_size"
+		android:theme="@style/Headline3"
+		android:visibility="invisible"
+		app:layout_constraintBottom_toBottomOf="@id/imageEventBackground"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
+
+	<androidx.core.widget.NestedScrollView
+		android:id="@+id/scrollView"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/imageEventBackground">
+
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/scrollableContent"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:fitsSystemWindows="true"
-			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+			android:layout_height="match_parent">
 
-			<com.google.android.material.appbar.CollapsingToolbarLayout
-				android:id="@+id/collapsingToolbar"
-				android:layout_width="match_parent"
-				android:layout_height="@dimen/img_profile_size"
-				android:fitsSystemWindows="true"
-				app:contentScrim="?attr/colorPrimary"
-				app:expandedTitleMarginEnd="64dp"
-				app:expandedTitleMarginStart="48dp"
-				app:layout_scrollFlags="scroll|exitUntilCollapsed">
+			<TextView
+				android:id="@+id/txtEventTitle"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_medium_16dp"
+				android:layout_marginTop="@dimen/margin_medium_16dp"
+				android:layout_marginEnd="@dimen/margin_small_8dp"
+				android:textColor="@color/textAccent"
+				android:theme="@style/Headline2"
+				app:layout_constraintEnd_toStartOf="@id/buttonAttend"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				tools:text="Event Title"
+				tools:textSize="@dimen/h2_font_size" />
 
-				<androidx.appcompat.widget.AppCompatImageView
-					android:id="@+id/imgEvent"
-					android:layout_width="match_parent"
-					android:layout_height="match_parent"
-					android:src="@drawable/elder_man_nordic_walking"
-					android:scaleType="centerCrop"
-					app:layout_collapseMode="parallax"/>
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/buttonAttend"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/margin_medium_16dp"
+				app:layout_constraintBottom_toBottomOf="@+id/txtEventTitle"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toTopOf="@+id/txtEventTitle"
+				tools:text="Attend" />
 
-				<androidx.appcompat.widget.Toolbar
-					android:id="@+id/eventsToolbar"
-					android:layout_width="match_parent"
-					android:layout_height="?attr/actionBarSize"
-					app:title="Event Details"
-					app:layout_collapseMode="pin"
-					app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+			<TextView
+				android:id="@+id/txtEventDate"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_medium_16dp"
+				android:layout_marginTop="@dimen/margin_small_8dp"
+				android:theme="@style/Headline3"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/txtEventTitle"
+				tools:text="16th march"
+				tools:textSize="18sp" />
 
-			</com.google.android.material.appbar.CollapsingToolbarLayout>
+			<TextView
+				android:id="@+id/txtAttending"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/margin_medium_16dp"
+				android:textColor="@color/textAccent"
+				android:theme="@style/Headline3"
+				app:layout_constraintBottom_toBottomOf="@id/txtEventDate"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toTopOf="@+id/txtEventDate"
+				tools:text="Attending: 12"
+				tools:textSize="18sp" />
 
-		</com.google.android.material.appbar.AppBarLayout>
+			<TextView
+				android:id="@+id/txtEventDescription"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_medium_16dp"
+				android:layout_marginTop="@dimen/margin_small_8dp"
+				android:layout_marginEnd="@dimen/margin_medium_16dp"
+				android:text="@string/long_test_string"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/txtEventDate"
+				tools:text="@string/long_test_string" />
 
-		<androidx.core.widget.NestedScrollView
-			android:id="@+id/scrollView"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:focusable="true"
-			android:focusableInTouchMode="true"
-			app:layout_behavior="@string/appbar_scrolling_view_behavior">
+			<fragment
+				android:id="@+id/eventMapFragment"
+				android:name="com.example.bpawlowski.falldetector.screens.main.events.SafeScrollMapFragment"
+				android:layout_width="0dp"
+				android:layout_height="@dimen/event_detail_map_height"
+				android:layout_margin="@dimen/margin_medium_16dp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/txtEventDescription"
+				tools:layout_editor_absoluteX="184dp"
+				tools:layout_editor_absoluteY="245dp" />
+		</androidx.constraintlayout.widget.ConstraintLayout>
+	</androidx.core.widget.NestedScrollView>
 
-			<androidx.constraintlayout.widget.ConstraintLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
+	<androidx.core.widget.ContentLoadingProgressBar
+		android:id="@+id/progressBar"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:theme="?android:attr/progressBarStyleLarge"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:visibilityMode="ignore"
+		tools:visibility="visible" />
 
-				<TextView
-					android:id="@+id/txtEventTitle"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_medium"
-					android:layout_marginEnd="@dimen/margin_small"
-					android:layout_marginTop="@dimen/margin_medium"
-					android:text="@{viewModel.eventMarkerData.title}"
-					android:theme="@style/Headline2"
-					android:textColor="@color/textAccent"
-					app:layout_constraintEnd_toStartOf="@id/btnAttend"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toTopOf="parent"
-					tools:text="Event Title"
-					tools:textSize="@dimen/h2_font_size" />
-
-				<com.google.android.material.button.MaterialButton
-					android:id="@+id/btnAttend"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginEnd="@dimen/margin_medium"
-					android:text="@{viewModel._eventData.isAttending ? @string/btn_leave : @string/btn_attend}"
-					app:layout_constraintBottom_toBottomOf="@+id/txtEventTitle"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintTop_toTopOf="@+id/txtEventTitle"
-					tools:text="Attend"/>
-
-				<TextView
-					android:id="@+id/txtEventDate"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_medium"
-					android:layout_marginTop="@dimen/margin_small"
-					android:text="@{viewModel.eventMarkerData.exactDate}"
-					android:theme="@style/Headline3"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@+id/txtEventTitle"
-					tools:text="16th march"
-					tools:textSize="18sp" />
-
-				<TextView
-					android:id="@+id/txtAttending"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginEnd="@dimen/margin_medium"
-					android:theme="@style/Headline3"
-					android:textColor="@color/textAccent"
-					android:text='@{"Attending " + viewModel.eventMarkerData.attendingUsers}'
-					app:layout_constraintTop_toTopOf="@+id/txtEventDate"
-					app:layout_constraintBottom_toBottomOf="@id/txtEventDate"
-					app:layout_constraintEnd_toEndOf="parent"
-					tools:text="Attending: 12"
-					tools:textSize="18sp"/>
-
-				<TextView
-					android:id="@+id/txtEventDescription"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_marginEnd="@dimen/margin_medium"
-					android:layout_marginStart="@dimen/margin_medium"
-					android:layout_marginTop="@dimen/margin_small"
-					android:text="@string/long_test_string"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@+id/txtEventDate"
-					tools:text="@string/long_test_string" />
-
-				<fragment
-					android:id="@+id/eventMapFragment"
-					android:name="com.example.bpawlowski.falldetector.screens.main.events.SafeScrollMapFragment"
-					android:layout_width="0dp"
-					android:layout_height="@dimen/event_detail_map_height"
-					android:layout_margin="@dimen/margin_medium"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@+id/txtEventDescription"
-					tools:layout_editor_absoluteX="184dp"
-					tools:layout_editor_absoluteY="245dp" />
-
-			</androidx.constraintlayout.widget.ConstraintLayout>
-		</androidx.core.widget.NestedScrollView>
-
-		<ProgressBar
-			android:id="@+id/progressBar"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:visibility="gone"
-			tools:visibility="visible"/>
-
-	</androidx.coordinatorlayout.widget.CoordinatorLayout>
-</layout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

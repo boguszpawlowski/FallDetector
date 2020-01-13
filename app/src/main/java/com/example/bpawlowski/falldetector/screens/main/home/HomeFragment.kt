@@ -3,24 +3,24 @@ package com.example.bpawlowski.falldetector.screens.main.home
 import android.os.Bundle
 import android.view.View
 import com.example.bpawlowski.falldetector.R
-import com.example.bpawlowski.falldetector.databinding.FragmentHomeBinding
 import com.example.bpawlowski.falldetector.base.fragment.BaseFragment
-import com.example.bpawlowski.falldetector.screens.main.MainViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import kotlinx.android.synthetic.main.fragment_home.buttonMonitor
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : BaseFragment<FragmentHomeBinding>() {
+class HomeFragment : BaseFragment<HomeViewState>() {
 
-	override val layoutResID = R.layout.fragment_home
+    override val layoutResID = R.layout.fragment_home
 
-	override val viewModel: HomeViewModel by viewModel()
+    override val viewModel: HomeViewModel by viewModel()
 
-	override val sharedViewModel: MainViewModel by sharedViewModel()
+    override fun invalidate(state: HomeViewState) {
+        // todo service error rationale
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnMonitor.setOnClickListener {
+        buttonMonitor.setOnClickListener {
             viewModel.toggleService(requireContext())
         }
     }

@@ -1,57 +1,46 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		xmlns:tools="http://schemas.android.com/tools">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".screens.main.contacts.ContactsFragment">
 
-	<data>
+	<TextView
+		android:id="@+id/tv_no_contacts"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/tv_no_contacts_yet"
+		android:textSize="@dimen/text_no_contacts"
+		android:textStyle="bold"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:visibility="visible" />
 
-		<variable
-			name="viewModel"
-			type="com.example.bpawlowski.falldetector.screens.main.contacts.ContactsViewModel"/>
-	</data>
+	<com.airbnb.epoxy.EpoxyRecyclerView
+		android:id="@+id/recyclerContact"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:listitem="@layout/contact_item" />
 
-	<androidx.constraintlayout.widget.ConstraintLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		tools:context=".screens.main.contacts.ContactsFragment">
+	<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+		android:id="@+id/fabPriority"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_medium_16dp"
+		android:elevation="@dimen/elevation_fab"
+		android:scaleType="center"
+		android:text="@string/fab_label"
+		app:icon="@drawable/icon_plus"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
 
-		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/recycler_contact"
-			android:layout_width="0dp"
-			android:layout_height="0dp"
-			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			tools:listitem="@layout/contact_item"/>
-
-		<TextView
-			android:id="@+id/tv_no_contacts"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/tv_no_contacts_yet"
-			android:textSize="@dimen/text_no_contacts"
-			android:textStyle="bold"
-			android:visibility="gone"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:visible="@{viewModel.contactsLiveData.isEmpty()}"
-			tools:visibility="visible"/>
-
-		<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-			android:id="@+id/fab"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/margin_medium"
-			android:elevation="@dimen/elevation_fab"
-			android:scaleType="center"
-			android:text="@string/fab_label"
-			app:icon="@drawable/icon_plus"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"/>
-
-	</androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

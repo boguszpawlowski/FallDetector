@@ -1,8 +1,6 @@
 package com.example.bpawlowski.falldetector
 
-
 import org.junit.Test
-
 
 /**
  * Instrumented test, which will execute on an Android device.

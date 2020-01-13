@@ -29,7 +29,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation project(path: ':core')
+    implementation project(path: ':domain')
 
     implementation "com.google.android.gms:play-services-location:17.0.0"
 

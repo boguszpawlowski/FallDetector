@@ -1,129 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		xmlns:tools="http://schemas.android.com/tools">
 
-	<data>
+<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/container"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="?android:attr/selectableItemBackground">
 
-		<import type="android.text.TextUtils"/>
-
-		<import type="android.view.View"/>
-
-		<variable
-			name="contact"
-			type="com.bpawlowski.core.model.Contact"/>
-	</data>
-
-	<androidx.constraintlayout.widget.ConstraintLayout
-		android:id="@+id/container"
-		android:layout_width="match_parent"
+	<TextView
+		android:id="@+id/txtContactName"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:background="?android:attr/selectableItemBackground">
+		android:layout_marginStart="@dimen/margin_card_start_72dp"
+		android:textSize="@dimen/text_highlight"
+		android:textStyle="bold"
+		app:layout_constraintBottom_toTopOf="@+id/txtNumber"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:text="Contact Name" />
 
-		<androidx.appcompat.widget.AppCompatImageView
-			android:id="@+id/img_contact"
-			android:layout_width="60dp"
-			android:layout_height="60dp"
-			android:layout_marginBottom="@dimen/margin_small"
-			android:layout_marginStart="@dimen/margin_small"
-			android:layout_marginTop="@dimen/margin_small"
-			android:scaleType="centerCrop"
-			android:src="@drawable/icon_contact"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"/>
+	<TextView
+		android:id="@+id/txtPriority"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_extra_small_4dp"
+		android:textAllCaps="true"
+		android:textColor="?attr/colorAccent"
+		android:textSize="@dimen/text_highlight"
+		app:layout_constraintStart_toEndOf="@id/txtContactName"
+		app:layout_constraintTop_toTopOf="@id/txtContactName"
+		tools:text="ICE" />
 
-		<TextView
-			android:id="@+id/txt_name"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/margin_card_start"
-			android:textSize="@dimen/text_highlight"
-			android:textStyle="bold"
-			app:layout_constraintBottom_toTopOf="@+id/txt_number"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			tools:text="Contact Name"/>
+	<TextView
+		android:id="@+id/txtNumber"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="@dimen/margin_extra_small_4dp"
+		app:layout_constraintBottom_toTopOf="@+id/txtEmail"
+		app:layout_constraintStart_toEndOf="@id/img_phone_icon"
+		app:layout_constraintTop_toBottomOf="@id/txtContactName"
+		tools:text="234 424 424" />
 
-		<TextView
-			android:id="@+id/txt_priority"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/margin_extra_small"
-			android:textAllCaps="true"
-			android:textColor="?attr/colorAccent"
-			android:textSize="@dimen/text_highlight"
-			app:layout_constraintStart_toEndOf="@id/txt_name"
-			app:layout_constraintTop_toTopOf="@id/txt_name"
-			tools:text="ICE"/>
+	<TextView
+		android:id="@+id/txtEmail"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/margin_extra_small_4dp"
+		android:layout_marginStart="@dimen/margin_extra_small_4dp"
+		android:ellipsize="end"
+		android:maxLines="1"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toStartOf="@id/btnSms"
+		app:layout_constraintHorizontal_weight="1"
+		app:layout_constraintStart_toEndOf="@id/img_email_icon"
+		app:layout_constraintTop_toBottomOf="@id/txtNumber"
+		tools:text="email@gmail.com" />
 
-		<androidx.appcompat.widget.AppCompatImageView
-			android:id="@+id/img_phone_icon"
-			android:layout_width="15dp"
-			android:layout_height="15dp"
-			android:src="@drawable/ic_phone_android_black_24dp"
-			app:layout_constraintBottom_toTopOf="@+id/txt_email"
-			app:layout_constraintStart_toStartOf="@id/txt_name"
-			app:layout_constraintTop_toBottomOf="@id/txt_name"/>
+	<androidx.appcompat.widget.AppCompatImageButton
+		android:id="@+id/btnSms"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/margin_extra_small_4dp"
+		android:background="?android:attr/selectableItemBackground"
+		android:padding="@dimen/margin_extra_small_4dp"
+		android:src="@drawable/ic_chat_black_32dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toStartOf="@+id/btnCall"
+		app:layout_constraintTop_toTopOf="parent" />
 
-		<TextView
-			android:id="@+id/txt_number"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/margin_extra_small"
-			app:layout_constraintBottom_toTopOf="@+id/txt_email"
-			app:layout_constraintStart_toEndOf="@id/img_phone_icon"
-			app:layout_constraintTop_toBottomOf="@id/txt_name"
-			tools:text="234 424 424"/>
+	<androidx.appcompat.widget.AppCompatImageButton
+		android:id="@+id/btnCall"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/margin_small_8dp"
+		android:background="?android:attr/selectableItemBackground"
+		android:padding="@dimen/margin_extra_small_4dp"
+		android:src="@drawable/ic_call_black_32dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
 
-		<androidx.appcompat.widget.AppCompatImageView
-			android:id="@+id/img_email_icon"
-			android:layout_width="15dp"
-			android:layout_height="15dp"
-			android:src="@drawable/ic_email_black_24dp"
-			android:visibility="@{TextUtils.isEmpty(contact.email) ? View.GONE : View.VISIBLE}"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintStart_toStartOf="@id/txt_name"
-			app:layout_constraintTop_toBottomOf="@id/txt_number"/>
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/img_phone_icon"
+		android:layout_width="15dp"
+		android:layout_height="15dp"
+		android:src="@drawable/ic_phone_android_black_24dp"
+		app:layout_constraintBottom_toTopOf="@+id/txtEmail"
+		app:layout_constraintStart_toStartOf="@id/txtContactName"
+		app:layout_constraintTop_toBottomOf="@id/txtContactName" />
 
-		<TextView
-			android:id="@+id/txt_email"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/margin_extra_small"
-			android:layout_marginStart="@dimen/margin_extra_small"
-			android:ellipsize="end"
-			android:maxLines="1"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toStartOf="@id/btn_sms"
-			app:layout_constraintHorizontal_weight="1"
-			app:layout_constraintStart_toEndOf="@id/img_email_icon"
-			app:layout_constraintTop_toBottomOf="@id/txt_number"
-			tools:text="email@gmail.com"/>
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/img_contact"
+		android:layout_width="60dp"
+		android:layout_height="60dp"
+		android:layout_marginBottom="@dimen/margin_small_8dp"
+		android:layout_marginStart="@dimen/margin_small_8dp"
+		android:layout_marginTop="@dimen/margin_small_8dp"
+		android:scaleType="centerCrop"
+		android:src="@drawable/icon_contact"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
 
-		<androidx.appcompat.widget.AppCompatImageButton
-			android:id="@+id/btn_sms"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/margin_extra_small"
-			android:background="?android:attr/selectableItemBackground"
-			android:padding="@dimen/margin_extra_small"
-			android:src="@drawable/ic_chat_black_32dp"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toStartOf="@+id/btn_call"
-			app:layout_constraintTop_toTopOf="parent"/>
+	<androidx.appcompat.widget.AppCompatImageView
+		android:id="@+id/img_email_icon"
+		android:layout_width="15dp"
+		android:layout_height="15dp"
+		android:src="@drawable/ic_email_black_24dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintStart_toStartOf="@id/txtContactName"
+		app:layout_constraintTop_toBottomOf="@id/txtNumber" />
 
-		<androidx.appcompat.widget.AppCompatImageButton
-			android:id="@+id/btn_call"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/margin_small"
-			android:background="?android:attr/selectableItemBackground"
-			android:padding="@dimen/margin_extra_small"
-			android:src="@drawable/ic_call_black_32dp"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent"/>
-
-	</androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

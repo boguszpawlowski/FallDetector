@@ -1,49 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 
-	<data>
+	<TextureView
+		android:id="@+id/viewFinder"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
 
-		<variable
-			name="viewModel"
-			type="com.example.bpawlowski.falldetector.screens.main.camera.CameraViewModel"/>
-	</data>
+	<androidx.appcompat.widget.AppCompatImageButton
+		android:id="@+id/buttonShutter"
+		android:layout_width="65dp"
+		android:layout_height="65dp"
+		android:layout_marginBottom="@dimen/margin_large_32dp"
+		android:background="@drawable/btn_shutter_background"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
 
-	<androidx.constraintlayout.widget.ConstraintLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+	<androidx.appcompat.widget.AppCompatImageButton
+		android:id="@+id/buttonRotate"
+		android:layout_width="50dp"
+		android:layout_height="50dp"
+		android:src="@drawable/ic_camera_front_black_24dp"
+		android:tint="@color/white"
+		android:background="@drawable/rotate_camera_background"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="@id/buttonShutter"
+		app:layout_constraintBottom_toBottomOf="@id/buttonShutter"
+		app:layout_constraintEnd_toStartOf="@id/buttonShutter" />
 
-		<TextureView
-			android:id="@+id/view_finder"
-			android:layout_width="0dp"
-			android:layout_height="0dp"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"/>
-
-		<androidx.appcompat.widget.AppCompatImageButton
-			android:id="@+id/btn_shutter"
-			android:layout_width="65dp"
-			android:layout_height="65dp"
-			android:layout_marginBottom="@dimen/margin_large"
-			android:background="@drawable/btn_shutter_background"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"/>
-
-		<androidx.appcompat.widget.AppCompatImageButton
-			android:id="@+id/btn_rotate"
-			android:layout_width="50dp"
-			android:layout_height="50dp"
-			android:src="@drawable/ic_camera_front_black_24dp"
-			android:tint="@color/white"
-			android:background="@drawable/rotate_camera_background"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="@id/btn_shutter"
-			app:layout_constraintBottom_toBottomOf="@id/btn_shutter"
-			app:layout_constraintEnd_toStartOf="@id/btn_shutter"/>
-
-	</androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,14 +15,14 @@
 			android:id="@+id/showDetails"
 			app:destination="@id/contactDetailsFragment"/>
 	</fragment>
-	<dialog
+	<fragment
 		android:id="@+id/formDialogFragment"
-		android:name="com.example.bpawlowski.falldetector.screens.main.contacts.FormDialogFragment"
-		android:label="FormDialogFragment">
+		android:name="com.example.bpawlowski.falldetector.screens.main.contacts.AddContactFragment"
+		android:label="Add Contact">
 		<action
 			android:id="@+id/openCamera"
 			app:destination="@id/cameraFragment"/>
-	</dialog>
+	</fragment>
 	<fragment
 		android:id="@+id/contactDetailsFragment"
 		android:name="com.example.bpawlowski.falldetector.screens.main.details.ContactDetailsFragment"

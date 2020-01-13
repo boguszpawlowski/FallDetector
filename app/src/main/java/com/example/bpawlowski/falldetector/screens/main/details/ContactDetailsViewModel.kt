@@ -1,85 +1,87 @@
 package com.example.bpawlowski.falldetector.screens.main.details
 
-import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.bpawlowski.system.connectivity.CallService
-import com.bpawlowski.system.connectivity.TextMessageService
-import com.bpawlowski.core.exception.FallDetectorException
-import com.bpawlowski.data.repository.ContactRepository
-import com.bpawlowski.core.domain.zip
-import com.bpawlowski.system.location.LocationProvider
-import com.example.bpawlowski.falldetector.domain.ContactFormModel
-import com.example.bpawlowski.falldetector.domain.ScreenResult
+import com.bpawlowski.domain.service.CallService
+import com.bpawlowski.domain.service.LocationProvider
+import com.bpawlowski.domain.service.TextMessageService
+import com.bpawlowski.domain.zip
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
-import com.example.bpawlowski.falldetector.domain.ScreenState
-import com.example.bpawlowski.falldetector.domain.reduce
-import com.example.bpawlowski.falldetector.util.mapToContact
-import com.example.bpawlowski.falldetector.util.toSingleEvent
+import com.example.bpawlowski.falldetector.domain.StateValue.Loading
+import com.example.bpawlowski.falldetector.domain.failure
+import com.example.bpawlowski.falldetector.domain.success
+import com.example.bpawlowski.falldetector.domain.toContact
+import com.example.bpawlowski.falldetector.domain.toForm
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import timber.log.Timber
-import java.io.File
 
 class ContactDetailsViewModel(
-	private val contactsRepository: ContactRepository,
-	private val textMessageService: TextMessageService,
-	private val callService: CallService,
-	private val locationProvider: LocationProvider
-) : BaseViewModel() {
+    private val contactsRepository: com.bpawlowski.domain.repository.ContactRepository,
+    private val textMessageService: TextMessageService,
+    private val callService: CallService,
+    private val locationProvider: LocationProvider,
+    initialState: ContactDetailsViewState = ContactDetailsViewState()
+) : BaseViewModel<ContactDetailsViewState>(initialState) {
 
-	val contactForm = ContactFormModel()
+    fun initData(id: Long) = viewModelScope.launch {
+        contactsRepository.getContact(id)
+            .onSuccess { setState { copy(contact = success(it), contactForm = it.toForm()) } }
+    }
 
-	private val _screenStateData = MutableLiveData<ScreenState<Unit>>()
-	val screenStateData = _screenStateData.toSingleEvent()
+    fun updateContact(contactId: Long) = backgroundScope.launch {
+        val contact = currentState.contactForm.toContact().copy(id = contactId)
 
-	fun initData(id: Long, photoFile: File? = null) = viewModelScope.launch {
-		contactsRepository.getContact(id)
-			.onSuccess {
-				contactForm.initData(it)
-				photoFile?.let { contactForm.filePath = it.toURI().toString() }
-			}.onException {
-				if (it !is FallDetectorException.NoSuchRecordException) Timber.e(it)
-			}
-	}
+        setState { copy(saveContactRequest = Loading) }
 
-	fun updateContact(contactId: Long) = backgroundScope.launch {
-		val contact = contactForm.mapToContact().copy(id = contactId)
+        contactsRepository.updateContact(contact)
+            .onSuccess {
+                setState {
+                    copy(
+                        saveContactRequest = success(Unit),
+                        contact = success(contact)
+                    )
+                }
+            }
+            .onFailure { setState { copy(saveContactRequest = failure(it)) } }
+    }
 
-		_screenStateData.reduce(ScreenResult.Loading)
-		contactsRepository.updateContact(contact)
-			.onSuccess {
-				_screenStateData.reduce(ScreenResult.Success(Unit))
-				initData(contactId)
-			}.onFailure {
-				_screenStateData.reduce(ScreenResult.Failure(it))
-			}
-	}
+    fun updatePhotoPath(filePath: String) = setState {
+        copy(contactForm = contactForm.copy(filePath = filePath))
+    }
 
-	fun updatePhotoPath(file: File){
-		contactForm.filePath = file.toURI().toString()
-	}
+    fun updateEmail(email: String) = setState {
+        copy(contactForm = contactForm.copy(email = email))
+    }
 
-	fun resetData() = contactForm.resetData()
+    fun updateName(name: String) = setState {
+        copy(contactForm = contactForm.copy(name = name))
+    }
 
-	fun togglePriority() {
-		contactForm.priority = !contactForm.priority
-	}
+    fun updatePhone(mobile: String) = setState {
+        copy(contactForm = contactForm.copy(mobile = mobile))
+    }
 
-	fun sendSms(contactId: Long) = backgroundScope.launch {
+    fun resetData() = setState {
+        val currentContact = contact() ?: return@setState this
+        copy(contactForm = currentContact.toForm())
+    }
 
-		val number = async { contactsRepository.getContact(contactId).map { it.mobile } }
-		val geoLocation = async { locationProvider.getLastKnownLocation() }
+    fun togglePriority() = setState {
+        copy(contactForm = contactForm.copy(priority = contactForm.priority.not()))
+    }
 
-		zip(number.await(), geoLocation.await())
-			.onSuccess {
-				textMessageService.sendMessage(it.first, it.second)
-			}
-	}
+    fun sendSms(contactId: Long) = backgroundScope.launch {
+        val number = async { contactsRepository.getContact(contactId).map { it.mobile } }
+        val geoLocation = async { locationProvider.getLastKnownLocation() }
 
-	fun callContact(contactId: Long, context: Context) = backgroundScope.launch {
-		contactsRepository.getContact(contactId).onSuccess {
-			callService.call(context, it)
-		}
-	}
+        zip(number.await(), geoLocation.await())
+            .onSuccess {
+                textMessageService.sendMessage(it.first, it.second)
+            }
+    }
+
+    fun callContact(contactId: Long) = backgroundScope.launch {
+        contactsRepository.getContact(contactId).onSuccess {
+            callService.call(it)
+        }
+    }
 }

@@ -1,15 +1,32 @@
 package com.bpawlowski.database.dbservice
 
+import android.content.Context
+import androidx.room.Room
 import com.bpawlowski.database.FallDetectorDatabase
 import com.bpawlowski.database.dao.ContactDao
 import com.bpawlowski.database.dao.EventDao
 import com.bpawlowski.database.dao.ServiceStateDao
 
-interface DatabaseService {
+private const val name = "FDDatabase"
 
-    fun getContactDao(): ContactDao
+internal class DatabaseService(
+    context: Context
+) {
 
-    fun getServiceStateDao(): ServiceStateDao
+    private var dbInstance: FallDetectorDatabase
 
-    fun getEventDao(): EventDao
+    init {
+        dbInstance = Room.databaseBuilder(
+            context,
+            FallDetectorDatabase::class.java,
+            name
+        ).fallbackToDestructiveMigration()
+            .build()
+    }
+
+    fun getContactDao(): ContactDao = dbInstance.contactDao()
+
+    fun getServiceStateDao(): ServiceStateDao = dbInstance.serviceStateDao()
+
+    fun getEventDao(): EventDao = dbInstance.eventDao()
 }

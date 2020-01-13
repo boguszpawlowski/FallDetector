@@ -1,50 +1,63 @@
 package com.example.bpawlowski.falldetector.screens.main.contacts
 
-import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.bpawlowski.core.model.Contact
-import com.bpawlowski.data.repository.ContactRepository
-import com.bpawlowski.system.connectivity.CallService
-import com.bpawlowski.system.connectivity.TextMessageService
-import com.bpawlowski.system.location.LocationProvider
+import androidx.lifecycle.viewModelScope
+import com.bpawlowski.domain.model.Contact
+import com.bpawlowski.domain.repository.ContactRepository
+import com.bpawlowski.domain.service.CallService
+import com.bpawlowski.domain.service.LocationProvider
+import com.bpawlowski.domain.service.TextMessageService
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
-import com.example.bpawlowski.falldetector.domain.ScreenResult
-import com.example.bpawlowski.falldetector.domain.ScreenState
-import com.example.bpawlowski.falldetector.domain.reduce
-import com.example.bpawlowski.falldetector.util.toSingleEvent
+import com.example.bpawlowski.falldetector.domain.StateValue.Loading
+import com.example.bpawlowski.falldetector.domain.failure
+import com.example.bpawlowski.falldetector.domain.success
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class ContactsViewModel(
-	private val contactsRepository: ContactRepository,
-	private val textMessageService: TextMessageService,
-	private val callService: CallService,
-	private val locationProvider: LocationProvider
-) : BaseViewModel() {
+    state: ContactsViewState = ContactsViewState(),
+    private val contactsRepository: ContactRepository,
+    private val textMessageService: TextMessageService,
+    private val callService: CallService,
+    private val locationProvider: LocationProvider
+) : BaseViewModel<ContactsViewState>(state) {
 
-	val contactsLiveData: LiveData<List<Contact>>
-		get() = contactsRepository.getAllContactsData()
+    init {
+        viewModelScope.launch {
+            contactsRepository.getAllContactsFlow().collect {
+                setState {
+                    copy(contacts = success(it))
+                }
+            }
+        }
+    }
 
-	private val _screenStateData = MutableLiveData<ScreenState<Contact>>()
-	val screenStateData = _screenStateData.toSingleEvent()
+    fun removeContact(contactId: Long) = backgroundScope.launch {
 
-	fun removeContact(contact: Contact) = backgroundScope.launch {
-		contactsRepository.removeContact(contact)
-			.onSuccess { _screenStateData.reduce(ScreenResult.Success(it)) }
-			.onException { Timber.e(it) }
-	}
+        setState { copy(removeContactRequest = Loading) }
 
-	fun addContact(contact: Contact) = backgroundScope.launch {
-		contactsRepository.addContact(contact)
-			.onException { Timber.e(it) }
-	}
+        contactsRepository.removeContact(contactId)
+            .onSuccess {
+                setState {
+                    copy(removeContactRequest = success(it))
+                }
+            }.onFailure {
+                setState {
+                    copy(removeContactRequest = failure(it))
+                }
+            }
+    }
 
-	fun callContact(context: Context, contact: Contact) = callService.call(context, contact)
+    fun addContact(contact: Contact) = backgroundScope.launch {
+        contactsRepository.addContact(contact)
+            .onException { Timber.e(it) }
+    }
 
-	fun sendMessage(contact: Contact) = backgroundScope.launch {
-		locationProvider.getLastKnownLocation().onSuccess {
-			textMessageService.sendMessage(contact.mobile, it)
-		}
-	}
+    fun callContact(contact: Contact) = callService.call(contact)
+
+    fun sendMessage(contact: Contact) = backgroundScope.launch {
+        locationProvider.getLastKnownLocation().onSuccess {
+            textMessageService.sendMessage(contact.mobile, it)
+        }
+    }
 }

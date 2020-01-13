@@ -1,16 +1,17 @@
 package com.example.bpawlowski.falldetector.screens.main.events
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.bpawlowski.domain.model.Event
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.base.fragment.BaseFragment
-import com.example.bpawlowski.falldetector.databinding.FragmentEventDetailsBinding
-import com.example.bpawlowski.falldetector.domain.EventMarker
-import com.example.bpawlowski.falldetector.domain.ScreenState
+import com.example.bpawlowski.falldetector.domain.StateValue.Loading
+import com.example.bpawlowski.falldetector.domain.onFailure
+import com.example.bpawlowski.falldetector.domain.onSuccess
+import com.example.bpawlowski.falldetector.domain.toMarker
 import com.example.bpawlowski.falldetector.screens.main.MainActivity
 import com.example.bpawlowski.falldetector.screens.main.MainViewModel
 import com.example.bpawlowski.falldetector.util.setVisible
@@ -22,105 +23,123 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.fragment_event_details.*
+import kotlinx.android.synthetic.main.fragment_event_details.buttonAttend
+import kotlinx.android.synthetic.main.fragment_event_details.buttonBack
+import kotlinx.android.synthetic.main.fragment_event_details.progressBar
+import kotlinx.android.synthetic.main.fragment_event_details.scrollView
+import kotlinx.android.synthetic.main.fragment_event_details.txtAttending
+import kotlinx.android.synthetic.main.fragment_event_details.txtEventDate
+import kotlinx.android.synthetic.main.fragment_event_details.txtEventTitle
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-const val EVENT_ID_KEY = "event_id_key"
 const val CAMERA_ZOOM_DISTANT = 18f
 
-class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(), OnMapReadyCallback {
+class EventDetailsFragment : BaseFragment<EventDetailsViewState>(), OnMapReadyCallback {
 
-	override val layoutResID = R.layout.fragment_event_details
+    override val layoutResID = R.layout.fragment_event_details
 
-	override val viewModel: EventDetailsViewModel by viewModel()
+    override val viewModel: EventDetailsViewModel by viewModel()
 
-	override val sharedViewModel: MainViewModel by sharedViewModel()
+    private val sharedViewModel: MainViewModel by sharedViewModel()
 
-	lateinit var map: GoogleMap
+    override val shouldShowActionBar = false
 
-	private val darkModeObserver: Observer<Boolean> by lazy {
-		Observer<Boolean> { darkMode ->
-			if (darkMode) {
-				map.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_night))
-			}
-		}
-	}
+    private val args: EventDetailsFragmentArgs by navArgs()
 
-	private val screenStateObserver: Observer<ScreenState<Unit>> by lazy {
-		Observer<ScreenState<Unit>> { state ->
-			state.error?.let {
-				snackbar(message = it.rationale)
-			}
-			progressBar.setVisible(state.loading)
-			btnAttend.isEnabled = state.loading.not()
-		}
-	}
+    lateinit var map: GoogleMap // todo create view for map, pass lifecycle events
 
-	private val eventMarkerObserver: Observer<EventMarker> by lazy {
-		Observer<EventMarker> { event ->
-			val bitmap = R.drawable.ic_directions_run_black_24dp.toBitmap(requireContext())
-			with(map) {
-				clear()
-				addMarker(
-					MarkerOptions()
-						.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-						.position(event.latLng)
-						.title(event.title)
-				)
-				animateCamera(CameraUpdateFactory.newLatLngZoom(event.latLng, CAMERA_ZOOM_DISTANT))
-			}
-		}
-	}
+    private val darkModeObserver: Observer<Boolean> by lazy {
+        Observer<Boolean> { darkMode ->
+            if (darkMode) {
+                map.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                        requireContext(),
+                        R.raw.map_night
+                    )
+                )
+            }
+        }
+    }
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
+    override fun invalidate(state: EventDetailsViewState) {
+        state.eventData()?.let { event ->
+            txtEventDate.text = event.toMarker().exactDate
+            txtEventTitle.text = event.title
+            txtAttending.text = getString(R.string.text_attending_count, event.attendingUsers)
+            buttonAttend.setText(if (event.isAttending) R.string.btn_leave else R.string.btn_attend)
+        }
 
-		if (savedInstanceState == null) {
-			val eventId = arguments?.getLong(EVENT_ID_KEY) ?: throw UnsupportedOperationException()
-			viewModel.loadEvent(eventId)
-		}
-	}
+        val loading = state.eventData is Loading || state.updateAttendingRequest is Loading
 
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		(activity as? MainActivity)?.supportActionBar?.hide()
+        progressBar.setVisible(loading)
+        buttonAttend.isEnabled = loading.not()
+    }
 
-		return super.onCreateView(inflater, container, savedInstanceState)
-	}
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
+        if (savedInstanceState == null) {
+            viewModel.loadEvent(args.eventId)
+        }
+    }
 
-		collapsingToolbar.apply {
-			setExpandedTitleColor(
-				ContextCompat.getColor(
-					requireContext(),
-					R.color.transparent
-				)
-			) //todo check if you can display home button?
-		}
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-		btnAttend.setOnClickListener { viewModel.updateAttending() }
+        viewScope.launch {
+            viewModel.subscribe(EventDetailsViewState::updateAttendingRequest) {
+                it.onFailure {
+                    snackbar(message = it.rationale)
+                }
+            }
+        }
 
-		(childFragmentManager.findFragmentById(R.id.eventMapFragment) as SafeScrollMapFragment).let {
-			it.getMapAsync(this)
-			it.scrollView = scrollView
-		}
-		viewModel.screenStateData.observe(viewLifecycleOwner, screenStateObserver)
-	}
+        buttonAttend.setOnClickListener { viewModel.updateAttending() }
 
-	override fun onDestroyView() {
-		(activity as? MainActivity)?.supportActionBar?.show()
+        buttonBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
-		super.onDestroyView()
-	}
+        (childFragmentManager.findFragmentById(R.id.eventMapFragment) as SafeScrollMapFragment).let {
+            it.getMapAsync(this)
+            it.scrollView = scrollView
+        }
+    }
 
-	override fun onMapReady(googleMap: GoogleMap) {
-		map = googleMap.apply {
-			uiSettings.isMapToolbarEnabled = true
-		}
+    override fun onDestroyView() {
+        (activity as? MainActivity)?.supportActionBar?.show()
 
-		viewModel.eventMarkerData.observe(viewLifecycleOwner, eventMarkerObserver)
-		sharedViewModel.darkModeLiveData.observe(viewLifecycleOwner, darkModeObserver)
-	}
+        super.onDestroyView()
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap.apply {
+            uiSettings.isMapToolbarEnabled = true
+        }
+
+        viewScope.launch {
+            viewModel.subscribeToAll(EventDetailsViewState::eventData) { result ->
+                result.onSuccess { invalidateMapMarker(it) }
+            }
+        }
+
+        sharedViewModel.darkModeLiveData.observe(viewLifecycleOwner, darkModeObserver)
+    }
+
+    private fun invalidateMapMarker(event: Event) {
+        val marker = event.toMarker()
+        val bitmap = R.drawable.ic_directions_run_black_24dp.toBitmap(requireContext())
+        with(map) {
+            clear()
+            addMarker(
+                MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                    .position(marker.latLng)
+                    .title(event.title)
+            )
+            animateCamera(CameraUpdateFactory.newLatLngZoom(marker.latLng, CAMERA_ZOOM_DISTANT))
+        }
+    }
 }

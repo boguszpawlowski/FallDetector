@@ -1,4 +1,5 @@
 package com.example.bpawlowski.falldetector.base.recycler
+/*
 
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
@@ -21,4 +22,4 @@ class ViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding
         item.bind(this)
         binding.executePendingBindings()
     }
-}
+}*/
