@@ -4,9 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.base.fragment.BaseFragment
@@ -17,12 +15,14 @@ import com.example.bpawlowski.falldetector.screens.main.camera.CameraViewState
 import com.example.bpawlowski.falldetector.screens.main.details.ContactDetailsFragmentDirections
 import com.example.bpawlowski.falldetector.screens.main.details.IMAGE_TYPE
 import com.example.bpawlowski.falldetector.util.checkPermission
+import com.example.bpawlowski.falldetector.util.checkedChanges
 import com.example.bpawlowski.falldetector.util.loadContactImage
 import com.example.bpawlowski.falldetector.util.showBottomSheetDialog
 import com.example.bpawlowski.falldetector.util.snackbar
 import com.example.bpawlowski.falldetector.util.textChanges
 import kotlinx.android.synthetic.main.fragment_add_contact.buttonApply
 import kotlinx.android.synthetic.main.fragment_add_contact.buttonCancel
+import kotlinx.android.synthetic.main.fragment_add_contact.checkboxIce
 import kotlinx.android.synthetic.main.fragment_add_contact.imageProfile
 import kotlinx.android.synthetic.main.fragment_add_contact.textEmail
 import kotlinx.android.synthetic.main.fragment_add_contact.textMobile
@@ -85,6 +85,11 @@ class AddContactFragment :
         viewScope.launch {
             textName.textChanges().collect {
                 viewModel.updateName(it)
+            }
+        }
+        viewScope.launch {
+            checkboxIce.checkedChanges().collect {
+                viewModel.updatePriority(it)
             }
         }
         viewScope.launch {

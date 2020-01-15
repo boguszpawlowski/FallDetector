@@ -18,15 +18,14 @@ val viewModelModule = module {
     viewModel {
         ContactsViewModel(
             contactsRepository = get(),
-            textMessageService = get(),
-            callService = get(),
+            connectivityService = get(),
             locationProvider = get()
         )
     }
     viewModel { AddContactViewModel(get()) }
     viewModel { MainViewModel(get(named("Default")), get()) }
     viewModel { AlarmViewModel(get(), get(), get()) }
-    viewModel { ContactDetailsViewModel(get(), get(), get(), get()) }
+    viewModel { ContactDetailsViewModel(get(), get(), get()) }
     viewModel { CameraViewModel() }
     viewModel {
         MapViewModel(

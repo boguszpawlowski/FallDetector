@@ -1,9 +1,8 @@
 package com.example.bpawlowski.falldetector.screens.main.details
 
 import androidx.lifecycle.viewModelScope
-import com.bpawlowski.domain.service.CallService
 import com.bpawlowski.domain.service.LocationProvider
-import com.bpawlowski.domain.service.TextMessageService
+import com.bpawlowski.domain.service.ConnectivityService
 import com.bpawlowski.domain.zip
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.domain.StateValue.Loading
@@ -16,8 +15,7 @@ import kotlinx.coroutines.launch
 
 class ContactDetailsViewModel(
     private val contactsRepository: com.bpawlowski.domain.repository.ContactRepository,
-    private val textMessageService: TextMessageService,
-    private val callService: CallService,
+    private val connectivityService: ConnectivityService,
     private val locationProvider: LocationProvider,
     initialState: ContactDetailsViewState = ContactDetailsViewState()
 ) : BaseViewModel<ContactDetailsViewState>(initialState) {
@@ -75,13 +73,13 @@ class ContactDetailsViewModel(
 
         zip(number.await(), geoLocation.await())
             .onSuccess {
-                textMessageService.sendMessage(it.first, it.second)
+                connectivityService.sendMessage(it.first, it.second)
             }
     }
 
     fun callContact(contactId: Long) = backgroundScope.launch {
         contactsRepository.getContact(contactId).onSuccess {
-            callService.call(it)
+            connectivityService.call(it)
         }
     }
 }

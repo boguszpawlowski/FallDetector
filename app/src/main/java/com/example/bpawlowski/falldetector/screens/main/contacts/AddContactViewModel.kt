@@ -30,6 +30,10 @@ class AddContactViewModel(
         copy(contactForm = contactForm.copy(mobile = mobile))
     }
 
+    fun updatePriority(priority: Boolean) = setState {
+        copy(contactForm = contactForm.copy(priority = priority))
+    }
+
     fun tryToAddContact() = viewModelScope.launch {
         setState { copy(saveContactRequest = Loading) }
 

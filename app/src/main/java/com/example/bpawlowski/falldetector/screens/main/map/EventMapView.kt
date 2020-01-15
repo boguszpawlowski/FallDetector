@@ -112,16 +112,13 @@ class EventsMapView @JvmOverloads constructor(
     }
 
     private fun moveToUsersLocation() = userLocation?.let { location ->
-        map?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, CAMERA_ZOOM_DEFAULT))
+        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, CAMERA_ZOOM_DEFAULT))
     }
 
     private fun toggleNightMode() {
         if (nightMode) {
             map?.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    context,
-                    R.raw.map_night
-                )
+                MapStyleOptions.loadRawResourceStyle(context, R.raw.map_night)
             )
         }
     }

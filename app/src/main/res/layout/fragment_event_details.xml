@@ -8,7 +8,7 @@
 	android:fitsSystemWindows="false"
 	app:layoutDescription="@xml/event_collapsing_animation_scene">
 
-	<androidx.appcompat.widget.AppCompatImageView
+	<androidx.constraintlayout.utils.widget.ImageFilterView
 		android:id="@+id/imageEventBackground"
 		android:layout_width="0dp"
 		android:layout_height="@dimen/detail_backdrop_height"

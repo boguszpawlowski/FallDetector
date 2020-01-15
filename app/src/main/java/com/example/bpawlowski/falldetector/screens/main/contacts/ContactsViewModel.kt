@@ -3,9 +3,8 @@ package com.example.bpawlowski.falldetector.screens.main.contacts
 import androidx.lifecycle.viewModelScope
 import com.bpawlowski.domain.model.Contact
 import com.bpawlowski.domain.repository.ContactRepository
-import com.bpawlowski.domain.service.CallService
+import com.bpawlowski.domain.service.ConnectivityService
 import com.bpawlowski.domain.service.LocationProvider
-import com.bpawlowski.domain.service.TextMessageService
 import com.example.bpawlowski.falldetector.base.activity.BaseViewModel
 import com.example.bpawlowski.falldetector.domain.StateValue.Loading
 import com.example.bpawlowski.falldetector.domain.failure
@@ -15,12 +14,11 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class ContactsViewModel(
-    state: ContactsViewState = ContactsViewState(),
     private val contactsRepository: ContactRepository,
-    private val textMessageService: TextMessageService,
-    private val callService: CallService,
-    private val locationProvider: LocationProvider
-) : BaseViewModel<ContactsViewState>(state) {
+    private val connectivityService: ConnectivityService,
+    private val locationProvider: LocationProvider,
+    initialState: ContactsViewState = ContactsViewState()
+) : BaseViewModel<ContactsViewState>(initialState) {
 
     init {
         viewModelScope.launch {
@@ -53,11 +51,11 @@ class ContactsViewModel(
             .onException { Timber.e(it) }
     }
 
-    fun callContact(contact: Contact) = callService.call(contact)
+    fun callContact(contact: Contact) = connectivityService.call(contact)
 
     fun sendMessage(contact: Contact) = backgroundScope.launch {
         locationProvider.getLastKnownLocation().onSuccess {
-            textMessageService.sendMessage(contact.mobile, it)
+            connectivityService.sendMessage(contact.mobile, it)
         }
     }
 }
