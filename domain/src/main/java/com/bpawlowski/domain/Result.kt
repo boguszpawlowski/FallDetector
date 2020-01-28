@@ -1,7 +1,6 @@
 package com.bpawlowski.domain
 
 import com.bpawlowski.domain.exception.FallDetectorException
-import java.io.IOException
 
 sealed class Result<out T> {
     data class Success<out T>(val data: T) : Result<T>()

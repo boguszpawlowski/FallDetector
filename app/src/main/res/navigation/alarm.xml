@@ -6,6 +6,6 @@
 
 	<fragment
 		android:id="@+id/alarmFragment"
-		android:name="com.example.bpawlowski.falldetector.screens.main.alarm.AlarmFragment"
+		android:name="com.example.bpawlowski.falldetector.screens.alarm.AlarmFragment"
 		android:label="Alarm"/>
 </navigation>

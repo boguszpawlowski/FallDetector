@@ -7,6 +7,7 @@
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 	<uses-permission android:name="android.permission.CAMERA"/>
+	<uses-permission android:name="android.permission.INTERNET"/>
 
     <application
             android:name=".FallDetectorApp"
@@ -17,10 +18,9 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-		<activity android:name="com.example.bpawlowski.falldetector.screens.login.LoginActivity"/>
         <activity
 			android:windowSoftInputMode="adjustPan"
-			android:name="com.example.bpawlowski.falldetector.screens.main.MainActivity"
+			android:name="com.example.bpawlowski.falldetector.screens.MainActivity"
 			android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

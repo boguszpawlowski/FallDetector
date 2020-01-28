@@ -6,9 +6,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
 import com.bpawlowski.domain.model.Contact
-import com.bpawlowski.domain.model.ContactPriority
 
 @Entity(
     indices = [Index("mobile", unique = true)],
@@ -34,35 +32,19 @@ data class ContactDb(
 
     @ColumnInfo(name = "user_priority")
     @NonNull
-    val priority: ContactPriority,
+    val priority: Boolean,
 
     @ColumnInfo(name = "photo_path", typeAffinity = ColumnInfo.TEXT)
     @Nullable
     val photoPath: String? = null
 )
 
-internal object UserPriorityConverter {
-    @TypeConverter
-    @JvmStatic
-    fun toPriority(priority: Int): ContactPriority {
-        return when (priority) {
-            0 -> ContactPriority.PRIORITY_NORMAL
-            1 -> ContactPriority.PRIORITY_ICE
-            else -> ContactPriority.PRIORITY_NORMAL
-        }
-    }
-
-    @TypeConverter
-    @JvmStatic
-    fun toInt(priority: ContactPriority): Int = priority.ordinal
-}
-
 fun ContactDb.toDomain() = Contact(
     id = id,
     name = name,
     mobile = mobile,
     email = email,
-    priority = priority,
+    isIce = priority,
     photoPath = photoPath
 )
 
@@ -71,6 +53,6 @@ fun Contact.toEntity() = ContactDb(
     name = name,
     mobile = mobile,
     email = email,
-    priority = priority,
+    priority = isIce,
     photoPath = photoPath
 )

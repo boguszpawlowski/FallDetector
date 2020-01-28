@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import com.bpawlowski.domain.util.doNothing
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -26,7 +27,7 @@ fun ImageButton.simulateClick(delay: Long = ANIMATION_FAST_MILLIS) {
     }, delay)
 }
 
-fun EditText.textChanges(debounce: Long = 150L) = callbackFlow {
+fun EditText.textChanges(debounce: Long = 150L): Flow<String> = callbackFlow {
     val watcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             offer(s.toString())
@@ -41,7 +42,7 @@ fun EditText.textChanges(debounce: Long = 150L) = callbackFlow {
 
     addTextChangedListener(watcher)
     awaitClose { removeTextChangedListener(watcher) }
-}.distinctUntilChanged().debounce(debounce)
+}
 
 fun CheckBox.checkedChanges() = callbackFlow {
     setOnCheckedChangeListener { _, isChecked -> offer(isChecked) }

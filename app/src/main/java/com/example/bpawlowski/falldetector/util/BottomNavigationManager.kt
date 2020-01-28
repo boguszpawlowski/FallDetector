@@ -2,14 +2,24 @@
 
 package com.example.bpawlowski.falldetector.util
 
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 object BottomNavigationManager {
-    val broadcastChannel = ConflatedBroadcastChannel<BottomNavigationConfiguration>()
+    private val mutex = Mutex()
 
-    fun toggleNavigation(navConfiguration: BottomNavigationConfiguration) {
-        broadcastChannel.offer(navConfiguration)
-    }
+    private val _flow = MutableStateFlow(BottomNavigationConfiguration(true, true))
+    val flow: StateFlow<BottomNavigationConfiguration> = _flow
+
+    fun toggleNavigation(navConfiguration: BottomNavigationConfiguration) =
+        CoroutineScope(Dispatchers.Default).launch {
+            mutex.withLock { _flow.value = navConfiguration }
+        }
 }
 
 data class BottomNavigationConfiguration(
@@ -18,8 +28,10 @@ data class BottomNavigationConfiguration(
 )
 
 fun toggleNavigation(shouldShowNavigation: Boolean, shouldShowActionBar: Boolean) {
-    BottomNavigationManager.toggleNavigation(BottomNavigationConfiguration(
-        shouldShowNavigation,
-        shouldShowActionBar
-    ))
+    BottomNavigationManager.toggleNavigation(
+        BottomNavigationConfiguration(
+            shouldShowNavigation,
+            shouldShowActionBar
+        )
+    )
 }

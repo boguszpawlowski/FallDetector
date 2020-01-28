@@ -1,11 +1,11 @@
 package com.example.bpawlowski.falldetector
 
 import android.app.Application
+import android.content.Context
 import android.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatDelegate
 import com.bpawlowski.data.di.DataModule
 import com.bpawlowski.database.di.DatabaseModule
-import com.bpawlowski.remote.di.RemoteModule
 import com.bpawlowski.system.preferences.DARK_THEME_KEY
 import com.bpawlowski.system.di.systemModule
 import com.example.bpawlowski.falldetector.di.viewModelModule
@@ -18,7 +18,7 @@ import org.koin.core.context.startKoin
 class FallDetectorApp : Application() {
 
     private val sharedPreferences by lazy {
-        PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        applicationContext.getSharedPreferences("Preference", Context.MODE_PRIVATE)
     }
 
     override fun onCreate() {
@@ -37,7 +37,6 @@ class FallDetectorApp : Application() {
 
         DataModule.load()
         DatabaseModule.load()
-        RemoteModule.load()
 
         loadKoinModules(
             listOf(
@@ -52,6 +51,5 @@ class FallDetectorApp : Application() {
 
         DataModule.unload()
         DatabaseModule.unload()
-        RemoteModule.unload()
     }
 }

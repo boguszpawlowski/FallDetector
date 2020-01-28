@@ -8,7 +8,6 @@ import com.bpawlowski.domain.Result
 import com.bpawlowski.domain.exception.FallDetectorException
 import com.bpawlowski.domain.failure
 import com.bpawlowski.domain.model.Contact
-import com.bpawlowski.domain.model.ContactPriority
 import com.bpawlowski.domain.success
 import kotlinx.coroutines.flow.Flow
 
@@ -31,7 +30,7 @@ internal class ContactRepositoryImpl(
     }
 
     override fun getAllContactsFlow(): Flow<List<Contact>> =
-        contactLocalDataSource.getAllFlow().sortedByDescending { it.priority }
+        contactLocalDataSource.getAllFlow().sortedByDescending { it.isIce }
 
     override suspend fun updateContact(contact: Contact): Result<Unit> =
         checkContact(contact).flatMap {
@@ -95,7 +94,7 @@ internal class ContactRepositoryImpl(
     private suspend fun checkContact(contact: Contact): Result<Unit> {
         val iceContactId = contactLocalDataSource.findIceContact()?.id
         val contactWithSameMobile = contactLocalDataSource.getContactByMobile(contact.mobile)
-        return if (contact.priority == ContactPriority.PRIORITY_ICE &&
+        return if (contact.isIce &&
             iceContactId != null &&
             contact.id != iceContactId
         ) {

@@ -3,10 +3,8 @@ package com.bpawlowski.database.di
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.bpawlowski.data.datasource.ContactLocalDataSource
-import com.bpawlowski.data.datasource.EventLocalDataSource
 import com.bpawlowski.data.datasource.ServiceStateLocalDataSource
 import com.bpawlowski.database.datasource.ContactLocalDataSourceImpl
-import com.bpawlowski.database.datasource.EventLocalDataSourceImpl
 import com.bpawlowski.database.datasource.ServiceSateLocalDataSourceImpl
 import com.bpawlowski.database.dbservice.DatabaseService
 import org.koin.core.context.loadKoinModules
@@ -41,12 +39,10 @@ private val databaseModule = module {
 
 private val daoModule = module {
     single { get<DatabaseService>().getContactDao() }
-    single { get<DatabaseService>().getEventDao() }
     single { get<DatabaseService>().getServiceStateDao() }
 }
 
 private val dataSourceModule = module {
     single<ContactLocalDataSource> { ContactLocalDataSourceImpl(get()) }
-    single<EventLocalDataSource> { EventLocalDataSourceImpl(get()) }
     single<ServiceStateLocalDataSource> { ServiceSateLocalDataSourceImpl(get()) }
 }

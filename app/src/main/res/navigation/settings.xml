@@ -6,6 +6,6 @@
 
 	<fragment
 		android:id="@+id/settingsFragment"
-		android:name="com.example.bpawlowski.falldetector.screens.main.settings.SettingsFragment"
-		android:label="Settings"/>
+		android:name="com.example.bpawlowski.falldetector.screens.preference.PreferenceFragment"
+		android:label="Settings" />
 </navigation>

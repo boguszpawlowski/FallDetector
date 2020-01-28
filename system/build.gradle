@@ -4,14 +4,14 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion App.Compile
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
-        testInstrumentationRunner rootProject.ext.testInstrumentationRunner
+        minSdkVersion App.Min
+        targetSdkVersion App.Target
+        versionCode App.VersionCode
+        versionName App.VersionCode.toString()
+        testInstrumentationRunner TestLibraries.InstrumentationRunner
     }
 
     buildTypes {
@@ -31,9 +31,9 @@ dependencies {
 
     implementation project(path: ':domain')
 
-    implementation "com.google.android.gms:play-services-location:17.0.0"
+    implementation Libraries.location
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation TestLibraries.junit4
+    androidTestImplementation TestLibraries.testRunner
+    androidTestImplementation TestLibraries.espresso
 }

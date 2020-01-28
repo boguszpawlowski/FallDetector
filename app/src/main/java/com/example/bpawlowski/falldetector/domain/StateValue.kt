@@ -4,7 +4,7 @@ import com.bpawlowski.domain.exception.FallDetectorException
 
 sealed class StateValue<out T> {
     object Loading : StateValue<Nothing>()
-    object Uninitialized : StateValue<Nothing>()
+    object Idle : StateValue<Nothing>()
     data class Success<out T>(val data: T) : StateValue<T>()
     data class Failure(val exception: FallDetectorException) : StateValue<Nothing>()
 

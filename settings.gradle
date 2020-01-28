@@ -1,1 +1,1 @@
-include ':app', ':database', ':system', ':remote', ':data', ':domain'
+include ':app', ':database', ':system', ':data', ':domain'

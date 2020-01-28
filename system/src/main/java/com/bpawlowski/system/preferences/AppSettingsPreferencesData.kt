@@ -21,7 +21,7 @@ class AppSettingsPreferencesData(
                 DARK_THEME_KEY -> temp.copy(darkMode = sharedPreferences.getBoolean(key, false))
                 SEND_SMS_KEY -> temp.copy(sendingSms = sharedPreferences.getBoolean(key, false))
                 SEND_LOCATION_KEY -> temp.copy(sendingLocation = sharedPreferences.getBoolean(key, false))
-                SENSITIVITY_KEY -> temp.copy(sensitivity = mapSensitivity(sharedPreferences.getString(key, "0")))
+                SENSITIVITY_KEY -> temp.copy(sensitivity = mapSensitivity(sharedPreferences.getString(key, "0") ?: "LOW"))
                 else -> temp
             }
         )

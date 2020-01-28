@@ -27,31 +27,21 @@ abstract class BaseFragment<S : MviState> : Fragment() {
 
     protected open val shouldShowActionBar = true
 
-    abstract val layoutResID: Int
-
     abstract val viewModel: BaseViewModel<S>
 
-    abstract fun invalidate(state: S)
+    open fun invalidate(state: S) = Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.tag(javaClass.simpleName).v("ON_CREATE")
+
         super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        Timber.tag(javaClass.simpleName).v("ON_CREATE_VIEW")
-        toggleNavigation(shouldShowNavigation, shouldShowActionBar)
-
-        return inflater.inflate(layoutResID, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Timber.tag(javaClass.simpleName).v("ON_VIEW_CREATED")
         super.onViewCreated(view, savedInstanceState)
+
+        toggleNavigation(shouldShowNavigation, shouldShowActionBar)
 
         viewModel.stateFlow.onEach {
             invalidate(it)

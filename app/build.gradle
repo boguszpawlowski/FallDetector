@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
@@ -9,21 +8,17 @@ kapt {
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion App.Compile
 
     defaultConfig {
-        applicationId "com.bpawlowski.FallDetector"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
-        testInstrumentationRunner rootProject.ext.testInstrumentationRunner
+        applicationId App.Id
+        minSdkVersion App.Min
+        targetSdkVersion App.Target
+        versionCode App.VersionCode
+        versionName App.VersionCode.toString()
+        testInstrumentationRunner TestLibraries.InstrumentationRunner
     }
 
-    compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
-    }
     buildTypes {
         release {
             minifyEnabled true
@@ -35,76 +30,76 @@ android {
         }
     }
 
-    kotlinOptions {
-        jvmTarget = "1.8"
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        compose true
+        viewBinding true
+    }
+
+    composeOptions {
+        kotlinCompilerVersion Kotlin.Version
+        kotlinCompilerExtensionVersion Compose.Version
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    coreLibraryDesugaring Libraries.desugarJdkLibs
 
     implementation project(path: ':system')
     implementation project(path: ':domain')
     implementation project(path: ':data')
     implementation project(path: ':database')
-    implementation project(path: ':remote')
 
-    implementation "com.airbnb.android:epoxy:$epoxy_version"
-    kapt "com.airbnb.android:epoxy-processor:$epoxy_version"
+    implementation AndroidX.coreKtx
 
-    // Support
-    implementation "androidx.recyclerview:recyclerview:$recycler_version"
-    implementation "com.google.android.material:material:$material_version"
-    implementation "androidx.appcompat:appcompat:$androidx_appcompat_version"
-    implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
-    implementation "androidx.preference:preference:$preferences_version"
-    implementation "androidx.cardview:cardview:$androidx_version"
+    implementation Libraries.material
+    implementation Libraries.appCompat
+    implementation Libraries.constraintLayout
+    implementation Libraries.preference
+    implementation Libraries.lifecycle
+    implementation Libraries.lifecycleViewModel
+    implementation Libraries.navigation
+    implementation Libraries.navigationExtensions
 
-    //lifecycle
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-beta01"
+    implementation Libraries.cameraXCore
+    implementation Libraries.camera2
+    implementation Libraries.cameraView
+    implementation Libraries.cameraXExtensions
 
-    //Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation Libraries.epoxy
+    implementation Libraries.dexter
+    implementation Libraries.stetho
+    implementation Libraries.glide
+    implementation Libraries.dialogs
+    implementation Libraries.dialogsBottomSheets
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation Compose.Ui
+    implementation Compose.Runtime
+    implementation Compose.Foundation
+    implementation Compose.FoundationLayout
+    implementation Compose.Material
+    implementation Compose.MaterialIconsExtended
+    implementation Compose.UiTooling
+    implementation Compose.CoilImage
 
-    //RuntimePermissions
-    implementation "com.karumi:dexter:$dexter_version"
+    implementation Libraries.koinViewModel
 
-    //Stetho
-    implementation "com.facebook.stetho:stetho:$stetho_version"
+    kapt Libraries.epoxyProcessor
+    kapt Libraries.glideProcessor
 
-    //Glide
-    implementation "com.github.bumptech.glide:glide:$glide_version"
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    debugImplementation Debug.LeakCanary
+    debugImplementation Debug.RedScreenOfDeath
+    debugImplementation Hyperion.Core
+    debugImplementation Hyperion.Timber
+    debugImplementation Hyperion.SharedPrefs
 
-    //Camera
-    implementation "androidx.camera:camera-core:$camerax_version"
-    implementation "androidx.camera:camera-camera2:$camerax_version"
-    implementation "androidx.camera:camera-view:$camerax_ext_version"
-    implementation "androidx.camera:camera-extensions:$camerax_ext_version"
-
-/*    //permissions todo change permissions for this
-    implementation "org.permissionsdispatcher:permissionsdispatcher:${latest.version}"
-    kapt "org.permissionsdispatcher:permissionsdispatcher-processor:${latest.version}"*/
-
-    // dialogs
-    implementation "com.afollestad.material-dialogs:core:$dialogs_version"
-    implementation "com.afollestad.material-dialogs:bottomsheets:$dialogs_version"
-
-    // test
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
-    //Leak Canary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:${leak_canary_version}"
-
-    //map
-    implementation "com.google.android.gms:play-services-maps:$maps_version"
-    implementation "com.google.android.gms:play-services-location:$maps_version"
-    implementation "com.google.maps.android:android-maps-utils:$map_utils_version"
+    testImplementation TestLibraries.junit4
+    androidTestImplementation TestLibraries.testRunner
+    androidTestImplementation TestLibraries.espresso
 }

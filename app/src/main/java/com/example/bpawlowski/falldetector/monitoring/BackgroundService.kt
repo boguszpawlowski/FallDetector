@@ -20,7 +20,7 @@ import com.bpawlowski.system.util.notificationManager
 import com.example.bpawlowski.falldetector.R
 import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.START_SERVICE
 import com.example.bpawlowski.falldetector.monitoring.ServiceIntentType.STOP_SERVICE
-import com.example.bpawlowski.falldetector.screens.main.MainActivity
+import com.example.bpawlowski.falldetector.screens.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

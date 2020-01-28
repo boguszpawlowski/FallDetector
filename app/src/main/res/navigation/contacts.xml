@@ -6,29 +6,29 @@
 
 	<fragment
 		android:id="@+id/contactsFragment"
-		android:name="com.example.bpawlowski.falldetector.screens.main.contacts.ContactsFragment"
+		android:name="com.example.bpawlowski.falldetector.screens.contacts.list.ContactsFragment"
 		android:label="Contacts">
 		<action
-			android:id="@+id/showDialog"
-			app:destination="@id/formDialogFragment"/>
+			android:id="@+id/showAddContact"
+			app:destination="@id/addContact" />
 		<action
 			android:id="@+id/showDetails"
 			app:destination="@id/contactDetailsFragment"/>
 	</fragment>
 	<fragment
-		android:id="@+id/formDialogFragment"
-		android:name="com.example.bpawlowski.falldetector.screens.main.contacts.AddContactFragment"
+		android:id="@+id/addContact"
+		android:name="com.example.bpawlowski.falldetector.screens.contacts.add.AddContactFragment"
 		android:label="Add Contact">
 		<action
 			android:id="@+id/openCamera"
-			app:destination="@id/cameraFragment"/>
+			app:destination="@id/cameraFragment" />
 	</fragment>
 	<fragment
 		android:id="@+id/contactDetailsFragment"
-		android:name="com.example.bpawlowski.falldetector.screens.main.details.ContactDetailsFragment"
+		android:name="com.example.bpawlowski.falldetector.screens.contacts.details.ContactDetailsFragment"
 		android:label="Contact Details">
 		<argument
-			android:name="contact_id"
+			android:name="contactId"
 			app:argType="long"/>
 		<action
 			android:id="@+id/openCamera"
@@ -36,6 +36,6 @@
 	</fragment>
 	<fragment
 		android:id="@+id/cameraFragment"
-		android:name="com.example.bpawlowski.falldetector.screens.main.camera.CameraFragment"
+		android:name="com.example.bpawlowski.falldetector.screens.camera.CameraFragment"
 		android:label="CameraFragment"/>
 </navigation>

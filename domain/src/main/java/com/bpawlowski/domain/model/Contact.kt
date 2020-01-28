@@ -5,6 +5,6 @@ data class Contact(
     val name: String,
     val mobile: Int,
     val email: String?,
-    val priority: ContactPriority,
+    val isIce: Boolean,
     val photoPath: String? = null
 )

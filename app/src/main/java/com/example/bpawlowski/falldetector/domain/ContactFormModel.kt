@@ -2,15 +2,13 @@ package com.example.bpawlowski.falldetector.domain
 
 import android.util.Patterns
 import com.bpawlowski.domain.model.Contact
-import com.bpawlowski.domain.model.ContactPriority.PRIORITY_ICE
-import com.bpawlowski.domain.model.ContactPriority.PRIORITY_NORMAL
 import com.example.bpawlowski.falldetector.util.empty
 
 data class ContactFormModel(
     val name: String = String.empty,
     val mobile: String = String.empty,
     val email: String = String.empty,
-    val priority: Boolean = false,
+    val isIce: Boolean = false,
     val filePath: String? = null
 ) {
 
@@ -37,7 +35,7 @@ data class ContactFormModel(
         return name != contact?.name ||
                 mobile != contact.mobile.toString() ||
                 email != contact.email ||
-                priority != (contact.priority == PRIORITY_ICE) ||
+                isIce != contact.isIce ||
                 filePath != contact.photoPath
     }
 }
@@ -46,7 +44,7 @@ fun Contact.toForm() = ContactFormModel(
     name = name,
     email = email.toString(),
     mobile = mobile.toString(),
-    priority = priority == PRIORITY_ICE,
+    isIce = isIce,
     filePath = photoPath
 )
 
@@ -54,6 +52,6 @@ fun ContactFormModel.toContact() = Contact(
     name = name,
     mobile = mobile.toInt(),
     email = email,
-    priority = if (priority) PRIORITY_ICE else PRIORITY_NORMAL,
+    isIce = isIce,
     photoPath = filePath
 )

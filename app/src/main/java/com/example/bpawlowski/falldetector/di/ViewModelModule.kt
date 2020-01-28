@@ -1,20 +1,31 @@
 package com.example.bpawlowski.falldetector.di
 
-import com.example.bpawlowski.falldetector.screens.main.MainViewModel
-import com.example.bpawlowski.falldetector.screens.main.alarm.AlarmViewModel
-import com.example.bpawlowski.falldetector.screens.main.camera.CameraViewModel
-import com.example.bpawlowski.falldetector.screens.main.contacts.ContactsViewModel
-import com.example.bpawlowski.falldetector.screens.main.contacts.AddContactViewModel
-import com.example.bpawlowski.falldetector.screens.main.details.ContactDetailsViewModel
-import com.example.bpawlowski.falldetector.screens.main.events.EventDetailsViewModel
-import com.example.bpawlowski.falldetector.screens.main.home.HomeViewModel
-import com.example.bpawlowski.falldetector.screens.main.map.MapViewModel
+import android.content.Context
+import com.example.bpawlowski.falldetector.domain.AppPreferenceDelegate
+import com.example.bpawlowski.falldetector.screens.MainViewModel
+import com.example.bpawlowski.falldetector.screens.alarm.AlarmViewModel
+import com.example.bpawlowski.falldetector.screens.camera.CameraViewModel
+import com.example.bpawlowski.falldetector.screens.contacts.list.ContactsViewModel
+import com.example.bpawlowski.falldetector.screens.contacts.add.AddContactViewModel
+import com.example.bpawlowski.falldetector.screens.contacts.details.ContactDetailsViewModel
+import com.example.bpawlowski.falldetector.screens.home.HomeViewModel
+import com.example.bpawlowski.falldetector.screens.preference.PreferenceViewModel
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel { HomeViewModel(get()) }
+    single {
+        AppPreferenceDelegate(
+            androidContext().getSharedPreferences(
+                "Preference",
+                Context.MODE_PRIVATE
+            )
+        )
+    }
+
+    viewModel { HomeViewModel(serviceStateRepository = get()) }
     viewModel {
         ContactsViewModel(
             contactsRepository = get(),
@@ -22,16 +33,27 @@ val viewModelModule = module {
             locationProvider = get()
         )
     }
-    viewModel { AddContactViewModel(get()) }
-    viewModel { MainViewModel(get(named("Default")), get()) }
-    viewModel { AlarmViewModel(get(), get(), get()) }
-    viewModel { ContactDetailsViewModel(get(), get(), get()) }
-    viewModel { CameraViewModel() }
+    viewModel { AddContactViewModel(contactsRepository = get()) }
     viewModel {
-        MapViewModel(
-            eventRepository = get(),
+        MainViewModel(
+            preferenceDelegate = get(),
+            serviceStateRepository = get()
+        )
+    }
+    viewModel {
+        AlarmViewModel(
+            locationProvider = get(),
+            contactRepository = get(),
+            alarmService = get()
+        )
+    }
+    viewModel {
+        ContactDetailsViewModel(
+            contactsRepository = get(),
+            connectivityService = get(),
             locationProvider = get()
         )
     }
-    viewModel { EventDetailsViewModel(get()) }
+    viewModel { CameraViewModel() }
+    viewModel { PreferenceViewModel(appPreferenceDelegate = get()) }
 }

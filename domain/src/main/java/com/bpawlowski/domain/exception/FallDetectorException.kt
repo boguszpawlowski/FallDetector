@@ -1,7 +1,6 @@
 package com.bpawlowski.domain.exception
 
-sealed class FallDetectorException(override val message: String, val rationale: String = message) :
-    Exception() {
+sealed class FallDetectorException(override val message: String, val rationale: String = message) : Exception() {
     data class NoSuchRecordException(
         private val id: Long?
     ) : FallDetectorException(
@@ -30,14 +29,6 @@ sealed class FallDetectorException(override val message: String, val rationale: 
     ) : FallDetectorException("Record with mobile $mobile already existing.")
 
     object StateNotInitializedException : FallDetectorException("Service state is not initialized")
-
-    data class ApiException(
-        val code: String,
-        val url: String,
-        val errorBody: String
-    ) : FallDetectorException(errorBody)
-
-    data class Unknown(val exception: Exception): FallDetectorException("Unknown Exception Occured")
 
     override fun toString() = message
 }
