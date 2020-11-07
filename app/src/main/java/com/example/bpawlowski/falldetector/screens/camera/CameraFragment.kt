@@ -10,6 +10,10 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Rational
 import android.view.*
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.ActivityResultRegistry
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.camera.core.*
 import androidx.camera.view.TextureViewMeteringPointFactory
 import androidx.localbroadcastmanager.content.LocalBroadcastManager

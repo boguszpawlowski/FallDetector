@@ -1,9 +1,0 @@
-apply plugin: 'java-library'
-apply plugin: 'kotlin'
-
-dependencies {
-    api Libraries.timber
-    api Libraries.koin
-    api Libraries.koinAndroid
-    api Libraries.coroutines
-}

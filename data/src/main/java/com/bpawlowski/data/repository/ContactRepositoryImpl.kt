@@ -8,12 +8,13 @@ import com.bpawlowski.domain.Result
 import com.bpawlowski.domain.exception.FallDetectorException
 import com.bpawlowski.domain.failure
 import com.bpawlowski.domain.model.Contact
+import com.bpawlowski.domain.repository.ContactRepository
 import com.bpawlowski.domain.success
 import kotlinx.coroutines.flow.Flow
 
 internal class ContactRepositoryImpl(
     private val contactLocalDataSource: ContactLocalDataSource
-) : com.bpawlowski.domain.repository.ContactRepository {
+) : ContactRepository {
 
     override suspend fun addContact(contact: Contact): Result<Long> =
         checkContact(contact).map {

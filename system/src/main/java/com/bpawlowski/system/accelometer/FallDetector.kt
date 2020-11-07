@@ -55,7 +55,5 @@ private fun Flow<AccelerometerEvent>.detectNoMovement(sensitivity: Sensitivity):
         .scan(mutableListOf()) { accumulator: MutableList<Float>, value -> accumulator.add(value); accumulator }
         .drop(100)
         .map { buffer ->
-            if (abs(buffer.toTypedArray().average()) < sensitivity.meanAccDuringNoMovement) {
-                true
-            } else throw IllegalStateException()
+            abs(buffer.toTypedArray().average()) < sensitivity.meanAccDuringNoMovement
         }.retryWhen { cause, _ -> cause is IllegalStateException }
