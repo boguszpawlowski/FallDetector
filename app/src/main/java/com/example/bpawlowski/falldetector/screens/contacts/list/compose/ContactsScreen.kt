@@ -43,7 +43,7 @@ fun ContactsScreen(
 
             LazyColumnFor(
                 items = state.value.contacts,
-                contentPadding = PaddingValues(Padding.Medium),
+                contentPadding = PaddingValues(Padding.ExtraLarge),
                 modifier = Modifier.constrainAs(listContacts) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
@@ -58,7 +58,7 @@ fun ContactsScreen(
                     onItemDismissed = onContactDismissed,
                     modifier = Modifier.fillParentMaxWidth()
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
             }
 
             ExtendedFloatingActionButton(

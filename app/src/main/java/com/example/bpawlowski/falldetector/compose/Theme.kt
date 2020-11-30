@@ -2,6 +2,7 @@ package com.example.bpawlowski.falldetector.compose
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Shapes
 import androidx.compose.runtime.Composable
 
 @Composable
@@ -11,6 +12,7 @@ fun FallDetectorTheme(
 ) {
     MaterialTheme(
         colors = if(darkTheme) DarkColors else LightColors,
-        content = content
+        content = content,
+        shapes = shapes
     )
 }

@@ -11,6 +11,7 @@ val Red900 = Color(0xffc20029)
 val Red200 = Color(0xfff297a2)
 val Red300 = Color(0xffea6d7e)
 val Red700 = Color(0xffdd0d3c)
+val DarkGrey = Color(0xff363A3D)
 
 
 val LightColors = lightColors(
@@ -29,5 +30,6 @@ val DarkColors = darkColors(
     onPrimary = Color.Black,
     secondary = Secondary,
     onSecondary = Color.White,
+    background = DarkGrey,
     error = Error
 )
